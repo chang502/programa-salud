@@ -511,6 +511,7 @@ function showPersonaDialog(hiddenfield, textfield) {
 
 
 
+
         var frmCrear = Ext.create({
             xtype: 'form',
             title: 'Crear registro',
