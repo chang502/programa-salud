@@ -6,7 +6,7 @@ Ext.QuickTips.init();
 
 
 var store_espacio_convivencia = Ext.create('Ext.data.Store', {
-    fields: ['id_espacio_convivencia', 'nombre', 'ubicacion', 'espacio_area', 'estado', 'observaciones'],
+    fields: ['id_espacio_convivencia', 'nombre', 'ubicacion', 'cantidad', 'cantidad_medida', 'id_unidad_medida', 'anio', 'costo', 'estado', 'observaciones'],
     proxy: {
         type: 'ajax',
         url: 'controller/playgrounds',
@@ -16,6 +16,16 @@ var store_espacio_convivencia = Ext.create('Ext.data.Store', {
     }
 });
 
+var store_unidades_medida = Ext.create('Ext.data.Store', {
+    fields: ['id_unidad_medida', 'nombre', 'nombre_corto'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/measurementunits',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
 
 function editRec(rec) {
     Ext.Ajax.request({
@@ -34,9 +44,9 @@ function editRec(rec) {
                     },
                     modal: true,
                     layout: {
-                     type: 'table',
-                     columns: 2
-                     },
+                        type: 'table',
+                        columns: 2
+                    },
                     items: [
                         {
                             xtype: 'hidden',
@@ -61,16 +71,52 @@ function editRec(rec) {
                             value: resultado.data[0].ubicacion
                         }, {
                             xtype: 'numberfield',
-                            fieldLabel: 'Espacio (m&sup2;)',
-                            name: 'espacio_area',
+                            fieldLabel: 'Cantidad',
+                            name: 'cantidad',
                             decimalPrecision: 4,
                             hideTrigger: true,
                             decimalSeparator: '.',
                             allowBlank: false,
-                            value: resultado.data[0].espacio_area
+                            value: resultado.data[0].cantidad
+                        }, {
+                            xtype: 'combo',
+                            fieldLabel: 'Unidad de medida',
+                            store: store_unidades_medida,
+                            queryMode: 'local',
+                            displayField: 'nombre',
+                            valueField: 'id_unidad_medida',
+                            name: 'id_unidad_medida',
+                            allowBlank: false,
+                            value: resultado.data[0].id_unidad_medida
+                        }, {
+                            xtype: 'numberfield',
+                            fieldLabel: 'Año',
+                            name: 'anio',
+                            hideTrigger: true,
+                            allowDecimals: false,
+                            enforceMaxLength: true,
+                            minValue: 1900,
+                            maxValue: 2199,
+                            allowBlank: false,
+                            value: resultado.data[0].anio
+                        }, {
+                            xtype: 'numberfield',
+                            fieldLabel: 'Costo del Proyecto',
+                            name: 'costo',
+                            maxLength: 250,
+                            decimalPrecision: 4,
+                            hideTrigger: true,
+                            decimalSeparator: '.',
+                            allowDecimals: true,
+                            minValue: 0,
+                            enforceMaxLength: true,
+                            allowBlank: false,
+                            value: resultado.data[0].costo
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Estado',
+                            colspan: 2,
+                            colspan: 2,
                             name: 'estado',
                             maxLength: 200,
                             enforceMaxLength: true,
@@ -187,7 +233,9 @@ function deleteRec(rec) {
 
 Ext.onReady(function () {
 
+    store_unidades_medida.load();
     store_espacio_convivencia.load();
+
 
 
     Ext.create({
@@ -227,14 +275,46 @@ Ext.onReady(function () {
                         allowBlank: false
                     }, {
                         xtype: 'numberfield',
-                        fieldLabel: 'Espacio (m&sup2;)',
-                        name: 'espacio_area',
+                        fieldLabel: 'Cantidad',
+                        name: 'cantidad',
                         decimalPrecision: 4,
                         hideTrigger: true,
                         decimalSeparator: '.',
                         allowBlank: false
                     }, {
+                        xtype: 'combo',
+                        fieldLabel: 'Unidad de Medida',
+                        store: store_unidades_medida,
+                        queryMode: 'local',
+                        displayField: 'nombre',
+                        valueField: 'id_unidad_medida',
+                        allowBlank: false,
+                        name: 'id_unidad_medida'
+                    }, {
+                        xtype: 'numberfield',
+                        fieldLabel: 'Año',
+                        name: 'anio',
+                        hideTrigger: true,
+                        allowDecimals: false,
+                        enforceMaxLength: true,
+                        minValue: 1900,
+                        maxValue: 2199,
+                        allowBlank: false
+                    }, {
+                        xtype: 'numberfield',
+                        fieldLabel: 'Costo del Proyecto',
+                        name: 'costo',
+                        maxLength: 250,
+                        decimalPrecision: 4,
+                        hideTrigger: true,
+                        decimalSeparator: '.',
+                        allowDecimals: true,
+                        minValue: 0,
+                        enforceMaxLength: true,
+                        allowBlank: false
+                    }, {
                         xtype: 'textfield',
+                        colspan: 2,
                         fieldLabel: 'Estado',
                         name: 'estado',
                         maxLength: 200,
@@ -308,15 +388,17 @@ Ext.onReady(function () {
 
                         columns: [
                             {hidden: true, dataIndex: 'id_espacio_convivencia'},
-                            {text: 'Nombre', dataIndex: 'nombre'},
-                            {text: 'Ubicación', dataIndex: 'ubicacion'},
-                            {text: 'Espacio (m&sup2;)', dataIndex: 'espacio_area'},
+                            {text: 'Nombre', dataIndex: 'nombre', width: 120},
+                            {text: 'Ubicación', dataIndex: 'ubicacion', width: 160},
+                            {text: 'Cantidad', dataIndex: 'cantidad_medida', width: 100},
+                            {text: 'Año', dataIndex: 'anio', width: 65},
+                            {text: 'Costo', dataIndex: 'costo', width: 90},
                             {text: 'Estado', dataIndex: 'estado'},
-                            {text: 'Observaciones', dataIndex: 'observaciones'},
+                            {text: 'Observaciones', dataIndex: 'observaciones', width: 150},
                             {
                                 xtype: 'actioncolumn',
                                 text: 'Acciones',
-                                width: 100,
+                                width: 75,
                                 items: [{
                                         icon: 'images/icons/page_edit.png',
                                         tooltip: 'Editar registro',

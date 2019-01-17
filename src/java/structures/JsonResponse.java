@@ -133,7 +133,7 @@ public class JsonResponse {
                         data.append("\"");
                         data.append(md.getColumnLabel(i + 1));
                         data.append("\":");
-
+                        
                         data.append((dtypes[i] == Types.VARCHAR || dtypes[i] == Types.CHAR) ? "\"" : "");
 
                         data.append(dtypes[i] == Types.BIT ? rs.getBoolean(i + 1) ? "true" : "false" : rs.getString(i + 1).replaceAll("\"", "\'").replaceAll("\n", "\\\\n"));
