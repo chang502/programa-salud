@@ -6,11 +6,11 @@
 
 
 
-var store_persona = Ext.create('Ext.data.Store', {
-    fields: ['id_persona', 'nombre', 'email', 'activo'],
+var store_personas = Ext.create('Ext.data.Store', {
+    fields: ['id_persona', 'nombre', 'fecha_nacimiento', 'telefono', 'email', 'identificacion'],
     proxy: {
         type: 'ajax',
-        url: 'controller/users',
+        url: 'controller/searchpersons',
         reader: {type: 'json',
             root: 'data'
         }
@@ -30,8 +30,8 @@ var store_tipos_documento = Ext.create('Ext.data.Store', {
 });
 
 
-function createTooltip(message,component,isField){
-    if(!isField){
+function createTooltip(message, component, isField) {
+    if (!isField) {
         component.clearTip();
     }
 
@@ -249,26 +249,116 @@ function showPersonaDialog(hiddenfield, textfield) {
             defaults: {
                 padding: '5 15 5 15'
             },
-            layout: {
-                type: 'table',
-                columns: 2
-            },
             items: [
                 {
-                    xtype: 'textfield',
-                    fieldLabel: 'Identificación'
-                }, {
-                    xtype: 'textfield',
-                    fieldLabel: 'Nombres o apellidos'
-                },{
-                    xtype: 'textfield',
-                    fieldLabel: 'Teléfono, correo'
-                }, {
-                    xtype: 'datefield',
-                    fieldLabel: 'Fecha nacimiento',
-                    emptyText: 'dd/mm/aaaa'
+                    xtype: 'fieldset',
+                    title: 'Parámetros de Búsqueda',
+                    padding: '5 5 5 5',
+                    defaults: {
+                        padding: '5 15 5 15'
+                    },
+                    layout: {
+                        type: 'table',
+                        columns: 2
+                    },
+                    items: [
+                        {
+                            xtype: 'textfield',
+                            fieldLabel: 'Identificación',
+                            name: 'identificacion'
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Nombres o apellidos',
+                            name: 'nombre_completo',
+                            maxLength: 203,
+                            enforceMaxLength: true
+                        }, {
+                            xtype: 'textfield',
+                            fieldLabel: 'Teléfono, correo',
+                            name: 'telefono_correo',
+                            maxLength: 50,
+                            enforceMaxLength: true
+                        }, {
+                            xtype: 'datefield',
+                            fieldLabel: 'Fecha nacimiento',
+                            name: 'fecha_nacimiento',
+                            emptyText: 'dd/mm/aaaa'
+                        }
+                        ,
+
+                        {
+                            xtype: 'button',
+                            colspan: 2,
+                            margin: '0 15 5 0',
+                            style: {
+                                "float": "right"
+                            },
+                            text: 'Buscar',
+                            //reference: 'doCreate',
+                            anchor: '-50%',
+                            handler: function () {
+
+                                var form = this.up('form');
+                                if (!form.isValid()) {
+                                } else {
+                                    //form.mask("Espere");
+                                    var data = form.getValues();
+                                    console.log(data);
+                                    
+                                    store_personas.load({
+                                        params: data,
+                                        callback: function(records, operation, success){
+                                            //form.unmask();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    ]
+                }
+                ,
+                {
+                    xtype: 'fieldset',
+                    title: 'Resultados de la Búsqueda',
+                    items: [
+                        {
+                            xtype: 'grid',
+                            store: store_personas,
+                            height: 250,
+                            width: '100%',
+                            columns: [
+                                {hidden: true, dataIndex: 'id_persona'},
+                                {text: 'Nombre', dataIndex: 'nombre'},
+                                {text: 'Fecha Nac', dataIndex: 'fecha_nacimiento'},
+                                {text: 'Teléfono', dataIndex: 'telefono'},
+                                {text: 'Correo', dataIndex: 'email'}  //, ------------------
+                                //{text: 'Identificación', dataIndex: 'identificacion'},
+                                /*{
+                                    xtype: 'actioncolumn',
+                                    text: 'Acciones',
+                                    width: 100,
+                                    items: [{
+                                            icon: 'images/icons/page_edit.png',
+                                            tooltip: 'Editar registro',
+                                            handler: function (grid, rowIndex, colIndex) {
+                                                var rec = grid.getStore().getAt(rowIndex).get('id_bebedero');
+                                                editRec(rec);
+                                            }
+                                        }, {
+                                            icon: 'images/icons/cross.png',
+                                            tooltip: 'Eliminar registro',
+                                            handler: function (grid, rowIndex, colIndex) {
+                                                var rec = grid.getStore().getAt(rowIndex).get('id_bebedero');
+                                                deleteRec(rec);
+                                            }
+                                        }]
+                                }*/
+                            ]
+                        }
+                    ]
                 }
             ]
+
         });
 
 
@@ -433,31 +523,31 @@ function showPersonaDialog(hiddenfield, textfield) {
                             change: function (cbox, newValue, oldValue, eOpts) {
                                 console.log('combo change event');
                                 console.log(cbox.getValue());
-                                console.log(cbox.getValue()===null);
-                                
-                                if(cbox.getValue()!== null){
+                                console.log(cbox.getValue() === null);
+
+                                if (cbox.getValue() !== null) {
                                     cbox.allowBlank = false;
                                     cbox.ownerCt.items.items[1].allowBlank = false;
                                     cbox.ownerCt.items.items[1].validate();
-                                    if (frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length && cbox.ownerCt.items.items[1].getValue() != ""){
+                                    if (frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length && cbox.ownerCt.items.items[1].getValue() != "") {
                                         add_id();
                                     }
-                                }else if (frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length){
-                                    
-                                    if(cbox.ownerCt.items.items[1].getValue() === ""){
+                                } else if (frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length) {
+
+                                    if (cbox.ownerCt.items.items[1].getValue() === "") {
                                         cbox.allowBlank = true;
                                     }
                                     cbox.validate();
                                 }
-                                
+
                                 /*
-                                cbox.allowBlank = !(cbox.getValue() === null && !(cbox.ownerCt.items.items[1].getValue() != "" && frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length));
-                                cbox.validate();
-                                cbox.ownerCt.items.items[1].allowBlank = !(cbox.getValue() === null && !(cbox.ownerCt.items.items[1].getValue() != "" && frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length));
-                                cbox.ownerCt.items.items[1].validate();
-                                if (cbox.ownerCt.items.items[1].getValue() != "" && frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length) {
-                                    add_id();
-                                }*/
+                                 cbox.allowBlank = !(cbox.getValue() === null && !(cbox.ownerCt.items.items[1].getValue() != "" && frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length));
+                                 cbox.validate();
+                                 cbox.ownerCt.items.items[1].allowBlank = !(cbox.getValue() === null && !(cbox.ownerCt.items.items[1].getValue() != "" && frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length));
+                                 cbox.ownerCt.items.items[1].validate();
+                                 if (cbox.ownerCt.items.items[1].getValue() != "" && frmCrear_identificacion.items.indexOf(cbox.ownerCt) + 1 == frmCrear_identificacion.items.length) {
+                                 add_id();
+                                 }*/
                             }
                         }
                     }, {
@@ -472,7 +562,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                                     tfield.ownerCt.items.items[0].validate();
                                     if (frmCrear_identificacion.items.indexOf(tfield.ownerCt) + 1 == frmCrear_identificacion.items.length && tfield.ownerCt.items.items[0].isValid()) {
                                         if (frmCrear_identificacion.items.length == store_tipos_documento.getCount()) {
-                                            createTooltip('Ha alcanzado el número máximo de documentos de identificación',tfield.getEl(),true);
+                                            createTooltip('Ha alcanzado el número máximo de documentos de identificación', tfield.getEl(), true);
                                         } else
                                             add_id();
                                     }
@@ -539,7 +629,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                 {
                     text: 'Aceptar',
                     handler: function () {
-                        console.log(tabPanel.getActiveTab());
+                        /*console.log(tabPanel.getActiveTab());
                         if (!tabPanel.getActiveTab().isValid()) {
 
                         } else {
@@ -567,7 +657,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                                     Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                 }
                             });
-                        }
+                        }*/
                     }
                 },
                 {text: 'Cancelar', handler: function () {

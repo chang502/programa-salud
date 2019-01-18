@@ -88,7 +88,7 @@ public class Manager {
     public java.util.Map<String, String> createMap(String fields[], java.io.InputStream params) {
         java.util.Map<String, String> map = new HashMap<>();
         try {
-
+            
             JsonReader reader = Json.createReader(params);
             JsonObject jsonObject = reader.readObject();
             reader.close();
@@ -255,6 +255,19 @@ public class Manager {
         }
 
         return response.getJsonData();
+    }
+    
+    
+    
+
+    public String searchPerson(java.io.InputStream params) {
+        String fields[] = {"identificacion", "nombre_completo","telefono_correo", "fecha_nacimiento"};
+        java.util.Map<String, String> map = new HashMap<>();
+        
+        for (String field : fields) {
+            map.put(field, request.getParameter(field));
+        }
+        return callSelectStoredProcedure("search_person",map,fields);
     }
 
 }

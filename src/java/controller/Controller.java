@@ -919,4 +919,21 @@ public class Controller {
 
     }
     
+    
+    
+    
+    
+
+    
+    
+    @GET
+    @Path("/searchpersons")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String searchPerson(java.io.InputStream params) {
+        String fields[] = {"identificacion", "nombre_completo","telefono_correo", "fecha_nacimiento"};
+        
+        return m.searchPerson(params);
+        //return m.callResultStoredProcedure("search_person", fields, params);
+    }
+    
 }
