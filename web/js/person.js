@@ -237,6 +237,10 @@ function getPersonTextBox(conf) {
 }
 
 function showPersonaDialog(hiddenfield, textfield) {
+    
+    //store_personas.load();
+    
+    
     if (hiddenfield.value !== undefined) {
 
     } else {
@@ -272,20 +276,8 @@ function showPersonaDialog(hiddenfield, textfield) {
                             name: 'nombre_completo',
                             maxLength: 203,
                             enforceMaxLength: true
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Teléfono, correo',
-                            name: 'telefono_correo',
-                            maxLength: 50,
-                            enforceMaxLength: true
-                        }, {
-                            xtype: 'datefield',
-                            fieldLabel: 'Fecha nacimiento',
-                            name: 'fecha_nacimiento',
-                            emptyText: 'dd/mm/aaaa'
                         }
                         ,
-
                         {
                             xtype: 'button',
                             colspan: 2,
@@ -301,14 +293,14 @@ function showPersonaDialog(hiddenfield, textfield) {
                                 var form = this.up('form');
                                 if (!form.isValid()) {
                                 } else {
-                                    //form.mask("Espere");
+                                    form.mask("Espere");
                                     var data = form.getValues();
                                     console.log(data);
                                     
                                     store_personas.load({
                                         params: data,
                                         callback: function(records, operation, success){
-                                            //form.unmask();
+                                            form.unmask();
                                         }
                                     });
                                 }
@@ -320,18 +312,24 @@ function showPersonaDialog(hiddenfield, textfield) {
                 {
                     xtype: 'fieldset',
                     title: 'Resultados de la Búsqueda',
+                    layout: 'fit',
+                    height: 290,
                     items: [
                         {
                             xtype: 'grid',
                             store: store_personas,
-                            height: 250,
-                            width: '100%',
+                            maxHeight: 270,
+                            listeners: {
+                                columnresize: function(ct, column, width, eOpts){
+                                    console.log(width);
+                                }
+                            },
                             columns: [
                                 {hidden: true, dataIndex: 'id_persona'},
-                                {text: 'Nombre', dataIndex: 'nombre'},
-                                {text: 'Fecha Nac', dataIndex: 'fecha_nacimiento'},
-                                {text: 'Teléfono', dataIndex: 'telefono'},
-                                {text: 'Correo', dataIndex: 'email'}  //, ------------------
+                                {text: 'Nombre', dataIndex: 'nombre', width: 250},
+                                {text: 'Fecha Nac', dataIndex: 'fecha_nacimiento', width: 95},
+                                {text: 'Teléfono', dataIndex: 'telefono', width: 85},
+                                {text: 'Correo', dataIndex: 'email', width: 270}  //, ------------------
                                 //{text: 'Identificación', dataIndex: 'identificacion'},
                                 /*{
                                     xtype: 'actioncolumn',
@@ -625,6 +623,15 @@ function showPersonaDialog(hiddenfield, textfield) {
         var vent = Ext.create('Ext.window.Window', {
             title: 'Seleccionar Persona',
             modal: true,
+            layout: 'fit',
+            width: 820,
+            height: 546,
+            closeAction: 'destroy',
+            listeners: {
+                resize: function(ven, width, height, eOpts){
+                    console.log(width+" x "+height);
+                }
+            },
             buttons: [
                 {
                     text: 'Aceptar',
@@ -666,7 +673,7 @@ function showPersonaDialog(hiddenfield, textfield) {
             ],
             items: [
                 tabPanel
-
+//frmBuscaRegistro
             ]
         }).show();
 

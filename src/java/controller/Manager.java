@@ -260,8 +260,8 @@ public class Manager {
     
     
 
-    public String searchPerson(java.io.InputStream params) {
-        String fields[] = {"identificacion", "nombre_completo","telefono_correo", "fecha_nacimiento"};
+    public String searchPerson(String fields[], java.io.InputStream params) {
+        //String fields[] = {"identificacion", "nombre_completo"};
         java.util.Map<String, String> map = new HashMap<>();
         
         for (String field : fields) {
