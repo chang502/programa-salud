@@ -10,10 +10,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="styles/style.css" rel="stylesheet" type="text/css"/>
-        <!-- 
-        <link href="js/ext-6.2.0/build/modern/theme-material/resources/theme-material-all.css" rel="stylesheet" type="text/css"/>
-        <script src="js/ext-6.2.0/build/ext-modern-all.js" type="text/javascript"></script>
-        <script src="js/ext-6.2.0/build/modern/theme-material/theme-material.js" type="text/javascript"></script>-->
         <link href="js/ext-6.2.0/build/classic/theme-neptune/resources/theme-neptune-all.css" rel="stylesheet" type="text/css"/>
         <script src="js/ext-6.2.0/build/ext-all.js" type="text/javascript"></script>
         <script src="js/ext-6.2.0/build/classic/locale/locale-es.js" type="text/javascript"></script>

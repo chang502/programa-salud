@@ -104,7 +104,6 @@ Ext.onReady(function () {
             }
         ]
     });
-    console.log(panel.items.items[0].items.items[0]);
     panel.items.items[0].items.items[0].focus();
     
     

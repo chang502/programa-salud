@@ -91,91 +91,91 @@ function editRec(rec) {
                             allowBlank: false,
                             hideTrigger: true,
                             value: resultado.data[0].limite
-                        },
-                        {
-                            xtype: 'fieldset',
-                            colspan: 2,
-                            title: 'Persona encargada',
-                            layout: {
-                                type: 'table',
-                                columns: 2
-                            },
-                            padding: '5 5 5 5',
-                            defaults: {
-                                padding: '5 15 5 15',
-                                selectOnFocus: true
-                            },
-                            items: [
-
-                                {
-                                    xtype: 'hidden',
-                                    name: 'id_persona',
-                                    value: resultado.data[0].id_persona
-                                }, {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Primer nombre',
-                                    name: 'primer_nombre',
-                                    allowBlank: false,
-                                    value: resultado.data[0].primer_nombre
-                                }, {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Segundo nombre',
-                                    name: 'segundo_nombre',
-                                    value: resultado.data[0].segundo_nombre
-                                }, {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Primer apellido',
-                                    name: 'primer_apellido',
-                                    allowBlank: false,
-                                    value: resultado.data[0].primer_apellido
-                                }, {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Segundo apellido',
-                                    name: 'segundo_apellido',
-                                    value: resultado.data[0].segundo_apellido
-                                }, {
-                                    xtype: 'datefield',
-                                    fieldLabel: 'Fecha nacimiento',
-                                    name: 'fecha_nacimiento',
-                                    emptyText: 'dd/mm/aaaa',
-                                    allowBlank: false,
-                                    value: resultado.data[0].fecha_nacimiento
-                                }, {
-                                    xtype: 'combo',
-                                    fieldLabel: 'Sexo',
-                                    name: 'sexo',
-                                    allowBlank: false,
-                                    store: {
-                                        fields: ['id', 'value'],
-                                        data: [
-                                            {"id": 'm', "value": "Masculino"},
-                                            {"id": 'f', "value": "Femenino"}
-                                        ]
-                                    },
-                                    queryMode: 'local',
-                                    displayField: 'value',
-                                    valueField: 'id',
-                                    value: resultado.data[0].sexo
-                                }, {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Correo',
-                                    name: 'email',
-                                    vtype: 'email',
-                                    value: resultado.data[0].email
-                                }, {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Teléfono',
-                                    name: 'telefono',
-                                    maxLength: 8,
-                                    enforceMaxLength: true,
-                                    minLength: 8,
-                                    value: resultado.data[0].telefono,
-                                    maskRe: /[0-9]/
-                                }
-
-
-                            ]
-                        }
+                        }, getPersonTextBox({label: 'asdf'})
+                                /*{
+                                 xtype: 'fieldset',
+                                 colspan: 2,
+                                 title: 'Persona encargada',
+                                 layout: {
+                                 type: 'table',
+                                 columns: 2
+                                 },
+                                 padding: '5 5 5 5',
+                                 defaults: {
+                                 padding: '5 15 5 15',
+                                 selectOnFocus: true
+                                 },
+                                 items: [
+                                 
+                                 {
+                                 xtype: 'hidden',
+                                 name: 'id_persona',
+                                 value: resultado.data[0].id_persona
+                                 }, {
+                                 xtype: 'textfield',
+                                 fieldLabel: 'Primer nombre',
+                                 name: 'primer_nombre',
+                                 allowBlank: false,
+                                 value: resultado.data[0].primer_nombre
+                                 }, {
+                                 xtype: 'textfield',
+                                 fieldLabel: 'Segundo nombre',
+                                 name: 'segundo_nombre',
+                                 value: resultado.data[0].segundo_nombre
+                                 }, {
+                                 xtype: 'textfield',
+                                 fieldLabel: 'Primer apellido',
+                                 name: 'primer_apellido',
+                                 allowBlank: false,
+                                 value: resultado.data[0].primer_apellido
+                                 }, {
+                                 xtype: 'textfield',
+                                 fieldLabel: 'Segundo apellido',
+                                 name: 'segundo_apellido',
+                                 value: resultado.data[0].segundo_apellido
+                                 }, {
+                                 xtype: 'datefield',
+                                 fieldLabel: 'Fecha nacimiento',
+                                 name: 'fecha_nacimiento',
+                                 emptyText: 'dd/mm/aaaa',
+                                 allowBlank: false,
+                                 value: resultado.data[0].fecha_nacimiento
+                                 }, {
+                                 xtype: 'combo',
+                                 fieldLabel: 'Sexo',
+                                 name: 'sexo',
+                                 allowBlank: false,
+                                 store: {
+                                 fields: ['id', 'value'],
+                                 data: [
+                                 {"id": 'm', "value": "Masculino"},
+                                 {"id": 'f', "value": "Femenino"}
+                                 ]
+                                 },
+                                 queryMode: 'local',
+                                 displayField: 'value',
+                                 valueField: 'id',
+                                 value: resultado.data[0].sexo
+                                 }, {
+                                 xtype: 'textfield',
+                                 fieldLabel: 'Correo',
+                                 name: 'email',
+                                 vtype: 'email',
+                                 value: resultado.data[0].email
+                                 }, {
+                                 xtype: 'textfield',
+                                 fieldLabel: 'Teléfono',
+                                 name: 'telefono',
+                                 maxLength: 8,
+                                 enforceMaxLength: true,
+                                 minLength: 8,
+                                 value: resultado.data[0].telefono,
+                                 maskRe: /[0-9]/
+                                 }
+                                 
+                                 
+                                 ]
+                                 }*/
 
 
                     ]
@@ -339,19 +339,68 @@ Ext.onReady(function () {
                         hideTrigger: true
                     }, {
                         xtype: 'fieldset',
-                        colspan: 2,
-                        title: 'Persona encargada',
-                        layout: {
-                            type: 'table',
-                            columns: 2
-                        },
-                        padding: '5 5 5 5',
+                        title: 'Días',
+                        defaultType: 'checkboxfield',
+                        //height: 300,
+                        items: [
+                            {
+                                boxLabel: 'Lunes',
+                                name: 'dia1',
+                                inputValue: '1',
+                                id: 'checkbox1'
+                            }, {
+                                boxLabel: 'Martes',
+                                name: 'dia2',
+                                inputValue: '2',
+                                id: 'checkbox2'
+                            }, {
+                                boxLabel: 'Miércoles',
+                                name: 'dia3',
+                                inputValue: '3',
+                                id: 'checkbox3'
+                            }, {
+                                boxLabel: 'Jueves',
+                                name: 'dia4',
+                                inputValue: '4',
+                                id: 'checkbox4'
+                            }, {
+                                boxLabel: 'Viernes',
+                                name: 'dia5',
+                                inputValue: '5',
+                                id: 'checkbox5'
+                            }, {
+                                boxLabel: 'Sábado',
+                                name: 'dia6',
+                                inputValue: '6',
+                                id: 'checkbox6'
+                            }
+                        ]
+                    },{
+                        xtype: 'panel',
                         defaults: {
-                            padding: '5 15 5 15',
+                            padding: '15 5 25 15',
                             selectOnFocus: true
                         },
-                        items: getCreatePerson()
+                        items: [
+                            {
+                                xtype: 'timefield',
+                                fieldLabel: 'Hora Inicio',
+                                format: 'H:i',
+                                minValue: '06:00',
+                                maxValue: '20:00',
+                                increment: 10
+                            },{
+                                xtype: 'timefield',
+                                fieldLabel: 'Hora Fin',
+                                format: 'H:i',
+                                minValue: '06:00',
+                                maxValue: '20:00',
+                                increment: 10
+                            }
+                        ]
                     }
+                    ,
+                    getPersonTextBox({colspan: 2})
                     ,
                     {
                         xtype: 'container',

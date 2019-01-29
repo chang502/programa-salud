@@ -62,7 +62,7 @@ function createTooltip(message, component, isField) {
 
 function getCreatePersonPanel() {
     store_tipos_documento.load();
-
+    
 
     return Ext.create({
         xtype: 'form',
@@ -200,6 +200,7 @@ function getCreatePerson() {
 
 
 function getPersonTextBox(conf) {
+    store_tipos_documento.load();
     var panel = Ext.create({
         xtype: 'panel',
         layout: 'hbox',
@@ -233,6 +234,7 @@ function getPersonTextBox(conf) {
             }
         ]
     });
+    Ext.apply(panel,conf);
     return panel;
 }
 
@@ -241,9 +243,9 @@ function showPersonaDialog(hiddenfield, textfield) {
     //store_personas.load();
     
     
-    if (hiddenfield.value !== undefined) {
+    //if (hiddenfield.value !== undefined) {
 
-    } else {
+    //} else {
 
 
         var frmBuscaRegistro = Ext.create({
@@ -269,10 +271,14 @@ function showPersonaDialog(hiddenfield, textfield) {
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Identificación',
+                            emptyText: 'CUI o Carnet',
+                            submitEmptyText: false,
                             name: 'identificacion'
                         }, {
                             xtype: 'textfield',
-                            fieldLabel: 'Nombres o apellidos',
+                            fieldLabel: 'Nombre',
+                            emptyText: 'Nombre(s) y/o Apellido(s)',
+                            submitEmptyText: false,
                             name: 'nombre_completo',
                             maxLength: 203,
                             enforceMaxLength: true
@@ -295,7 +301,6 @@ function showPersonaDialog(hiddenfield, textfield) {
                                 } else {
                                     form.mask("Espere");
                                     var data = form.getValues();
-                                    console.log(data);
                                     
                                     store_personas.load({
                                         params: data,
@@ -456,6 +461,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                             editable: false,
                             forceSelection: true,
                             valueField: 'id_tipo_documento',
+                            name: 'id_tipo_documento',
                             listeners: {
                                 change: function (cbox, newValue, oldValue, eOpts) {
                                     cbox.allowBlank = false;
@@ -471,6 +477,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                             xtype: 'textfield',
                             colspan: 2,
                             fieldLabel: 'Número',
+                            name: 'numero_documento',
                             listeners: {
                                 change: function (tfield, newValue, oldValue, eOpts) {
                                     if (tfield.getValue() != "") {
@@ -512,6 +519,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                         xtype: 'combo',
                         fieldLabel: 'Tipo Id',
                         store: store_tipos_documento,
+                            name: 'id_tipo_documento',
                         queryMode: 'local',
                         forceSelection: true,
                         disableKeyFilter: true,
@@ -551,6 +559,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                     }, {
                         xtype: 'textfield',
                         fieldLabel: 'Número',
+                            name: 'numero_documento',
                         listeners: {
                             change: function (tfield, newValue, oldValue, eOpts) {
                                 if (tfield.getValue() != "") {
@@ -602,7 +611,7 @@ function showPersonaDialog(hiddenfield, textfield) {
 
         var frmCrear = Ext.create({
             xtype: 'form',
-            title: 'Crear registro',
+            title: 'Crear Registro',
             padding: '10 10 10 10',
             items: [
                 frmCrear_datosPersonales,
@@ -627,44 +636,47 @@ function showPersonaDialog(hiddenfield, textfield) {
             width: 820,
             height: 546,
             closeAction: 'destroy',
-            listeners: {
-                resize: function(ven, width, height, eOpts){
-                    console.log(width+" x "+height);
-                }
-            },
             buttons: [
                 {
                     text: 'Aceptar',
                     handler: function () {
-                        /*console.log(tabPanel.getActiveTab());
-                        if (!tabPanel.getActiveTab().isValid()) {
-
-                        } else {
-                            var data = frmEdit.getValues();
-                            frmEdit.mask("Espere");
+                        var activeTab=tabPanel.getActiveTab();
+                        if (activeTab.title === 'Buscar Persona'){
+                            var grid=activeTab.items.items[1].items.items[0];
+                            if(grid.getSelectionModel().hasSelection()){
+                                var row=grid.getSelectionModel().getSelection()[0];
+                                console.log(row.get('id_persona')+' - '+row.get('nombre'));
+                                hiddenfield.value = row.get('id_persona');
+                                textfield.setValue(row.get('nombre'));
+                                this.up('window').close();
+                            }
+                        }else if (activeTab.title === 'Crear Registro'){
+                            //console.log(activeTab);
+                            var data = activeTab.getValues();
+                            activeTab.mask("Espere");
                             Ext.Ajax.request({
-                                url: 'controller/sdsdsdsdsds',
+                                url: 'controller/createperson',
                                 method: 'POST',
                                 jsonData: data,
                                 success: function (f, g) {
                                     var resultado = eval('(' + f.responseText + ')');
                                     if (resultado.success) {
-                                        frmEdit.unmask();
+                                        activeTab.unmask();
                                         vent.close();
-                                        store_usuarios.load();
+                                        //store_usuarios.load();
                                         Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
 
                                     } else {
-                                        frmEdit.unmask();
+                                        activeTab.unmask();
                                         Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                     }
                                 },
                                 failure: function (f, g) {
-                                    frmEdit.unmask();
+                                    activeTab.unmask();
                                     Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                 }
                             });
-                        }*/
+                        }
                     }
                 },
                 {text: 'Cancelar', handler: function () {
@@ -679,6 +691,6 @@ function showPersonaDialog(hiddenfield, textfield) {
 
 
 
-    }
+    //}
 
 }

@@ -104,7 +104,24 @@ public class Manager {
                     map.put(field, jsonObject.getInt(field) + "");
                 } else if (vt == vt.TRUE || vt == vt.FALSE) {
                     map.put(field, jsonObject.getBoolean(field) + "");
-                } else {
+                } else if(vt== vt.ARRAY){
+                    System.out.println("Es Array!!!!");
+                    JsonArray ja=jsonObject.getJsonArray(field);
+                    for (int j = 0; j < ja.size(); j++) {
+                        
+                        System.out.println("ja: "+j);
+                        JsonValue jsv=ja.get(j);
+                        ValueType vst=jsv.getValueType();
+                        if (vst == vst.NUMBER) {
+                            System.out.println(ja.getInt(j));
+                        } else if (vst == vst.TRUE || vst == vt.FALSE) {
+                            System.out.println(ja.getInt(j));
+                        }else{
+                            System.out.println(ja.getString(j));
+                        }
+                                
+                    }
+                }else {
                     map.put(field, jsonObject.getString(field));
                 }
 
@@ -259,14 +276,66 @@ public class Manager {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public String searchPerson(String fields[], java.io.InputStream params) {
         //String fields[] = {"identificacion", "nombre_completo"};
         java.util.Map<String, String> map = new HashMap<>();
         
-        for (String field : fields) {
-            map.put(field, request.getParameter(field));
+        map.put("identificacion", request.getParameter("identificacion"));
+        map.put("nombre_completo", request.getParameter("nombre_completo").replace(" ", "%"));
+        
+
+        
+        map.put("id_tipo_documento", request.getParameter("id_tipo_documento"));
+        System.out.println("------");
+        System.out.println(map.get("id_tipo_documento"));
+        
+        
+        
+        try {
+                    
+            ResultSet rs = new DBManager().callGetProcedure("get_search_person_count", map, fields);
+            //response.setResultSet(rs);
+            
+            rs.beforeFirst();
+            int person_count = -1;
+            while (rs.next()) {
+                person_count = rs.getInt("result");
+            }
+            
+            if(person_count <= -1){//error
+                
+            }
+            
+            if (person_count == 0){//buscar en CC y CREAR
+                
+            }
+            
+            if (person_count == 1) {//buscar en CC y ACTUALIZAR
+                
+            }
+            
+            // else: 
+
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
         }
+        
+        
         return callSelectStoredProcedure("search_person",map,fields);
     }
 

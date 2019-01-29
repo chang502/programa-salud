@@ -670,6 +670,26 @@ public class Controller {
     
     
     @GET
+    @Path("/studentdocumenttypes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getStudentDocumentTypes() {
+        return m.callSelectStoredProcedure("get_student_document_types");
+    }
+    
+    
+    
+    
+    @GET
+    @Path("/employeedocumenttypes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getEmployeeDocumentTypes() {
+        return m.callSelectStoredProcedure("get_employee_document_types");
+    }
+    
+    
+    
+    
+    @GET
     @Path("/documenttypes")
     @Produces(MediaType.APPLICATION_JSON)
     public String getDocumentTypes() {
@@ -934,6 +954,23 @@ public class Controller {
         
         return m.searchPerson(fields, params);
         //return m.callResultStoredProcedure("search_person", fields, params);
+    }
+    
+    
+    
+    
+    @POST
+    @Path("/createperson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createPerson(java.io.InputStream params) {
+
+        String fields[] = { "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido", "fecha_nacimiento", "sexo", "email", "telefono","id_tipo_documento","numero_documento"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        System.out.println(map.get("numero_documento"));
+        return m.callResultStoredProcedure("create_person", map, fields);
+
     }
     
 }

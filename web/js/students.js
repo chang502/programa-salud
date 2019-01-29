@@ -14,7 +14,7 @@ var store_tipos_documento = Ext.create('Ext.data.Store', {
     fields: ['id_tipo_documento', 'nombre'],
     proxy: {
         type: 'ajax',
-        url: 'controller/documenttypes',
+        url: 'controller/studentdocumenttypes',
         reader: {type: 'json',
             root: 'data'
         }
