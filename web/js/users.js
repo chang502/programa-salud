@@ -66,26 +66,16 @@ function editRec(rec) {
                             inputType: 'password'
                         }, {
                             xtype: 'textfield',
-                            fieldLabel: 'Primer nombre',
-                            value: resultado.data[0].primer_nombre,
+                            fieldLabel: 'Nombres',
+                            value: resultado.data[0].nombre,
                             name: 'primer_nombre',
                             allowBlank: false
                         }, {
                             xtype: 'textfield',
-                            fieldLabel: 'Segundo nombre',
-                            value: resultado.data[0].segundo_nombre,
-                            name: 'segundo_nombre'
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Primer apellido',
-                            value: resultado.data[0].primer_apellido,
+                            fieldLabel: 'Apellidos',
+                            value: resultado.data[0].apellido,
                             name: 'primer_apellido',
                             allowBlank: false
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Segundo apellido',
-                            value: resultado.data[0].segundo_apellido,
-                            name: 'segundo_apellido'
                         }, {
                             xtype: 'datefield',
                             fieldLabel: 'Fecha nacimiento',
@@ -294,22 +284,14 @@ Ext.onReady(function () {
                         allowBlank: false
                     }, {
                         xtype: 'textfield',
-                        fieldLabel: 'Primer nombre',
-                        name: 'primer_nombre',
+                        fieldLabel: 'Nombres',
+                        name: 'nombre',
                         allowBlank: false
                     }, {
                         xtype: 'textfield',
-                        fieldLabel: 'Segundo nombre',
-                        name: 'segundo_nombre'
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Primer apellido',
-                        name: 'primer_apellido',
+                        fieldLabel: 'Apellidos',
+                        name: 'apellido',
                         allowBlank: false
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Segundo apellido',
-                        name: 'segundo_apellido'
                     }, {
                         xtype: 'datefield',
                         fieldLabel: 'Fecha nacimiento',

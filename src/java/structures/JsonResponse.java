@@ -20,12 +20,14 @@ public class JsonResponse {
     private boolean sessionexpired;
     private String message;
     private ResultSet rs;
+    private String payload;
 
     public JsonResponse() {
         this.success = true;
         this.sessionexpired = false;
         this.message = "";
         this.rs = null;
+        this.payload = "";
     }
 
     public void setSuccess(boolean success) {
@@ -46,34 +48,38 @@ public class JsonResponse {
 
         this.rs = dm.getResultSet(str);
     }
-    
-    public void setResultSet(ResultSet result){
-        this.rs=result;
+
+    public void setResultSet(ResultSet result) {
+        this.rs = result;
     }
-    
-    public void callSelectStoredProcedure(String procedure_name){
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public void callSelectStoredProcedure(String procedure_name) {
         try {
-            
+
             DBManager dm = new DBManager();
-            this.rs=dm.callGetProcedure(procedure_name);
+            this.rs = dm.callGetProcedure(procedure_name);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace(System.err);
             this.setSuccess(false);
-            this.setMessage("Ocurrió un error: "+e.getMessage());
+            this.setMessage("Ocurrió un error: " + e.getMessage());
         }
     }
-    
-    public void callSelectStoredProcedure(String procedure_name, java.util.Map<String, String> params, String fields[]){
+
+    public void callSelectStoredProcedure(String procedure_name, java.util.Map<String, String> params, String fields[]) {
         try {
-            
+
             DBManager dm = new DBManager();
-            this.rs=dm.callGetProcedure(procedure_name, params,  fields);
+            this.rs = dm.callGetProcedure(procedure_name, params, fields);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace(System.err);
             this.setSuccess(false);
-            this.setMessage("Ocurrió un error: "+e.getMessage());
+            this.setMessage("Ocurrió un error: " + e.getMessage());
         }
     }
 
@@ -82,31 +88,54 @@ public class JsonResponse {
             DBManager dm = new DBManager();
             java.sql.CallableStatement result = dm.callResultProcedure(operation, map, fields);
 
-            
             this.setSuccess(result.getInt(fields.length + 1) > 0);
-            this.setMessage(result.getString(fields.length+2));
+            this.setMessage(result.getString(fields.length + 2));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace(System.err);
             this.setSuccess(false);
-            this.setMessage("Ocurrió un error: "+e.getMessage());
+            this.setMessage("Ocurrió un error: " + e.getMessage());
         }
 
     }
-    
-    
-    
+
+    public void callResultStoredProcedureWith4Outputs(String operation, java.util.Map<String, String> map, String fields[]) {
+        try {
+            DBManager dm = new DBManager();
+            java.sql.CallableStatement result = dm.callResultProcedureWith4Outputs(operation, map, fields);
+
+            this.setSuccess(result.getInt(fields.length + 1) > 0);
+            this.setMessage(result.getString(fields.length + 2));
+            this.setPayload("{\"id_persona\": "+result.getInt(fields.length+3)+",\"nombre_completo\": \""+result.getString(fields.length+4)+"\"}");
+            
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace(System.err);
+            this.setSuccess(false);
+            this.setMessage("Ocurrió un error: " + e.getMessage());
+        }
+
+    }
 
     public boolean getSuccess() {
         return this.success;
     }
 
     public boolean getSessionExpired() {
+        
         return this.sessionexpired;
     }
 
     public String getMessage() {
         return this.message;
+    }
+
+    public String getPayload() {
+        return this.payload;
+    }
+    
+    public boolean hasPayload(){
+        return this.payload.length()>0;
     }
 
     public String getJsonData() {
@@ -133,12 +162,15 @@ public class JsonResponse {
                         data.append("\"");
                         data.append(md.getColumnLabel(i + 1));
                         data.append("\":");
+
+                        data.append((dtypes[i] == Types.VARCHAR || dtypes[i] == Types.CHAR || dtypes[i] == Types.VARBINARY) ? "\"" : "");
+
                         
-                        data.append((dtypes[i] == Types.VARCHAR || dtypes[i] == Types.CHAR) ? "\"" : "");
+                        //System.out.println(i + " " + md.getColumnName(i + 1) + ": " + dtypes[i] + "\twas null?: " + rs.wasNull());
 
-                        data.append(dtypes[i] == Types.BIT ? rs.getBoolean(i + 1) ? "true" : "false" : rs.getString(i + 1).replaceAll("\"", "\'").replaceAll("\n", "\\\\n"));
+                        data.append(dtypes[i] == Types.BIT ? rs.getBoolean(i + 1) ? "true" : "false" : dtypes[i] == Types.DECIMAL ? ((rs.getLong(i + 1)*0l==0l && rs.wasNull())?"null":rs.getLong(i + 1)): rs.getString(i + 1) != null ? rs.getString(i + 1).replaceAll("\"", "\'").replaceAll("\n", "\\\\n") : "");
 
-                        data.append((dtypes[i] == Types.VARCHAR || dtypes[i] == Types.CHAR) ? "\"" : "");
+                        data.append((dtypes[i] == Types.VARCHAR || dtypes[i] == Types.CHAR || dtypes[i] == Types.VARBINARY) ? "\"" : "");
                         data.append(",");
                     }
                     if (data.length() > 1) {
@@ -180,6 +212,12 @@ public class JsonResponse {
         sb.append("\"message\":\"");
         sb.append(this.getMessage().replaceAll("\"", "\'"));
         sb.append("\",");
+        
+        if(this.hasPayload()){
+            sb.append("\"payload\": ");
+            sb.append(this.getPayload());
+            sb.append(",");
+        }
 
         sb.append("\"rows\":");
         sb.append(rowcount);

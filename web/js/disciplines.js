@@ -91,7 +91,7 @@ function editRec(rec) {
                             allowBlank: false,
                             hideTrigger: true,
                             value: resultado.data[0].limite
-                        }, getPersonTextBox({label: 'asdf'})
+                        }, getPersonTextBox()
                                 /*{
                                  xtype: 'fieldset',
                                  colspan: 2,
@@ -341,37 +341,38 @@ Ext.onReady(function () {
                         xtype: 'fieldset',
                         title: 'Días',
                         defaultType: 'checkboxfield',
-                        //height: 300,
+                        margin: '0 0 5 10',
+                        width: 280,
                         items: [
                             {
                                 boxLabel: 'Lunes',
-                                name: 'dia1',
-                                inputValue: '1',
+                                name: 'flg_lunes',
+                                inputValue: 1,
                                 id: 'checkbox1'
                             }, {
                                 boxLabel: 'Martes',
-                                name: 'dia2',
-                                inputValue: '2',
+                                name: 'flg_martes',
+                                inputValue: 1,
                                 id: 'checkbox2'
                             }, {
                                 boxLabel: 'Miércoles',
-                                name: 'dia3',
-                                inputValue: '3',
+                                name: 'flg_miercoles',
+                                inputValue: 1,
                                 id: 'checkbox3'
                             }, {
                                 boxLabel: 'Jueves',
-                                name: 'dia4',
-                                inputValue: '4',
+                                name: 'flg_jueves',
+                                inputValue: 1,
                                 id: 'checkbox4'
                             }, {
                                 boxLabel: 'Viernes',
-                                name: 'dia5',
-                                inputValue: '5',
+                                name: 'flg_viernes',
+                                inputValue: 1,
                                 id: 'checkbox5'
                             }, {
                                 boxLabel: 'Sábado',
-                                name: 'dia6',
-                                inputValue: '6',
+                                name: 'flg_sabado',
+                                inputValue: 1,
                                 id: 'checkbox6'
                             }
                         ]
@@ -388,19 +389,23 @@ Ext.onReady(function () {
                                 format: 'H:i',
                                 minValue: '06:00',
                                 maxValue: '20:00',
-                                increment: 10
+                                increment: 10,
+                                name: 'hora_inicio'
                             },{
                                 xtype: 'timefield',
                                 fieldLabel: 'Hora Fin',
                                 format: 'H:i',
                                 minValue: '06:00',
                                 maxValue: '20:00',
-                                increment: 10
+                                increment: 10,
+                                name: 'hora_fin'
                             }
                         ]
                     }
                     ,
-                    getPersonTextBox({colspan: 2})
+                    getPersonTextBox({
+                                panelConfig: {padding: '0 0 0 5'}
+                            })
                     ,
                     {
                         xtype: 'container',
@@ -423,7 +428,10 @@ Ext.onReady(function () {
                                     } else {
                                         form.mask("Espere");
                                         var data = form.getValues();
-                                        //console.log(data);
+                                        
+                                        //adding hiddenfield value
+                                        data.id_persona=form.items.items[0].items.items[5].items.items[0].value;
+                                        
                                         Ext.Ajax.request({
                                             url: 'controller/creatediscipline',
                                             method: 'POST',
@@ -462,8 +470,10 @@ Ext.onReady(function () {
                         columns: [
                             {hidden: true, dataIndex: 'id_disciplina'},
                             {text: 'Nombre', dataIndex: 'nombre', width: 200},
-                            {text: 'Límite', dataIndex: 'limite', width: 150},
-                            {text: 'Nombre Encargado', dataIndex: 'nombre_encargado', width: 250},
+                            {text: 'Límite/Asignados/Disponibles', dataIndex: 'resumen_cantidad', width: 150},
+                            {text: 'Días', dataIndex: 'dias', width: 150},
+                            {text: 'Horas', dataIndex: 'horas', width: 90},
+                            {text: 'Nombre Encargado', dataIndex: 'nombre_completo', width: 250},
                             {text: 'Semestre', dataIndex: 'semestre'},
                             {
                                 xtype: 'actioncolumn',

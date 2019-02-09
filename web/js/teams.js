@@ -17,6 +17,18 @@ var store_selecciones = Ext.create('Ext.data.Store', {
 });
 
 
+var store_seleccion_personas = Ext.create('Ext.data.Store', {
+    fields: ['id_seleccion_persona', 'id_seleccion', 'id_persona', 'fecha_inicio', 'fecha_fin', 'nombre_seleccion', 'nombre_persona'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/teampersons',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
+
 var store_tipos_documento = Ext.create('Ext.data.Store', {
     fields: ['id_tipo_documento', 'nombre'],
     proxy: {
@@ -256,9 +268,9 @@ function deleteRec(rec) {
                     }
                 });
             } else if (btn === 'no') {
-                
+
             } else {
-                
+
             }
         }
     });
@@ -268,6 +280,8 @@ function deleteRec(rec) {
 
 
 Ext.onReady(function () {
+    
+    store_seleccion_personas.load();
 
     store_selecciones.load();
     store_tipos_documento.load();
@@ -411,110 +425,135 @@ Ext.onReady(function () {
                         ]
                     }]
             }, {
-                xtype: 'fieldset',
-                title: 'Integrantes',
-                layout: {
-                    type: 'table',
-                    columns: 2
-                },
-                padding: '5 5 5 5',
-                defaults: {
-                    padding: '5 15 5 15'
-                },
+                xtype: 'form',
                 items: [
                     {
-                        xtype: 'combo',
-                        fieldLabel: 'Selección',
-                        store: store_selecciones,
-                        queryMode: 'local',
-                        displayField: 'nombre',
-                        valueField: 'id_seleccion'
-                    }, 
-                    getPersonTextBox({label:'asdf'})
-                    ,{
-                        xtype: 'combo',
-                        fieldLabel: 'Tipo Persona',
-                        store: store_tipos_persona,
-                        queryMode: 'local',
-                        displayField: 'nombre',
-                        valueField: 'id_tipo_persona'
-                    }, {
-                        xtype: 'combo',
-                        fieldLabel: 'Tipo Identificación',
-                        store: store_tipos_documento,
-                        queryMode: 'local',
-                        displayField: 'nombre',
-                        valueField: 'id_tipo_documento'
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Identificación'
-                    }, {
-                        xtype: 'datefield',
-                        fieldLabel: 'Fecha inicio'
-                    }, {
-                        xtype: 'datefield',
-                        fieldLabel: 'Fecha fin'
-                    },
-                    {
-                        xtype: 'container',
-                        colspan: 2,
-                        pack: 'end',
+                        xtype: 'fieldset',
+                        title: 'Integrantes',
                         layout: {
-                            type: 'hbox',
-                            pack: 'end'
+                            type: 'table',
+                            columns: 2
+                        },
+                        padding: '5 5 5 5',
+                        defaults: {
+                            padding: '5 15 5 15'
                         },
                         items: [
                             {
-                                xtype: 'button',
-                                text: 'Agregar',
-                                anchor: '-50%'
-                            }
-                        ]
-                    }, {
-                        xtype: 'grid',
-                        colspan: 2,
-                        store: {
-                            fields: ['seleccion', 'cui', 'nombre', 'carrera', 'fechaInicio', 'fechaFin'],
-                            data: [
-                                {'seleccion': 'Text', 'cui': 'Text', 'nombre': 'Text', 'carrera': 'Text', 'fechaInicio': 'Text', 'fechaFin': 'Text'},
-                                {'seleccion': 'Text', 'cui': 'Text', 'nombre': 'Text', 'carrera': 'Text', 'fechaInicio': 'Text', 'fechaFin': 'Text'},
-                                {'seleccion': 'Text', 'cui': 'Text', 'nombre': 'Text', 'carrera': 'Text', 'fechaInicio': 'Text', 'fechaFin': 'Text'},
-                                {'seleccion': 'Text', 'cui': 'Text', 'nombre': 'Text', 'carrera': 'Text', 'fechaInicio': 'Text', 'fechaFin': 'Text'},
-                                {'seleccion': 'Text', 'cui': 'Text', 'nombre': 'Text', 'carrera': 'Text', 'fechaInicio': 'Text', 'fechaFin': 'Text'}
-                            ]
-                        },
-
-                        columns: [
-                            {text: 'Selección', dataIndex: 'seleccion'},
-                            {text: 'CUI', dataIndex: 'cui'},
-                            {text: 'Nombre', dataIndex: 'nombre'},
-                            {text: 'Carrera', dataIndex: 'carrera'},
-                            {text: 'Fecha Inicio', dataIndex: 'fechaInicio'},
-                            {text: 'Fecha Fin', dataIndex: 'fechaFin'},
+                                xtype: 'combo',
+                                fieldLabel: 'Selección',
+                                store: store_selecciones,
+                                queryMode: 'local',
+                                displayField: 'nombre',
+                                valueField: 'id_seleccion',
+                                name: 'id_seleccion',
+                                allowBlank: false
+                            },
+                            getPersonTextBox({
+                                panelConfig: {padding: '0 0 0 15'}
+                            })
+                            , {
+                                xtype: 'datefield',
+                                fieldLabel: 'Fecha inicio',
+                                name: 'fecha_inicio',
+                                allowBlank: false
+                            }, {
+                                xtype: 'datefield',
+                                fieldLabel: 'Fecha fin',
+                                name: 'fecha_fin',
+                                allowBlank: false
+                            },
                             {
-                                xtype: 'actioncolumn',
-                                text: 'Acciones',
-                                width: 100,
-                                items: [{
-                                        icon: 'images/icons/page_edit.png',
-                                        tooltip: 'Editar registro',
-                                        handler: function (grid, rowIndex, colIndex) {
-                                            var rec = grid.getStore().getAt(rowIndex).get('idUsuario');
-                                            editSubRec(rec);
+                                xtype: 'container',
+                                colspan: 2,
+                                pack: 'end',
+                                layout: {
+                                    type: 'hbox',
+                                    pack: 'end'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'button',
+                                        text: 'Agregar',
+                                        anchor: '-50%',
+                                        handler: function () {
+                                            var form = this.up('form');
+                                            if (!form.isValid()) {
+                                            } else {
+                                                form.mask("Espere");
+                                                var data = form.getValues();
+                                                data.id_persona = form.items.items[0].items.items[1].items.items[0].value;
+                                                //console.log(data);
+                                                Ext.Ajax.request({
+                                                    url: 'controller/createteamperson',
+                                                    method: 'POST',
+                                                    jsonData: data,
+                                                    success: function (f, g) {
+                                                        form.unmask();
+                                                        var resultado = eval('(' + f.responseText + ')');
+                                                        if (resultado.success) {
+                                                            Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
+                                                            console.log(form);
+                                                            for (var i = 1; i < form.items.items.length; i++) {
+                                                                form.items.items[0].items.items[i].reset();
+                                                            }
+                                                            store_seleccion_personas.load({
+                                                                params:{
+                                                                    id_seleccion: data.id_seleccion
+                                                                }
+                                                            });
+                                                            //store_selecciones.load();
+                                                        } else {
+                                                            Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                        }
+                                                    },
+                                                    failure: function (f, g) {
+                                                        form.unmask();
+                                                        Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                    }
+                                                });
+                                            }
                                         }
-                                    }, {
-                                        icon: 'images/icons/cross.png',
-                                        tooltip: 'Eliminar registro',
-                                        handler: function (grid, rowIndex, colIndex) {
-                                            var rec = grid.getStore().getAt(rowIndex).get('idUsuario');
-                                            deleteRec(rec);
-                                        }
-                                    }]
-                            }
-                        ],
-                        height: 250
-                    }
+                                    }
+                                ]
+                            }, {
+                                xtype: 'grid',
+                                colspan: 2,
+                                store: store_seleccion_personas,
 
+                                columns: [
+                                    {text: 'Selección', dataIndex: 'nombre_seleccion'},
+                                    //{text: 'CUI', dataIndex: 'cui'},
+                                    {text: 'Nombre', dataIndex: 'nombre_persona'},
+                                    //{text: 'Carrera', dataIndex: 'carrera'},
+                                    {text: 'Fecha Inicio', dataIndex: 'fecha_inicio'},
+                                    {text: 'Fecha Fin', dataIndex: 'fecha_fin'},
+                                    {
+                                        xtype: 'actioncolumn',
+                                        text: 'Acciones',
+                                        width: 100,
+                                        items: [{
+                                                icon: 'images/icons/page_edit.png',
+                                                tooltip: 'Editar registro',
+                                                handler: function (grid, rowIndex, colIndex) {
+                                                    var rec = grid.getStore().getAt(rowIndex).get('idUsuario');
+                                                    editSubRec(rec);
+                                                }
+                                            }, {
+                                                icon: 'images/icons/cross.png',
+                                                tooltip: 'Eliminar registro',
+                                                handler: function (grid, rowIndex, colIndex) {
+                                                    var rec = grid.getStore().getAt(rowIndex).get('idUsuario');
+                                                    deleteRec(rec);
+                                                }
+                                            }]
+                                    }
+                                ],
+                                height: 250
+                            }
+
+                        ]
+                    }
                 ]
             }
         ]

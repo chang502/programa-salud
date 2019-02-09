@@ -74,7 +74,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String createuser(java.io.InputStream params) {
 
-        String fields[] = {"id_usuario", "clave", "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido", "fecha_nacimiento", "sexo", "email", "telefono"};
+        String fields[] = {"id_usuario", "clave", "nombre", "apellido", "primer_apellido", "segundo_apellido", "fecha_nacimiento", "sexo", "email", "telefono"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
         map.replace("clave", m.toPassword(map.get("clave")));
@@ -452,9 +452,17 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String createDiscipline(java.io.InputStream params) {
 
-        String fields[] = {"nombre","limite", "semestre","primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido", "fecha_nacimiento", "sexo", "email", "telefono"};
+        String fields[] = {"semestre","nombre","limite","flg_lunes", "flg_martes", "flg_miercoles", "flg_jueves", "flg_viernes", "flg_sabado", "hora_inicio", "hora_fin", "id_persona"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
+        
+        String tmp;
+        for (int i =3; i < 9; i++) {
+            String field = fields[i];
+            tmp=map.remove(field);
+            map.put(field, tmp!=null?"1":"0");
+        }
+        
         return m.callResultStoredProcedure("create_discipline", map, fields);
 
     }
@@ -965,12 +973,90 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String createPerson(java.io.InputStream params) {
 
-        String fields[] = { "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido", "fecha_nacimiento", "sexo", "email", "telefono","id_tipo_documento","numero_documento"};
+        String fields[] = { "nombre", "apellido", "fecha_nacimiento", "sexo", "email", "telefono", "cui", "nov", "regpersonal", "carnet"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
-        System.out.println(map.get("numero_documento"));
-        return m.callResultStoredProcedure("create_person", map, fields);
+        
+        return m.callResultStoredProcedureWith4Outputs("create_person", map, fields);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @POST
+    @Path("/createteamperson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createTeamPerson(java.io.InputStream params) {
+
+        String fields[] = {"id_seleccion", "id_persona", "fecha_inicio", "fecha_fin"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("create_team_person", map, fields);
 
     }
+    
+    
+    @GET
+    @Path("/teampersons")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTeamPerson() {
+        return m.callSelectStoredProcedure("get_team_persons");
+    }
+    
+    
+    
+    @GET
+    @Path("/teampersons/{id_bebedero}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTeamPerson(@PathParam("id_seleccion_persona") String id_seleccion_persona) {
+        String fields[] = {"id_seleccion_persona"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_seleccion_persona", id_seleccion_persona);
+        
+        return m.callSelectStoredProcedure("get_team_person",map,fields);
+    }
+    
+    
+
+    
+    
+    @POST
+    @Path("/updateteamperson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateTeamPerson(java.io.InputStream params) {
+
+        String fields[] = {"id_seleccion_persona", "id_seleccion", "id_persona", "fecha_inicio", "fecha_fin"};
+        return m.callResultStoredProcedure("update_team_person", fields, params);
+
+    }
+
+    
+    
+    @POST
+    @Path("/deleteteamperson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteTeamPerson(java.io.InputStream params) {
+
+        String fields[] = {"id_seleccion_persona"};
+        return m.callResultStoredProcedure("delete_team_person", fields, params);
+
+    }
+    
+    
     
 }

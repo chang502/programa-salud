@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     if(session != null && session.getAttribute("id_usuario")!=null){
-       String nombre = (String) session.getAttribute("id_usuario"); //response.sendRedirect("login.jsp");
+       String nombre_completo = (String) session.getAttribute("id_usuario"); //response.sendRedirect("login.jsp");
     
 %><div id="cssmenu">
     <ul>
@@ -65,7 +65,7 @@
         <% } %>
         <li class="has-sub last"><a href="#"><span>Cuenta</span></a>
             <ul>
-                <li><a href="#"><span><%= nombre%></span></a></li>
+                <li><a href="#"><span><%= nombre_completo%></span></a></li>
                 <li><a href="changepassword.jsp"><span>Cambiar Contraseña</span></a></li>
                 <li class="last"><a href="logout.jsp"><span>Cerrar Sesión</span></a></li>
             </ul>

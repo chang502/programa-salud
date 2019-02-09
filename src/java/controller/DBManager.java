@@ -140,4 +140,35 @@ public class DBManager {
 
     }
     
+    
+
+    public CallableStatement callResultProcedureWith4Outputs(String procedure, java.util.Map<String, String> params, String fields[]) throws Exception {
+
+        String param_list = "";
+        for (int i = 0; i < fields.length; i++) {
+            param_list += "?,";
+        }
+
+        if (fields.length > 0) {
+            param_list = param_list.substring(0, param_list.length() - 1);
+        }
+
+        String query = "{ call " + procedure + "(" + param_list + ",?,?,?,?) }";//2 parámetros más para el id y el mensaje
+        
+        CallableStatement stmt = conn.prepareCall(query);
+
+        for (int i = 0; i < fields.length; i++) {
+            stmt.setString(i + 1, params.get(fields[i]));
+        }
+        stmt.registerOutParameter(fields.length + 1, java.sql.Types.INTEGER);//"o_result"
+        stmt.registerOutParameter(fields.length + 2, java.sql.Types.VARCHAR);//"o_mensaje"
+        stmt.registerOutParameter(fields.length + 3, java.sql.Types.INTEGER);//"o_id_persona"
+        stmt.registerOutParameter(fields.length + 4, java.sql.Types.VARCHAR);//"o_nombre_completo"
+
+        stmt.executeUpdate();
+
+        return stmt;
+
+    }
+    
 }
