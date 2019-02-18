@@ -74,7 +74,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String createuser(java.io.InputStream params) {
 
-        String fields[] = {"id_usuario", "clave", "nombre", "apellido", "primer_apellido", "segundo_apellido", "fecha_nacimiento", "sexo", "email", "telefono"};
+        String fields[] = {"id_usuario", "clave", "id_persona"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
         map.replace("clave", m.toPassword(map.get("clave")));
@@ -109,7 +109,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String updateUser(java.io.InputStream params) {
 
-        String fields[] = {"id_usuario", "clave", "primer_nombre", "segundo_nombre", "primer_apellido", "segundo_apellido", "fecha_nacimiento", "sexo", "email", "telefono", "cambiar_clave"};
+        String fields[] = {"id_usuario", "clave", "id_persona", "cambiar_clave"};
         java.util.Map<String, String> map = m.createMap(fields, params);
         
         if(map.get("clave").length()>0){
@@ -1012,14 +1012,14 @@ public class Controller {
     @GET
     @Path("/teampersons")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getTeamPerson() {
+    public String getTeamPersons() {
         return m.callSelectStoredProcedure("get_team_persons");
     }
     
     
     
     @GET
-    @Path("/teampersons/{id_bebedero}")
+    @Path("/teampersons/{id_seleccion_persona}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getTeamPerson(@PathParam("id_seleccion_persona") String id_seleccion_persona) {
         String fields[] = {"id_seleccion_persona"};
@@ -1032,7 +1032,7 @@ public class Controller {
     
 
     
-    
+    /*
     @POST
     @Path("/updateteamperson")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -1042,7 +1042,7 @@ public class Controller {
         String fields[] = {"id_seleccion_persona", "id_seleccion", "id_persona", "fecha_inicio", "fecha_fin"};
         return m.callResultStoredProcedure("update_team_person", fields, params);
 
-    }
+    }*/
 
     
     
@@ -1056,6 +1056,413 @@ public class Controller {
         return m.callResultStoredProcedure("delete_team_person", fields, params);
 
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @POST
+    @Path("/createtraining")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createTraining(java.io.InputStream params) {
+
+        String fields[] = {"nombre", "descripcion", "tipo_capacitacion", "estado", "fecha_inicio", "fecha_fin"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("create_training", map, fields);
+
+    }
+    
+    
+    @GET
+    @Path("/trainings")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTrainings() {
+        return m.callSelectStoredProcedure("get_trainings");
+    }
+    
+    
+    
+    @GET
+    @Path("/trainings/{id_capacitacion}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTraining(@PathParam("id_capacitacion") String id_capacitacion) {
+        String fields[] = {"id_capacitacion"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_capacitacion", id_capacitacion);
+        
+        return m.callSelectStoredProcedure("get_training",map,fields);
+    }
+    
+    
+
+    
+    
+    @POST
+    @Path("/updatetraining")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateTraining(java.io.InputStream params) {
+
+        String fields[] = {"id_capacitacion", "nombre", "descripcion", "tipo_capacitacion", "estado", "fecha_inicio", "fecha_fin"};
+        return m.callResultStoredProcedure("update_training", fields, params);
+
+    }
+
+    
+    
+    @POST
+    @Path("/deletetraining")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteTraining(java.io.InputStream params) {
+
+        String fields[] = {"id_capacitacion"};
+        return m.callResultStoredProcedure("delete_training", fields, params);
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @POST
+    @Path("/createtrainingattendee")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createTrainingAttendee(java.io.InputStream params) {
+
+        String fields[] = {"id_capacitacion", "id_persona"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("create_training_attendee", map, fields);
+
+    }
+    
+    
+    @GET
+    @Path("/trainingattendees")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTrainingAttendees() {
+        return m.callSelectStoredProcedure("get_training_attendees");
+    }
+    
+    
+    
+    @GET
+    @Path("/trainingattendees/{id_capacitacion_persona}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTrainingAttendee(@PathParam("id_capacitacion_persona") String id_capacitacion_persona) {
+        String fields[] = {"id_capacitacion_persona"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_capacitacion_persona", id_capacitacion_persona);
+        
+        return m.callSelectStoredProcedure("get_training_attendee",map,fields);
+    }
+    
+    
+
+    
+    /*
+    @POST
+    @Path("/updatetrainingattendee")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateTrainingAttendee(java.io.InputStream params) {
+
+        String fields[] = {"id_capacitacion", "nombre", "descripcion", "tipo_capacitacion", "estado", "fecha_inicio", "fecha_fin"};
+        return m.callResultStoredProcedure("update_training_attendee", fields, params);
+
+    }*/
+
+    
+    
+    @POST
+    @Path("/deletetrainingattendee")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteTrainingAttendee(java.io.InputStream params) {
+
+        String fields[] = {"id_capacitacion_persona"};
+        return m.callResultStoredProcedure("delete_training_attendee", fields, params);
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    @GET
+    @Path("/userclinics")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getuserclinics() {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        return m.callSelectStoredProcedure("get_user_clinics",map,fields);
+    }
+    
+    
+    
+    
+
+    @GET
+    @Path("/userdoctors")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getuserdoctors() {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        return m.callSelectStoredProcedure("get_user_doctors",map,fields);
+    }
+    
+
+    
+    
+    
+    
+
+    
+    
+    @POST
+    @Path("/personemail")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getPersonEmail(java.io.InputStream params) {
+
+        String fields[] = {"id_persona"};
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callSelectStoredProcedure("get_person_email", map, fields);
+
+    }
+    
+    
+    
+    
+    
+    @POST
+    @Path("/createappointment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_clinica", "id_persona", "id_doctor", "fecha", "hora", "sintoma", "email"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        
+        structures.JsonResponse response=m.getResponse();
+        
+        if (!response.setSessionExpired(m.isSessionExpired())) {
+            response.callResultStoredProcedure("schedule_appointment", map, fields);
+        }
+        
+        System.out.println("id_cita: "+response.getIdInsert());
+        
+        
+        
+        return response.getJsonData();
+
+    }
+    
+    
+
+    @GET
+    @Path("/todaysappointments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTodaysAppointments() {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        return m.callSelectStoredProcedure("get_todays_appointments",map,fields);
+    }
+    
+    
+
+    @GET
+    @Path("/futureappointments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getFutureAppointments() {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        return m.callSelectStoredProcedure("get_future_appointments",map,fields);
+    }
+    
+    
+    
+    
+    
+    
+    
+    @GET
+    @Path("/appointments/{id_cita}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAppointment(@PathParam("id_cita") String id_cita) {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_cita","id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_cita", id_cita);
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_appointment",map,fields);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    @POST
+    @Path("/updateappointment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_cita", "id_clinica", "id_doctor", "fecha", "hora", "sintoma"};
+        return m.callResultStoredProcedure("update_appointment", fields, params);
+
+    }
+    
+
+    
+    
+    @POST
+    @Path("/deleteappointment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_cita"};
+        return m.callResultStoredProcedure("delete_appointment", fields, params);
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @GET
+    @Path("/appointmentmeasurements/{id_cita}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAppointmentMeasurements(@PathParam("id_cita") String id_cita) {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_cita","id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_cita", id_cita);
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_appointment_measurements",map,fields);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

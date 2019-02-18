@@ -33,7 +33,7 @@ var tiposDato = Ext.create('Ext.data.Store', {
 
 
 var store_clinica_doctores = Ext.create('Ext.data.Store', {
-    fields: ['id_clinica_doctor', 'nombre', 'activo'],
+    fields: ['id_clinica_doctor', 'nombre_completo', 'activo'],
     proxy: {
         type: 'ajax',
         //url: 'controller/users',
@@ -500,7 +500,7 @@ Ext.onReady(function () {
                                     }
                                 }
                             },
-                            {text: 'Nombre', dataIndex: 'nombre', width: 250}
+                            {text: 'Nombre', dataIndex: 'nombre_completo', width: 250}
                         ]
                     }
                 ]

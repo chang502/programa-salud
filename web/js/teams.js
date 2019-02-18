@@ -177,69 +177,6 @@ function editRec(rec) {
 
 
 
-function editSubRec(rec) {
-    Ext.create('Ext.window.Window', {
-        title: 'Editar Registro',
-        //height: 400,
-        //width: 580,
-        padding: '5 5 5 5',
-        defaults: {
-            padding: '5 15 5 15'
-        },
-        modal: true,
-        layout: {
-            type: 'table',
-            columns: 2
-        },
-        buttons: [
-            {text: 'Aceptar'},
-            {text: 'Cancelar', handler: function () {
-                    this.up('window').close();
-                }}
-        ],
-        items: [
-            {
-                xtype: 'combo',
-                fieldLabel: 'Selección',
-                store: selecciones,
-                queryMode: 'local',
-                displayField: 'nombre',
-                valueField: 'idSeleccion'
-            }, {
-                xtype: 'combo',
-                fieldLabel: 'Tipo Persona',
-                store: {
-                    fields: ['tipoPersona', 'nombre'],
-                    data: [
-                        {"tipoPersona": "estudiante", "nombre": "Estudiante"},
-                        {"tipoPersona": "personalDocente", "nombre": "Personal Docente"},
-                        {"tipoPersona": "personalAdministrativo", "nombre": "Personal Administrativo"}
-                    ]
-                },
-                queryMode: 'local',
-                displayField: 'nombre',
-                valueField: 'tipoPersona'
-            }, {
-                xtype: 'combo',
-                fieldLabel: 'Tipo Identificación',
-                store: tiposDoc,
-                queryMode: 'local',
-                displayField: 'nombre',
-                valueField: 'tipoDocumento'
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Identificación'
-            }, {
-                xtype: 'datefield',
-                fieldLabel: 'Fecha inicio'
-            }, {
-                xtype: 'datefield',
-                fieldLabel: 'Fecha fin'
-            }
-        ]
-    }).show();
-}
-
 
 
 function deleteRec(rec) {
@@ -259,6 +196,44 @@ function deleteRec(rec) {
                         if (resultado.success) {
                             Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
                             store_selecciones.load();
+                        } else {
+                            Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                        }
+                    },
+                    failure: function (response, opts) {
+                        Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                    }
+                });
+            } else if (btn === 'no') {
+
+            } else {
+
+            }
+        }
+    });
+}
+
+
+
+
+
+function deleteSubRec(rec) {
+    Ext.Msg.show({
+        title: 'Eliminar Registro',
+        message: '¿Está seguro de eliminar el registro?',
+        buttons: Ext.Msg.YESNO,
+        icon: Ext.Msg.QUESTION,
+        fn: function (btn) {
+            if (btn === 'yes') {
+                Ext.Ajax.request({
+                    url: 'controller/deleteteamperson',
+                    method: 'POST',
+                    jsonData: '{"id_seleccion_persona": "' + rec + '"}',
+                    success: function (f, opts) {
+                        var resultado = eval('(' + f.responseText + ')');
+                        if (resultado.success) {
+                            Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
+                            store_seleccion_personas.load();
                         } else {
                             Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                         }
@@ -461,7 +436,7 @@ Ext.onReady(function () {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha fin',
                                 name: 'fecha_fin',
-                                allowBlank: false
+                                allowBlank: true
                             },
                             {
                                 xtype: 'container',
@@ -522,6 +497,7 @@ Ext.onReady(function () {
                                 store: store_seleccion_personas,
 
                                 columns: [
+                                    {hidden: true, dataIndex: 'id_seleccion_persona'},
                                     {text: 'Selección', dataIndex: 'nombre_seleccion'},
                                     //{text: 'CUI', dataIndex: 'cui'},
                                     {text: 'Nombre', dataIndex: 'nombre_persona'},
@@ -532,19 +508,13 @@ Ext.onReady(function () {
                                         xtype: 'actioncolumn',
                                         text: 'Acciones',
                                         width: 100,
-                                        items: [{
-                                                icon: 'images/icons/page_edit.png',
-                                                tooltip: 'Editar registro',
-                                                handler: function (grid, rowIndex, colIndex) {
-                                                    var rec = grid.getStore().getAt(rowIndex).get('idUsuario');
-                                                    editSubRec(rec);
-                                                }
-                                            }, {
+                                        items: [
+                                            {
                                                 icon: 'images/icons/cross.png',
                                                 tooltip: 'Eliminar registro',
                                                 handler: function (grid, rowIndex, colIndex) {
-                                                    var rec = grid.getStore().getAt(rowIndex).get('idUsuario');
-                                                    deleteRec(rec);
+                                                    var rec = grid.getStore().getAt(rowIndex).get('id_seleccion_persona');
+                                                    deleteSubRec(rec);
                                                 }
                                             }]
                                     }

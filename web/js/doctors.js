@@ -36,7 +36,7 @@ var store_doctores_especialidades = Ext.create('Ext.data.Store', {
 
 
 var store_doctores = Ext.create('Ext.data.Store', {
-    fields: ['id_doctor', 'id_usuario', 'nombre', 'fecha_nacimiento', 'sexo', 'telefono', 'email'],
+    fields: ['id_doctor', 'id_usuario', 'nombre_completo', 'fecha_nacimiento', 'sexo', 'telefono', 'email'],
     proxy: {
         type: 'ajax',
         url: 'controller/doctors',
@@ -90,14 +90,12 @@ function editRec(rec) {
                                                 combo.ownerCt.unmask();
                                                 var resultado = eval('(' + f.responseText + ')');
                                                 if (resultado.success) {
-                                                    combo.ownerCt.items.items[1].setValue(resultado.data[0].primer_nombre);
-                                                    combo.ownerCt.items.items[2].setValue(resultado.data[0].segundo_nombre);
-                                                    combo.ownerCt.items.items[3].setValue(resultado.data[0].primer_apellido);
-                                                    combo.ownerCt.items.items[4].setValue(resultado.data[0].segundo_apellido);
-                                                    combo.ownerCt.items.items[5].setValue(resultado.data[0].fecha_nacimiento);
-                                                    combo.ownerCt.items.items[6].setValue(resultado.data[0].sexo);
-                                                    combo.ownerCt.items.items[7].setValue(resultado.data[0].telefono);
-                                                    combo.ownerCt.items.items[8].setValue(resultado.data[0].email);
+                                                    combo.ownerCt.items.items[1].setValue(resultado.data[0].nombre);
+                                                    combo.ownerCt.items.items[2].setValue(resultado.data[0].apellido);
+                                                    combo.ownerCt.items.items[3].setValue(resultado.data[0].fecha_nacimiento);
+                                                    combo.ownerCt.items.items[4].setValue(resultado.data[0].nombre_sexo);
+                                                    combo.ownerCt.items.items[5].setValue(resultado.data[0].telefono);
+                                                    combo.ownerCt.items.items[6].setValue(resultado.data[0].email);
                                                 } else {
                                                     Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
 
@@ -114,7 +112,7 @@ function editRec(rec) {
                             }
                         }, {
                             xtype: 'textfield',
-                            fieldLabel: 'Primer nombre',
+                            fieldLabel: 'Nombres',
                             submitValue: false,
                             allowBlank: false,
                             maxLength: 50,
@@ -122,22 +120,7 @@ function editRec(rec) {
                             readOnly: true
                         }, {
                             xtype: 'textfield',
-                            fieldLabel: 'Segundo nombre',
-                            submitValue: false,
-                            maxLength: 50,
-                            enforceMaxLength: true,
-                            readOnly: true
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Primer apellido',
-                            submitValue: false,
-                            allowBlank: false,
-                            maxLength: 50,
-                            enforceMaxLength: true,
-                            readOnly: true
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Segundo apellido',
+                            fieldLabel: 'Apellidos',
                             submitValue: false,
                             maxLength: 50,
                             enforceMaxLength: true,
@@ -181,6 +164,7 @@ function editRec(rec) {
                         }, {
                             xtype: 'hidden',
                             name: 'id_doctor',
+                            value: rec
                         }
                     ]
                 });
@@ -321,14 +305,12 @@ Ext.onReady(function () {
                                             combo.ownerCt.unmask();
                                             var resultado = eval('(' + f.responseText + ')');
                                             if (resultado.success) {
-                                                combo.ownerCt.items.items[1].setValue(resultado.data[0].primer_nombre);
-                                                combo.ownerCt.items.items[2].setValue(resultado.data[0].segundo_nombre);
-                                                combo.ownerCt.items.items[3].setValue(resultado.data[0].primer_apellido);
-                                                combo.ownerCt.items.items[4].setValue(resultado.data[0].segundo_apellido);
-                                                combo.ownerCt.items.items[5].setValue(resultado.data[0].fecha_nacimiento);
-                                                combo.ownerCt.items.items[6].setValue(resultado.data[0].sexo);
-                                                combo.ownerCt.items.items[7].setValue(resultado.data[0].telefono);
-                                                combo.ownerCt.items.items[8].setValue(resultado.data[0].email);
+                                                combo.ownerCt.items.items[1].setValue(resultado.data[0].nombre);
+                                                combo.ownerCt.items.items[2].setValue(resultado.data[0].apellido);
+                                                combo.ownerCt.items.items[3].setValue(resultado.data[0].fecha_nacimiento);
+                                                combo.ownerCt.items.items[4].setValue(resultado.data[0].nombre_sexo);
+                                                combo.ownerCt.items.items[5].setValue(resultado.data[0].telefono);
+                                                combo.ownerCt.items.items[6].setValue(resultado.data[0].email);
                                             } else {
                                                 Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
 
@@ -345,7 +327,7 @@ Ext.onReady(function () {
                         }
                     }, {
                         xtype: 'textfield',
-                        fieldLabel: 'Primer nombre',
+                        fieldLabel: 'Nombres',
                         submitValue: false,
                         allowBlank: false,
                         maxLength: 50,
@@ -353,23 +335,9 @@ Ext.onReady(function () {
                         readOnly: true
                     }, {
                         xtype: 'textfield',
-                        fieldLabel: 'Segundo nombre',
-                        submitValue: false,
-                        maxLength: 50,
-                        enforceMaxLength: true,
-                        readOnly: true
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Primer apellido',
+                        fieldLabel: 'Apellidos',
                         submitValue: false,
                         allowBlank: false,
-                        maxLength: 50,
-                        enforceMaxLength: true,
-                        readOnly: true
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Segundo apellido',
-                        submitValue: false,
                         maxLength: 50,
                         enforceMaxLength: true,
                         readOnly: true
@@ -468,7 +436,7 @@ Ext.onReady(function () {
                         columns: [
                             {hidden: true, dataIndex: 'id_doctor'},
                             {text: 'Usuario', dataIndex: 'id_usuario', width: 80},
-                            {text: 'Nombre', dataIndex: 'nombre', width: 200},
+                            {text: 'Nombre', dataIndex: 'nombre_completo', width: 200},
                             {text: 'Fecha Nac', dataIndex: 'fecha_nacimiento', width: 95},
                             {text: 'Sexo', dataIndex: 'sexo', width: 50},
                             {text: 'Teléfono', dataIndex: 'telefono', width: 80},
@@ -508,7 +476,7 @@ Ext.onReady(function () {
                                 fieldLabel: 'Doctor',
                                 store: store_doctores,
                                 queryMode: 'local',
-                                displayField: 'nombre',
+                                displayField: 'nombre_completo',
                                 valueField: 'id_doctor',
                                 listeners: {
                                     change: function (combo, newVal, oldVal, eOpts) {

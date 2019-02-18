@@ -13,7 +13,10 @@ Ext.onReady(function () {
         renderTo: 'main-container',
         //width: 900,
         items: [
-           scheduleappointment_panel
+           createScheduleAppointmentPanel({
+                afterSuccess: function(){
+                }
+            })
         ]
     });
 });

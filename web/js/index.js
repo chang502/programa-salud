@@ -1,3 +1,5 @@
+/* global store_citas_de_hoy, Ext */
+
 Ext.require([
     'Ext.tip.QuickTipManager'
 ]);
@@ -13,8 +15,12 @@ Ext.onReady(function () {
         renderTo: 'main-container',
         //width: 900,
         items: [
-            appointmentsfortoday_panel,
-            scheduleappointment_panel
+            createAppointmentsForTodayPanel({}),
+            createScheduleAppointmentPanel({
+                afterSuccess: function(){
+                    store_citas_de_hoy.load();
+                }
+            })
         ]
     });
 });

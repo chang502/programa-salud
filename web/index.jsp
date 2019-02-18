@@ -25,6 +25,8 @@
             }
         </style>
         
+        
+        <script src="js/person.js" type="text/javascript"></script>
         <script src="js/appointment_store.js" type="text/javascript"></script>
         <script src="js/appointmentschedule_panel.js" type="text/javascript"></script>
         <script src="js/appointmenteditanddelete_dialog.js" type="text/javascript"></script>

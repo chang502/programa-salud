@@ -6,15 +6,21 @@
 
 
 
+/* global Ext */
+
 var store_personas = Ext.create('Ext.data.Store', {
     fields: ['id_persona', 'nombre', 'fecha_nacimiento', 'telefono', 'email', 'identificacion'],
     proxy: {
         type: 'ajax',
+        enablePaging: true,
         url: 'controller/searchpersons',
         method: 'POST',
+        pageSize: 10,
         reader: {type: 'json',
-            root: 'data'
+            root: 'data',
+            totalProperty: 'rows'
         }
+
     }
 });
 
@@ -28,173 +34,6 @@ var store_tipo_persona = Ext.create('Ext.data.Store', {
 });
 
 
-function createTooltip(message, component, isField) {
-    if (!isField) {
-        component.clearTip();
-    }
-
-    var tip = window.Ext.create('Ext.tip.ToolTip', {
-        // no target, no hover
-        target: component,
-        html: message,
-        autoShow: true,
-        autoScroll: true,
-        dismissDelay: 10000,
-        focusOnToFront: true,
-        autoHide: true,
-        //closable: true,
-        stateful: false,
-        listeners: {
-            // the tip is hidden by default, not closed
-            //beforeclose: function () {
-            hide: function () {
-                tip.destroy();
-                tip = null;
-            }
-        }
-    });
-
-    // show immediately
-    tip.show();
-}
-
-function getCreatePersonPanel() {
-
-
-    return Ext.create({
-        xtype: 'form',
-        layout: {
-            type: 'table',
-            columns: 2
-        },
-        /*padding: '5 5 5 5',*/
-        defaults: {
-            padding: '5 15 5 15'
-        },
-        items: [
-
-            {
-                xtype: 'textfield',
-                fieldLabel: 'Primer nombre',
-                name: 'primer_nombre',
-                allowBlank: false
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Segundo nombre',
-                name: 'segundo_nombre'
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Primer apellido',
-                name: 'primer_apellido',
-                allowBlank: false
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Segundo apellido',
-                name: 'segundo_apellido'
-            }, {
-                xtype: 'datefield',
-                fieldLabel: 'Fecha nacimiento',
-                name: 'fecha_nacimiento',
-                emptyText: 'dd/mm/aaaa',
-                allowBlank: false
-            }, {
-                xtype: 'combo',
-                fieldLabel: 'Sexo',
-                name: 'sexo',
-                allowBlank: false,
-                store: {
-                    fields: ['id', 'value'],
-                    data: [
-                        {"id": 'm', "value": "Masculino"},
-                        {"id": 'f', "value": "Femenino"}
-                    ]
-                },
-                queryMode: 'local',
-                displayField: 'value',
-                valueField: 'id'
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Correo',
-                name: 'email',
-                vtype: 'email'
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Teléfono',
-                name: 'telefono',
-                maxLength: 8,
-                enforceMaxLength: true,
-                minLength: 8,
-                maskRe: /[0-9]/
-            }
-        ]
-    });
-}
-
-
-
-
-function getCreatePerson() {
-
-
-
-    return [
-
-        {
-            xtype: 'textfield',
-            fieldLabel: 'Primer nombre',
-            name: 'primer_nombre',
-            allowBlank: false
-        }, {
-            xtype: 'textfield',
-            fieldLabel: 'Segundo nombre',
-            name: 'segundo_nombre'
-        }, {
-            xtype: 'textfield',
-            fieldLabel: 'Primer apellido',
-            name: 'primer_apellido',
-            allowBlank: false
-        }, {
-            xtype: 'textfield',
-            fieldLabel: 'Segundo apellido',
-            name: 'segundo_apellido'
-        }, {
-            xtype: 'datefield',
-            fieldLabel: 'Fecha nacimiento',
-            name: 'fecha_nacimiento',
-            emptyText: 'dd/mm/aaaa',
-            allowBlank: false
-        }, {
-            xtype: 'combo',
-            fieldLabel: 'Sexo',
-            name: 'sexo',
-            allowBlank: false,
-            store: {
-                fields: ['id', 'value'],
-                data: [
-                    {"id": 'm', "value": "Masculino"},
-                    {"id": 'f', "value": "Femenino"}
-                ]
-            },
-            queryMode: 'local',
-            displayField: 'value',
-            valueField: 'id'
-        }, {
-            xtype: 'textfield',
-            fieldLabel: 'Correo',
-            name: 'email',
-            vtype: 'email'
-        }, {
-            xtype: 'textfield',
-            fieldLabel: 'Teléfono',
-            name: 'telefono',
-            maxLength: 8,
-            enforceMaxLength: true,
-            minLength: 8,
-            maskRe: /[0-9]/
-        }
-    ];
-}
-
 
 function getPersonTextBox(conf) {
     if (conf===undefined){
@@ -202,50 +41,57 @@ function getPersonTextBox(conf) {
     }
     var panel = Ext.create({
         xtype: 'panel',
-        //border: 1,
-        layout: 'hbox',
-        //margin: '0 -5 0 -5',
-       // padding: '0 10 0 10',
+        layout: {
+            type: 'hbox',
+            align: 'stretch'
+        },
         items: [
             {
                 xtpye: 'hiddenfield',
-                name: 'id_persona'
+                name: 'id_persona',
+                value: conf.id_persona
             }, {
                 xtype: 'textfield',
                 name: 'nombre_completo',
+                value: conf.nombre_completo,
+                flex: 1,
                 fieldLabel: conf.hasOwnProperty('fieldLabel') ? conf['fieldLabel'] : 'Persona',
                 readOnly: true,
                 allowBlank: conf.hasOwnProperty('allowBlank') ? conf['fieldLabel'] : false,
                 listeners: {
                     specialkey: function (f, e, eopts) {
                         if (e.getKey() == e.ENTER) {
-                            //mostrarVentanaSeleciconMedico(f.ownerCt.items.items[1],f.ownerCt.items.items[2]);
                             showPersonaDialog(f.ownerCt.items.items[0], f.ownerCt.items.items[1]);
                         }
                     },
                     afterRender: function(comp, eOpts){
-                        window.console.log(comp.getWidth()+" "+comp.ownerCt.getWidth()+" ");
+                        //window.console.log(comp.getWidth()+" "+comp.ownerCt.getWidth()+" ");
                         //comp.setWidth(comp.ownerCt.getWidth()-25);
                         comp.inputEl.on('dblclick', function() {
                             showPersonaDialog(comp.ownerCt.items.items[0], comp.ownerCt.items.items[1]);
                         });
                     }
                 }
+            },{
+                xtpye: 'hiddenfield',
+                name: 'email'
             }, {
                 xtype: 'button',
                 cls: 'plainButtonCls',
+                flex: 0,
+                width: 24,
                 icon: 'images/icons/user_go.png',
                 tooltip: 'Seleccionar persona',
                 focusable: false,
                 tabIndex: -1,
+                dock: 'right',
                 listeners: {
                     afterRender: function(comp, eOpts){
                         comp.ownerCt.items.items[1].setWidth(comp.ownerCt.getWidth()-comp.getWidth()-10);
-                        window.console.log("btn "+comp.getWidth());
+                        //window.console.log("btn "+comp.getWidth());
                     }
                 },
                 handler: function (button, e) {
-                    //mostrarVentanaSeleciconMedico(button.ownerCt.items.items[1], button.ownerCt.items.items[2]);
                     showPersonaDialog(button.ownerCt.items.items[0], button.ownerCt.items.items[1]);
                 }
             }
@@ -300,9 +146,9 @@ function showPersonaDialog(hiddenfield, textfield) {
                         name: 'tipo_persona',
                         allowBlank: false,
                         listeners: {
-                            afterrender: function(comp, eOpts){
+                            /*afterrender: function(comp, eOpts){
                                 comp.focus();
-                            },
+                            },*/
                             focus: function(){
                                 this.expand();
                             },
@@ -315,15 +161,25 @@ function showPersonaDialog(hiddenfield, textfield) {
                                 return false;
                             },
                             select: function(comp, eOpts){
-                                comp.ownerCt.items.items[1].focus();
+                                var emptytext=comp.getValue();
+                                if(emptytext==='ESTUDIANTE'){
+                                    comp.ownerCt.items.items[1].setEmptyText('Carnet');
+                                }else if(emptytext==='TRABAJADOR'){
+                                    comp.ownerCt.items.items[1].setEmptyText('CUI');
+                                }if(emptytext==='TODOS'){
+                                    comp.ownerCt.items.items[1].setEmptyText('Identificación');
+                                }
+                                //comp.ownerCt.items.items[1].focus();
                             }
                         }
                     }, {
                         xtype: 'textfield',
                         fieldLabel: 'Identificación',
-                        emptyText: 'CUI o Carnet',
+                        emptyText: 'Identificación',
                         submitEmptyText: false,
                         name: 'identificacion',
+                        maxLength: 13,
+                        enforceMaxLength: true,
                         allowBlank: false,
                         listeners: {
                             specialkey: function(f,e){
@@ -343,6 +199,8 @@ function showPersonaDialog(hiddenfield, textfield) {
                         //reference: 'doCreate',
                         anchor: '-50%',
                         handler: function () {
+                            
+                           
 
                             var form = this.up('form');
                             
@@ -350,7 +208,6 @@ function showPersonaDialog(hiddenfield, textfield) {
                             } else {
                                 form.ownerCt.mask("Espere");
                                 var data = form.getValues();
-
                                 store_personas.load({
                                     params: data,
                                     method: 'POST',
@@ -384,7 +241,10 @@ function showPersonaDialog(hiddenfield, textfield) {
                     {
                         xtype: 'grid',
                         store: store_personas,
-                        maxHeight: 270,
+                        maxHeight: 300,
+                        bbar:[
+                            '-'
+                        ],
                         selModel: {
                             selType: 'rowmodel', // rowmodel is the default selection model
                             mode: 'SINGLE' // Allows selection of multiple rows
@@ -401,28 +261,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                             {hidden: true, dataIndex: 'id_persona'},
                             {text: 'Nombre', dataIndex: 'nombre_completo', width: 320},
                             {text: 'Fecha Nac', dataIndex: 'fecha_nacimiento', width: 95},
-                            {text: 'Correo', dataIndex: 'email', width: 270}  //, ------------------
-                            //{text: 'Identificación', dataIndex: 'identificacion'},
-                            /*{
-                             xtype: 'actioncolumn',
-                             text: 'Acciones',
-                             width: 100,
-                             items: [{
-                             icon: 'images/icons/page_edit.png',
-                             tooltip: 'Editar registro',
-                             handler: function (grid, rowIndex, colIndex) {
-                             var rec = grid.getStore().getAt(rowIndex).get('id_bebedero');
-                             editRec(rec);
-                             }
-                             }, {
-                             icon: 'images/icons/cross.png',
-                             tooltip: 'Eliminar registro',
-                             handler: function (grid, rowIndex, colIndex) {
-                             var rec = grid.getStore().getAt(rowIndex).get('id_bebedero');
-                             deleteRec(rec);
-                             }
-                             }]
-                             }*/
+                            {text: 'Correo', dataIndex: 'email', width: 270} 
                         ]
                     }
                 ]
@@ -516,6 +355,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                         fieldLabel: 'CUI',
                         name: 'cui',
                         maxLength: 13,
+                        minLengthText: 'Ingrese un CUI válido',
                         enforceMaxLength: true,
                         minLength: 13,
                         maskRe: /[0-9]/
@@ -524,6 +364,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                         fieldLabel: 'Registro Académico',
                         name: 'carnet',
                         maxLength: 9,
+                        minLengthText: 'Ingrese un registro académico válido',
                         enforceMaxLength: true,
                         minLength: 7,
                         maskRe: /[0-9]/
@@ -532,12 +373,14 @@ function showPersonaDialog(hiddenfield, textfield) {
                         fieldLabel: 'Número de Orientación Vocacional',
                         name: 'nov',
                         maxLength: 10,
+                        minLengthText: 'Ingrese un número de orientación vocacional válido',
                         enforceMaxLength: true,
                         minLength: 10,
                         maskRe: /[0-9]/
                     },{
                         xtype: 'textfield',
                         fieldLabel: 'Registro Personal',
+                        minLengthText: 'Ingrese un número de registro de personal válido',
                         name: 'regpersonal',
                         maxLength: 9,
                         enforceMaxLength: true,
@@ -630,12 +473,15 @@ function showPersonaDialog(hiddenfield, textfield) {
         ],
         items: [
             tabPanel
-//frmBuscaRegistro
-        ]
+        ],
+        listeners: {
+            afterrender: function (v3nt,eOpts){
+                frmBuscaRegistro.items.items[0].items.items[0].focus();
+            },
+            beforeclose: function(v3nt,eOpts){
+                store_personas.removeAll();
+            }
+        }
     }).show();
-
-
-
-    //}
 
 }

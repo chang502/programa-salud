@@ -21,6 +21,7 @@ public class JsonResponse {
     private String message;
     private ResultSet rs;
     private String payload;
+    private String idInsert;
 
     public JsonResponse() {
         this.success = true;
@@ -28,6 +29,7 @@ public class JsonResponse {
         this.message = "";
         this.rs = null;
         this.payload = "";
+        this.idInsert = "";
     }
 
     public void setSuccess(boolean success) {
@@ -55,6 +57,10 @@ public class JsonResponse {
 
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public void setIdInsert(String id) {
+        this.idInsert = id;
     }
 
     public void callSelectStoredProcedure(String procedure_name) {
@@ -89,6 +95,7 @@ public class JsonResponse {
             java.sql.CallableStatement result = dm.callResultProcedure(operation, map, fields);
 
             this.setSuccess(result.getInt(fields.length + 1) > 0);
+            this.setIdInsert(result.getInt(fields.length + 1)+"");
             this.setMessage(result.getString(fields.length + 2));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -136,6 +143,10 @@ public class JsonResponse {
     
     public boolean hasPayload(){
         return this.payload.length()>0;
+    }
+
+    public String getIdInsert() {
+        return this.idInsert;
     }
 
     public String getJsonData() {

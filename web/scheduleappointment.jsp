@@ -15,6 +15,7 @@
         <script src="js/ext-6.2.0/build/classic/locale/locale-es.js" type="text/javascript"></script>
         <script src="js/ext-6.2.0/build/classic/theme-neptune/theme-neptune.js" type="text/javascript"></script>
         
+        <script src="js/person.js" type="text/javascript"></script>
         <script src="js/appointmentschedule_panel.js" type="text/javascript"></script>
         <script src="js/scheduleappointment.js" type="text/javascript"></script>
         <title>Programar Cita</title>

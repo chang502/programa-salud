@@ -5,7 +5,7 @@ Ext.require([
 Ext.QuickTips.init();
 
 var store_usuarios = Ext.create('Ext.data.Store', {
-    fields: ['id_usuario', 'nombre', 'email', 'activo'],
+    fields: ['id_usuario', 'nombre_completo', 'email', 'activo'],
     proxy: {
         type: 'ajax',
         url: 'controller/users',
@@ -64,57 +64,10 @@ function editRec(rec) {
                             emptyText: 'Llenar para cambiar',
                             value: '',
                             inputType: 'password'
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Nombres',
-                            value: resultado.data[0].nombre,
-                            name: 'primer_nombre',
-                            allowBlank: false
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Apellidos',
-                            value: resultado.data[0].apellido,
-                            name: 'primer_apellido',
-                            allowBlank: false
-                        }, {
-                            xtype: 'datefield',
-                            fieldLabel: 'Fecha nacimiento',
-                            value: resultado.data[0].fecha_nacimiento,
-                            name: 'fecha_nacimiento',
-                            emptyText: 'dd/mm/aaaa',
-                            allowBlank: false
-                        }, {
-                            xtype: 'combo',
-                            fieldLabel: 'Sexo',
-                            value: resultado.data[0].sexo,
-                            name: 'sexo',
-                            allowBlank: false,
-                            store: {
-                                fields: ['id', 'value'],
-                                data: [
-                                    {"id": 'm', "value": "Masculino"},
-                                    {"id": 'f', "value": "Femenino"}
-                                ]
-                            },
-                            queryMode: 'local',
-                            displayField: 'value',
-                            valueField: 'id'
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Correo',
-                            name: 'email',
-                            value: resultado.data[0].email,
-                            vtype: 'email'
-                        }, {
-                            xtype: 'textfield',
-                            fieldLabel: 'Teléfono',
-                            name: 'telefono',
-                            value: resultado.data[0].telefono,
-                            maxLength: 8,
-                            enforceMaxLength: true,
-                            minLength: 8,
-                            maskRe: /[0-9]/
-                        }, {
+                        },
+                        getPersonTextBox({id_persona: resultado.data[0].id_persona, nombre_completo: resultado.data[0].nombre_completo, panelConfig: {colspan: 2, padding: '5 25 5 15'}})
+                                ,
+                        {
                             xtype: 'radiogroup',
                             allowBlank: false,
                             combineErrors: true,
@@ -155,6 +108,10 @@ function editRec(rec) {
                                 if (!frmEdit.isValid()) {
                                 } else {
                                     var data = frmEdit.getValues();
+                                    
+                                    console.log(frmEdit);
+                                    data.id_persona = frmEdit.items.items[2].items.items[0].value;
+                                    
                                     frmEdit.mask("Espere");
                                     Ext.Ajax.request({
                                         url: 'controller/updateuser',
@@ -282,51 +239,10 @@ Ext.onReady(function () {
                         name: 'clave',
                         inputType: 'password',
                         allowBlank: false
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Nombres',
-                        name: 'nombre',
-                        allowBlank: false
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Apellidos',
-                        name: 'apellido',
-                        allowBlank: false
-                    }, {
-                        xtype: 'datefield',
-                        fieldLabel: 'Fecha nacimiento',
-                        name: 'fecha_nacimiento',
-                        emptyText: 'dd/mm/aaaa',
-                        allowBlank: false
-                    }, {
-                        xtype: 'combo',
-                        fieldLabel: 'Sexo',
-                        name: 'sexo',
-                        allowBlank: false,
-                        store: {
-                            fields: ['id', 'value'],
-                            data: [
-                                {"id": 'm', "value": "Masculino"},
-                                {"id": 'f', "value": "Femenino"}
-                            ]
-                        },
-                        queryMode: 'local',
-                        displayField: 'value',
-                        valueField: 'id'
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Correo',
-                        name: 'email',
-                        vtype: 'email'
-                    }, {
-                        xtype: 'textfield',
-                        fieldLabel: 'Teléfono',
-                        name: 'telefono',
-                        maxLength: 8,
-                        enforceMaxLength: true,
-                        minLength: 8,
-                        maskRe: /[0-9]/
-                    },
+                    }
+                    ,
+                    getPersonTextBox({panelConfig: {colspan: 2}})
+                            ,
                     {
                         xtype: 'container',
                         pack: 'end',
@@ -341,12 +257,16 @@ Ext.onReady(function () {
                                 text: 'Crear',
                                 anchor: '-50%',
                                 handler: function () {
-                                    
+
                                     var form = this.up('form');
                                     if (!form.isValid()) {
                                     } else {
                                         form.mask("Espere");
                                         var data = form.getValues();
+
+                                        //setting id_persona
+                                        data.id_persona = form.items.items[0].items.items[2].items.items[0].value;
+
                                         Ext.Ajax.request({
                                             url: 'controller/createuser',
                                             method: 'POST',
@@ -383,7 +303,7 @@ Ext.onReady(function () {
                         maxHeight: 250,
                         columns: [
                             {text: 'Id Usuario', dataIndex: 'id_usuario', width: 100},
-                            {text: 'Nombre', dataIndex: 'nombre', width: 150},
+                            {text: 'Nombre', dataIndex: 'nombre_completo', width: 250},
                             {text: 'Correo', dataIndex: 'email', width: 220},
                             {text: 'Estado', dataIndex: 'activo', width: 120},
                             {

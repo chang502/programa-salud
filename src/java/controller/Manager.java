@@ -37,8 +37,16 @@ public class Manager {
         HttpSession session = request.getSession();
         response.setSessionExpired(session == null || session.getAttribute("id_usuario")==null);
     }
+    
+    public HttpServletRequest getRequest(){
+        return this.request;
+    }
+    
+    public JsonResponse getResponse(){
+        return this.response;
+    }
 
-    private boolean isSessionExpired() {
+    public boolean isSessionExpired() {
         HttpSession session = request.getSession();
         
         return session == null || session.getAttribute("id_usuario")==null;
@@ -440,6 +448,12 @@ public class Manager {
                     e.printStackTrace();
                 }
             }
+        }else if(tipo_persona.equals("TODOS")){
+            java.util.Map<String, String> map = new java.util.HashMap<>();
+            
+            String fields2[] = {"id"};
+            map.put("id", identificacion);
+            return callSelectStoredProcedure("search_person_by_any_id", map, fields2);
         }
 
         return "{}";
