@@ -307,7 +307,7 @@ public class Manager {
         return null;
     }
 
-    private String parseStudentCcWsResponseMetadata(String raw) {
+    private String parseStudentCcWsResponseMetadata(String raw, String carrera) {
         try {
             java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
             JsonReader reader = Json.createReader(is);
@@ -323,8 +323,8 @@ public class Manager {
 
             java.util.Map<String, String> map = new java.util.HashMap<>();
 
-            String fields[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "nov", "usuarioid"};
-            for (int i = 0; i < fields.length; i++) {
+            String fields[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "nov", "usuarioid", "carrera"};
+            for (int i = 0; i < fields.length-1; i++) {
                 String field = fields[i];
                 String tmp = null;
                 try {
@@ -333,7 +333,9 @@ public class Manager {
                 }
                 map.put(field, tmp);
             }
-
+            
+            map.put("carrera", carrera);
+            
             String tmp = map.remove("fechanacimiento");
             map.put("fecha_nacimiento", tmp);
 
@@ -354,6 +356,34 @@ public class Manager {
         }
         return null;
     }
+    
+    private String getFieldFromCcWsResponseMetadata(String raw, String fieldname) {
+        String resp=null;
+        
+        try {
+            java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
+            JsonReader reader = Json.createReader(is);
+            
+            
+
+            JsonArray jsonArray = reader.readArray();
+            reader.close();
+
+            if(jsonArray.isEmpty()){
+                return null;
+            }
+            JsonObject jsonObject = jsonArray.getJsonObject(0);
+            
+            if(!jsonObject.isNull(fieldname)){
+                resp=jsonObject.getString(fieldname);
+            }
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resp;
+    }
 
     private String parseEmployeeCcWsResponseMetadata(String raw) {
         try {
@@ -372,7 +402,7 @@ public class Manager {
 
             java.util.Map<String, String> map = new java.util.HashMap<>();
 
-            String fields[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "regpseronal"};
+            String fields[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "regpseronal","departamento"};
             for (int i = 0; i < fields.length; i++) {
                 String field = fields[i];
                 String tmp = null;
@@ -418,8 +448,23 @@ public class Manager {
                     map.put("carnet", identificacion);
                     
                     if (con != null && con.getResponseCode() == 200) {
-                        String ws_response = getCcWsResponseMetadata(con.getInputStream());
-                        String resp = parseStudentCcWsResponseMetadata(ws_response);
+                        
+                        java.io.InputStream is=con.getInputStream();
+                        
+                        String ws_response = getCcWsResponseMetadata(is);
+                        //carrera
+                        con = utils.ConexionCentroCalculo.getEstudianteCarrera(identificacion);
+                        String ws_response_carrera = getCcWsResponseMetadata(con.getInputStream());
+                        String carrera = getFieldFromCcWsResponseMetadata(ws_response_carrera,"nombre_carrera");
+                        //!carrera
+                        String resp = parseStudentCcWsResponseMetadata(ws_response,carrera);
+                        
+                        
+                        
+                        //System.out.println(ws_response_carrera);
+                        
+                        
+                        
                         return resp == null?callSelectStoredProcedure("search_person_by_carnet", map, fields2):resp;
                     } else {
 
@@ -440,6 +485,7 @@ public class Manager {
 
                         String ws_response = getCcWsResponseMetadata(con.getInputStream());
                         String resp =  parseEmployeeCcWsResponseMetadata(ws_response);
+                        //System.out.println(resp);
                         return resp == null?callSelectStoredProcedure("search_person_by_cui", map, fields2):resp;
                     } else {
                         return callSelectStoredProcedure("search_person_by_cui", map, fields2);

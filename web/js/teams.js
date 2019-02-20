@@ -139,6 +139,7 @@ function editRec(rec) {
                                             frmEdit.unmask();
                                             if (resultado.success) {
                                                 vent.close();
+                                                store_seleccion_personas.load();
                                                 store_selecciones.load();
                                                 Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
 
@@ -195,6 +196,7 @@ function deleteRec(rec) {
                         var resultado = eval('(' + f.responseText + ')');
                         if (resultado.success) {
                             Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
+                            store_seleccion_personas.load();
                             store_selecciones.load();
                         } else {
                             Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
@@ -257,7 +259,6 @@ function deleteSubRec(rec) {
 Ext.onReady(function () {
     
     store_seleccion_personas.load();
-
     store_selecciones.load();
     store_tipos_documento.load();
     store_tipos_persona.load();
@@ -468,10 +469,12 @@ Ext.onReady(function () {
                                                         var resultado = eval('(' + f.responseText + ')');
                                                         if (resultado.success) {
                                                             Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
-                                                            console.log(form);
-                                                            for (var i = 1; i < form.items.items.length; i++) {
-                                                                form.items.items[0].items.items[i].reset();
-                                                            }
+                                                            //console.log(form);
+                                                            
+                                                            var curval=form.items.items[0].items.items[0].getValue();
+                                                            window.console.log(curval);
+                                                            form.reset();
+                                                            form.items.items[0].items.items[0].setValue(curval);
                                                             store_seleccion_personas.load({
                                                                 params:{
                                                                     id_seleccion: data.id_seleccion

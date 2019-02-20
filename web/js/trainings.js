@@ -150,6 +150,7 @@ function editRec(rec) {
                                             if (resultado.success) {
                                                 vent.close();
                                                 store_capacitaciones.load();
+                                                store_capacitacion_personas.load();
                                                 Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
 
                                             } else {
@@ -207,6 +208,7 @@ function deleteRec(rec) {
                         if (resultado.success) {
                             Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
                             store_capacitaciones.load();
+                            store_capacitacion_personas.load();
                         } else {
                             Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                         }
@@ -371,6 +373,7 @@ Ext.onReady(function () {
                                                             Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
                                                             form.reset();
                                                             store_capacitaciones.load();
+                                                            store_capacitacion_personas.load();
                                                         } else {
                                                             Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                                         }
@@ -489,6 +492,7 @@ Ext.onReady(function () {
                                                         if (resultado.success) {
                                                             Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
                                                             form.reset();
+                                                            store_capacitaciones.load();
                                                             store_capacitacion_personas.load();
                                                         } else {
                                                             Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});

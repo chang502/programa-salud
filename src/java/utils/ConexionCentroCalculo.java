@@ -146,5 +146,58 @@ public class ConexionCentroCalculo {
     
     
     
+    
+
+
+    public static HttpURLConnection getEstudianteCarrera(String carnet) {
+        //Persona resp = null;
+        String strOperacion = "carrerasEstudiante";
+        try {
+            
+            String url = "http://172.16.8.162:9090/fiusac-web-process/apiProcess/get/ejecutarMetodoWS/";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            
+            con.setConnectTimeout(3000);
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            con.setRequestProperty("Cache-Control", "no-cache");
+            
+            String strUser = "990067900";
+            String strPassword = "ws-sa7ud";
+            String strReference = "";
+            
+            String strParametros = "";
+            
+            strParametros = URLEncoder.encode("Carnet=" + carnet, "UTF-8");
+            
+            String StrMetadata = "test";
+            
+            String urlParameters = "strUser=" + strUser + "&strPassword=" + strPassword + "&strReference=" + strReference + "&strOperacion=" + strOperacion + "&strParametros=" + strParametros + "&StrMetadata=" + StrMetadata;
+            
+            //System.out.println(urlParameters);
+            
+            // Send post request
+            con.setDoOutput(true);
+            
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
+            
+            return con;
+        } catch (Exception ex) {
+            System.err.println("Webservice '"+strOperacion+"' no disponible: "+ex.getMessage());
+        }
+        return null;
+    }
+
+    
+    
+    
+
+    
+    
+    
 
 }

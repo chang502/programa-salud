@@ -28,7 +28,7 @@ var store_tipo_persona = Ext.create('Ext.data.Store', {
     fields: ['id', 'value'],
     data: [
         {"id": 'ESTUDIANTE', "value": "Estudiante"},
-        {"id": 'TRABAJADOR', "value": "Personal"},
+        {"id": 'TRABAJADOR', "value": "Trajabador"},
         {"id": 'TODOS', "value": "Todo"}
     ]
 });
@@ -167,7 +167,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                                 }else if(emptytext==='TRABAJADOR'){
                                     comp.ownerCt.items.items[1].setEmptyText('CUI');
                                 }if(emptytext==='TODOS'){
-                                    comp.ownerCt.items.items[1].setEmptyText('Identificación');
+                                    comp.ownerCt.items.items[1].setEmptyText('Nombre o ID');
                                 }
                                 //comp.ownerCt.items.items[1].focus();
                             }
