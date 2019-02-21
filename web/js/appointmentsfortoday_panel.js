@@ -1,5 +1,5 @@
 
-/* global store_citas_futuras */
+/* global store_citas_futuras, Ext */
 
 Ext.require([
     'Ext.tip.QuickTipManager'
@@ -8,7 +8,7 @@ Ext.require([
 Ext.QuickTips.init();
 
 var store_citas_de_hoy = Ext.create('Ext.data.Store', {
-    fields: ["id_cita", "id_persona", "id_doctor", "id_clinica", 'fecha', 'hora', 'paciente', 'atiende', 'clinica', 'sintoma'],
+    fields: ["id_cita", "id_persona", "id_doctor", "id_clinica", 'fecha', 'hora', 'paciente', 'atiende', 'clinica', 'sintoma', 'paso'],
     proxy: {
         type: 'ajax',
         url: 'controller/todaysappointments',
@@ -41,6 +41,7 @@ function createAppointmentsForTodayPanel(conf) {
                             {hidden: true, dataIndex: 'id_persona'},
                             {hidden: true, dataIndex: 'id_doctor'},
                             {hidden: true, dataIndex: 'id_clinica'},
+                            {hidden: true, dataIndex: 'paso'},
                             /*{text: 'Fecha', dataIndex: 'fecha'},*/
                             {text: 'Hora', dataIndex: 'hora', width: 60},
                             {text: 'Paciente', dataIndex: 'paciente', width: 185},
@@ -57,10 +58,40 @@ function createAppointmentsForTodayPanel(conf) {
                                         icon: 'images/icons/pill_go.png',
                                         tooltip: 'Atender cita',
                                         xtype: 'templatecolumn',
-                                        tpl: '<a href="google.com" target="_blank">aaa</a>',
                                         handler: function (grid, rowIndex, colIndex) {
                                             var rec = grid.getStore().getAt(rowIndex).get('id_cita');
-                                            //editRec(rec);
+                                            var paso = grid.getStore().getAt(rowIndex).get('paso');
+                                            if (paso === 'ATENDIENDO') {
+                                                location.href = 'attendappointment.jsp?cita=' + rec;
+                                            } else {
+                                                Ext.Msg.show({
+                                                    title: 'Atender Cita',
+                                                    message: 'Al atender la cita, quedará registrada la hora de inicio de la misma ¿Desea continuar?',
+                                                    buttons: Ext.Msg.YESNO,
+                                                    icon: Ext.Msg.QUESTION,
+                                                    fn: function (btn) {
+                                                        if (btn === 'yes') {
+                                                            Ext.Ajax.request({
+                                                                url: 'controller/startappointment',
+                                                                method: 'POST',
+                                                                jsonData: '{"id_cita": "' + rec + '"}',
+                                                                success: function (f, opts) {
+                                                                    var resultado = eval('(' + f.responseText + ')');
+                                                                    if (resultado.success) {
+                                                                        location.href = 'attendappointment.jsp?cita=' + rec;
+                                                                    } else {
+                                                                        Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                    }
+                                                                },
+                                                                failure: function (response, opts) {
+                                                                    Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                });
+
+                                            }
                                         }
                                     }, {
                                         icon: 'images/icons/vcard.png',
@@ -74,7 +105,7 @@ function createAppointmentsForTodayPanel(conf) {
                                         tooltip: 'Editar registro',
                                         handler: function (grid, rowIndex, colIndex) {
                                             var rec = grid.getStore().getAt(rowIndex).get('id_cita');
-                                            editarCita(rec, function(){
+                                            editarCita(rec, function () {
                                                 store_citas_futuras.load();
                                                 store_citas_de_hoy.load();
                                             });
@@ -84,7 +115,7 @@ function createAppointmentsForTodayPanel(conf) {
                                         tooltip: 'Eliminar registro',
                                         handler: function (grid, rowIndex, colIndex) {
                                             var rec = grid.getStore().getAt(rowIndex).get('id_cita');
-                                            borrarCita(rec, function(){
+                                            borrarCita(rec, function () {
                                                 store_citas_futuras.load();
                                                 store_citas_de_hoy.load();
                                             });

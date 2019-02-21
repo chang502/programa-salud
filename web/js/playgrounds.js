@@ -1,3 +1,5 @@
+/* global Ext */
+
 Ext.require([
     'Ext.tip.QuickTipManager'
 ]);

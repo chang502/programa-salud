@@ -1455,6 +1455,50 @@ public class Controller {
     
     
     
+
+    
+    
+    @POST
+    @Path("/startappointment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String startAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_cita"};
+        return m.callResultStoredProcedure("start_appointment", fields, params);
+
+    }
+    
+    
+    @POST
+    @Path("/attendappointment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String attendAppointment(java.io.InputStream params) {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_cita"};
+        java.util.Map<String, String> map = m.createMap(fields, params);
+
+        map.put("id_usuario", id_usuario); 
+        
+        
+        
+        
+        
+        String fields2[] = {"id_usuario","id_cita"};
+        return m.callSelectStoredProcedure("attend_appointment", map, fields2);
+
+    }
+    
+    
+    
     
     
     

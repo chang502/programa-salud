@@ -24,9 +24,22 @@ Ext.onReady(function () {
             if (urlparams.cita !== undefined || urlparams.cita !== '') {
 
 
+/////////////
 
+
+
+
+
+//////////
+                /*Ext.Ajax.request({
+                 url: 'controller/appointments/' + urlparams.cita,
+                 success: function (f, opts) {
+                 var resultado = eval('(' + f.responseText + ')');
+                 if (resultado.success) {*/
                 Ext.Ajax.request({
-                    url: 'controller/appointments/' + urlparams.cita,
+                    url: 'controller/attendappointment',
+                    method: 'POST',
+                    jsonData: '{"id_cita": "' + urlparams.cita + '"}',
                     success: function (f, opts) {
                         var resultado = eval('(' + f.responseText + ')');
                         if (resultado.success) {
