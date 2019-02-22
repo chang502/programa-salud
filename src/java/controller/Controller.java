@@ -1503,6 +1503,100 @@ public class Controller {
     
     
     
+    @POST
+    @Path("/createaction")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createAction(java.io.InputStream params) {
+
+        String fields[] = {"nombre"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("create_action", map, fields);
+
+    }
+    
+    
+    @GET
+    @Path("/actions")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getActions() {
+        return m.callSelectStoredProcedure("get_actions");
+    }
+    
+    
+    
+    @GET
+    @Path("/actions/{id_accion}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAction(@PathParam("id_accion") String id_accion) {
+        String fields[] = {"id_accion"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_accion", id_accion);
+        
+        return m.callSelectStoredProcedure("get_action",map,fields);
+    }
+    
+    
+
+    
+    
+    @POST
+    @Path("/updateaction")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateAction(java.io.InputStream params) {
+
+        String fields[] = {"id_accion", "nombre"};
+        return m.callResultStoredProcedure("update_action", fields, params);
+
+    }
+
+    
+    
+    @POST
+    @Path("/deleteaction")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteAction(java.io.InputStream params) {
+
+        String fields[] = {"id_accion"};
+        return m.callResultStoredProcedure("delete_action", fields, params);
+
+    }
+    
+    
+
+    
+    
+    @POST
+    @Path("/savemeasures")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String saveMeasures(java.io.InputStream params) {
+
+        String ma = m.tomarMedidas( params);
+        //return m.callResultStoredProcedure("delete_action", fields, params);
+        return ma;
+    }
+    
+    
+    
+    
+    
+    
+    
+    @GET
+    @Path("/measurementhistory/{id_cita}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getMeasurementHistory(@PathParam("id_cita") String id_cita) {
+        String fields[] = {"id_cita"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_cita", id_cita);
+        
+        return m.callSelectStoredProcedure("get_measurement_history",map,fields);
+    }
+    
     
     
     

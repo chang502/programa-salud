@@ -35,21 +35,21 @@ public class Manager {
         response = new JsonResponse();
         this.request = request;
         HttpSession session = request.getSession();
-        response.setSessionExpired(session == null || session.getAttribute("id_usuario")==null);
+        response.setSessionExpired(session == null || session.getAttribute("id_usuario") == null);
     }
-    
-    public HttpServletRequest getRequest(){
+
+    public HttpServletRequest getRequest() {
         return this.request;
     }
-    
-    public JsonResponse getResponse(){
+
+    public JsonResponse getResponse() {
         return this.response;
     }
 
     public boolean isSessionExpired() {
         HttpSession session = request.getSession();
-        
-        return session == null || session.getAttribute("id_usuario")==null;
+
+        return session == null || session.getAttribute("id_usuario") == null;
     }
 
     public String toPassword(String password) {
@@ -143,6 +143,50 @@ public class Manager {
             e.printStackTrace();
         }
         return map;
+    }
+
+    public String tomarMedidas(java.io.InputStream params) {
+
+        try {
+            JsonReader reader = Json.createReader(params);
+            JsonObject jo = reader.readObject();
+            reader.close();
+
+            ValueType vt;
+            JsonValue jv;
+
+            String id_cita = jo.getInt("id_cita") + "";
+            String id_persona = jo.getInt("id_persona") + "";
+
+            JsonArray jam = jo.getJsonArray("id_medida");
+            JsonArray jav = jo.getJsonArray("valor");
+
+            String tmp = null;
+
+            String fields[] = {"id_medida", "id_persona", "id_cita", "valor"};
+            for (int i = 0; i < jam.size(); i++) {
+                tmp = jav.getString(i);
+                if (tmp != null && !tmp.equals("")) {
+
+                    java.util.Map<String, String> map2 = new HashMap<>();
+                    map2.put("id_medida", jam.getString(i));
+                    map2.put("id_persona", id_persona);
+                    map2.put("id_cita", id_cita);
+                    map2.put("valor", tmp);
+                    System.out.println(this.callResultStoredProcedure("create_persona_medida", map2, fields));
+
+                }
+            }
+
+            /*response.setSuccess(true);
+            response.setSessionExpired(false);
+            response.setMessage("Medidas ingresadas correctamente" );*/
+
+            return "{\"success\":true,\"sessionexpired\":false,\"message\":\"Medidas ingresadas correctamente\",\"rows\":0,\"data\":[]}";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "{\"success\":false,\"sessionexpired\":false,\"message\":\"" + e.getMessage() + "\",\"rows\":0,\"data\":[]}";
+        }
     }
 
     public String callResultStoredProcedure(String operation, java.util.Map<String, String> map, String fields[]) {
@@ -292,11 +336,10 @@ public class Manager {
 
             //java.io.InputStreamReader isr=new java.io.InputStreamReader(is,"UTF-8");
             BufferedReader bfreader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            
+
             JsonReader reader = Json.createReader(bfreader);
             JsonObject jsonObject = reader.readObject();
             reader.close();
-            
 
             String metadata = jsonObject.getString("metadata");
             return metadata;
@@ -311,12 +354,11 @@ public class Manager {
         try {
             java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
             JsonReader reader = Json.createReader(is);
-            
 
             JsonArray jsonArray = reader.readArray();
             reader.close();
 
-            if(jsonArray.isEmpty()){
+            if (jsonArray.isEmpty()) {
                 return null;
             }
             JsonObject jsonObject = jsonArray.getJsonObject(0);
@@ -324,7 +366,7 @@ public class Manager {
             java.util.Map<String, String> map = new java.util.HashMap<>();
 
             String fields[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "nov", "usuarioid", "carrera"};
-            for (int i = 0; i < fields.length-1; i++) {
+            for (int i = 0; i < fields.length - 1; i++) {
                 String field = fields[i];
                 String tmp = null;
                 try {
@@ -333,9 +375,9 @@ public class Manager {
                 }
                 map.put(field, tmp);
             }
-            
+
             map.put("carrera", carrera);
-            
+
             String tmp = map.remove("fechanacimiento");
             map.put("fecha_nacimiento", tmp);
 
@@ -356,29 +398,26 @@ public class Manager {
         }
         return null;
     }
-    
+
     private String getFieldFromCcWsResponseMetadata(String raw, String fieldname) {
-        String resp=null;
-        
+        String resp = null;
+
         try {
             java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
             JsonReader reader = Json.createReader(is);
-            
-            
 
             JsonArray jsonArray = reader.readArray();
             reader.close();
 
-            if(jsonArray.isEmpty()){
+            if (jsonArray.isEmpty()) {
                 return null;
             }
             JsonObject jsonObject = jsonArray.getJsonObject(0);
-            
-            if(!jsonObject.isNull(fieldname)){
-                resp=jsonObject.getString(fieldname);
+
+            if (!jsonObject.isNull(fieldname)) {
+                resp = jsonObject.getString(fieldname);
             }
-            
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -394,7 +433,7 @@ public class Manager {
             JsonArray jsonArray = reader.readArray();
             reader.close();
 
-            if(jsonArray.isEmpty()){
+            if (jsonArray.isEmpty()) {
                 return null;
             }
 
@@ -402,7 +441,7 @@ public class Manager {
 
             java.util.Map<String, String> map = new java.util.HashMap<>();
 
-            String fields[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "regpseronal","departamento"};
+            String fields[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "regpseronal", "departamento"};
             for (int i = 0; i < fields.length; i++) {
                 String field = fields[i];
                 String tmp = null;
@@ -418,7 +457,6 @@ public class Manager {
 
             tmp = map.remove("correo");
             map.put("email", tmp);
-
 
             fields[2] = "fecha_nacimiento";
             fields[4] = "email";
@@ -446,26 +484,21 @@ public class Manager {
 
                     String fields2[] = {"carnet"};
                     map.put("carnet", identificacion);
-                    
+
                     if (con != null && con.getResponseCode() == 200) {
-                        
-                        java.io.InputStream is=con.getInputStream();
-                        
+
+                        java.io.InputStream is = con.getInputStream();
+
                         String ws_response = getCcWsResponseMetadata(is);
                         //carrera
                         con = utils.ConexionCentroCalculo.getEstudianteCarrera(identificacion);
                         String ws_response_carrera = getCcWsResponseMetadata(con.getInputStream());
-                        String carrera = getFieldFromCcWsResponseMetadata(ws_response_carrera,"nombre_carrera");
+                        String carrera = getFieldFromCcWsResponseMetadata(ws_response_carrera, "nombre_carrera");
                         //!carrera
-                        String resp = parseStudentCcWsResponseMetadata(ws_response,carrera);
-                        
-                        
-                        
+                        String resp = parseStudentCcWsResponseMetadata(ws_response, carrera);
+
                         //System.out.println(ws_response_carrera);
-                        
-                        
-                        
-                        return resp == null?callSelectStoredProcedure("search_person_by_carnet", map, fields2):resp;
+                        return resp == null ? callSelectStoredProcedure("search_person_by_carnet", map, fields2) : resp;
                     } else {
 
                         return callSelectStoredProcedure("search_person_by_carnet", map, fields2);
@@ -484,9 +517,9 @@ public class Manager {
                     if (con != null && con.getResponseCode() == 200) {
 
                         String ws_response = getCcWsResponseMetadata(con.getInputStream());
-                        String resp =  parseEmployeeCcWsResponseMetadata(ws_response);
+                        String resp = parseEmployeeCcWsResponseMetadata(ws_response);
                         //System.out.println(resp);
-                        return resp == null?callSelectStoredProcedure("search_person_by_cui", map, fields2):resp;
+                        return resp == null ? callSelectStoredProcedure("search_person_by_cui", map, fields2) : resp;
                     } else {
                         return callSelectStoredProcedure("search_person_by_cui", map, fields2);
                     }
@@ -494,9 +527,9 @@ public class Manager {
                     e.printStackTrace();
                 }
             }
-        }else if(tipo_persona.equals("TODOS")){
+        } else if (tipo_persona.equals("TODOS")) {
             java.util.Map<String, String> map = new java.util.HashMap<>();
-            
+
             String fields2[] = {"id"};
             map.put("id", identificacion);
             return callSelectStoredProcedure("search_person_by_any_id", map, fields2);

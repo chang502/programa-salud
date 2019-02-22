@@ -1,3 +1,6 @@
+
+function createPatientHistoryPanel(){
+    
 var patienthistory_panel = Ext.create({
     xtype: 'form',
     //renderTo: 'main-container',
@@ -49,3 +52,9 @@ var patienthistory_panel = Ext.create({
         }
     ]
 });
+
+
+return patienthistory_panel;
+
+}
+
