@@ -493,7 +493,7 @@ public class Manager {
                         //carrera
                         con = utils.ConexionCentroCalculo.getEstudianteCarrera(identificacion);
                         String ws_response_carrera = getCcWsResponseMetadata(con.getInputStream());
-                        String carrera = getFieldFromCcWsResponseMetadata(ws_response_carrera, "nombre_carrera");
+                        String carrera = getFieldFromCcWsResponseMetadata(ws_response_carrera, "carrera");
                         //!carrera
                         String resp = parseStudentCcWsResponseMetadata(ws_response, carrera);
 

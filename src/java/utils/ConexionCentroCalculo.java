@@ -1,41 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package utils;
 
-import structures.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
 
 /**
  *
  * @author Andres
  */
 public class ConexionCentroCalculo {
-
-    private static enum tipoWs {
-        DATOS_ESTUDIANTE,
-        CARRERA_ESTUDIANTE,
-        DATOS_EMPLEADO
-    }
-    
 
 
     public static HttpURLConnection getEstudiante(String numeroCarnet) {
