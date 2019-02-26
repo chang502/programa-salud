@@ -374,6 +374,7 @@ public class Manager {
                 } catch (Exception ff) {
                 }
                 map.put(field, tmp);
+                //System.out.println(field+" - "+tmp);
             }
 
             map.put("carrera", carrera);
@@ -494,6 +495,7 @@ public class Manager {
                         con = utils.ConexionCentroCalculo.getEstudianteCarrera(identificacion);
                         String ws_response_carrera = getCcWsResponseMetadata(con.getInputStream());
                         String carrera = getFieldFromCcWsResponseMetadata(ws_response_carrera, "carrera");
+                        //String carrera="09";
                         //!carrera
                         String resp = parseStudentCcWsResponseMetadata(ws_response, carrera);
 

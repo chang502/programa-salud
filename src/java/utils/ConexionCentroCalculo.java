@@ -6,23 +6,27 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+
 /**
  *
  * @author Andres
  */
 public class ConexionCentroCalculo {
 
+private static final int TIMEOUT = 3000;
+private static final String URL = "http://172.16.240.70:9090/fiusac-web-process/apiProcess/get/ejecutarMetodoWS/";
 
     public static HttpURLConnection getEstudiante(String numeroCarnet) {
         //Persona resp = null;
         String strOperacion = "datosPersonalesSimple";
         try {
             
-            String url = "http://172.16.8.162:9090/fiusac-web-process/apiProcess/get/ejecutarMetodoWS/";
-            URL obj = new URL(url);
+            //String url = "http://172.16.240.70:9090/fiusac-web-process/apiProcess/get/ejecutarMetodoWS/";
+            URL obj = new URL(URL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             
-            con.setConnectTimeout(3000);
+            con.setConnectTimeout(TIMEOUT);
+            
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Cache-Control", "no-cache");
@@ -76,11 +80,11 @@ public class ConexionCentroCalculo {
         String strOperacion = "datosPersonalesTrabajador";
         try {
             
-            String url = "http://172.16.8.162:9090/fiusac-web-process/apiProcess/get/ejecutarMetodoWS/";
-            URL obj = new URL(url);
+            
+            URL obj = new URL(URL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             
-            con.setConnectTimeout(3000);
+            con.setConnectTimeout(TIMEOUT);
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Cache-Control", "no-cache");
@@ -129,11 +133,10 @@ public class ConexionCentroCalculo {
         String strOperacion = "carrerasEstudiante";
         try {
             
-            String url = "http://172.16.8.162:9090/fiusac-web-process/apiProcess/get/ejecutarMetodoWS/";
-            URL obj = new URL(url);
+            URL obj = new URL(URL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             
-            con.setConnectTimeout(3000);
+            con.setConnectTimeout(TIMEOUT);
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Cache-Control", "no-cache");
