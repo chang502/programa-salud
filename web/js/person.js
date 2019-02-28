@@ -179,6 +179,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                         submitEmptyText: false,
                         name: 'identificacion',
                         maxLength: 13,
+                        selectOnFocus: true,
                         enforceMaxLength: true,
                         allowBlank: false,
                         listeners: {
@@ -278,7 +279,8 @@ function showPersonaDialog(hiddenfield, textfield) {
         title: 'Datos Personales',
         padding: '5 5 5 5',
         defaults: {
-            padding: '5 15 5 15'
+            padding: '5 15 5 15',
+            selectOnFocus: true
         },
         layout: {
             type: 'table',

@@ -244,9 +244,15 @@ Ext.onReady(function () {
                                                         ,
                                                         {
                                                             xtype: 'label',
-                                                            text: 'Hora inicio:'
+                                                            text: 'Hora programada:'
                                                         }, {
                                                             html: '<h3>' + resultado.data[0].hora + '</h3>'
+                                                        },
+                                                        {
+                                                            xtype: 'label',
+                                                            text: 'Hora inicio:'
+                                                        }, {
+                                                            html: '<h3>' + resultado.data[0].hora_inicio + '</h3>'
                                                         }
 
                                                     ]

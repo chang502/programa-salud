@@ -352,6 +352,7 @@ public class Manager {
 
     private String parseStudentCcWsResponseMetadata(String raw, String carrera) {
         try {
+            System.out.println(raw);
             java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
             JsonReader reader = Json.createReader(is);
 
@@ -427,6 +428,7 @@ public class Manager {
 
     private String parseEmployeeCcWsResponseMetadata(String raw) {
         try {
+            System.out.println(raw);
             java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
             JsonReader reader = Json.createReader(is);
             //JsonObject jsonObject = reader.readObject();
@@ -442,7 +444,7 @@ public class Manager {
 
             java.util.Map<String, String> map = new java.util.HashMap<>();
 
-            String fields[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "regpseronal", "departamento"};
+            String fields[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "regpersonal", "departamento"};
             for (int i = 0; i < fields.length; i++) {
                 String field = fields[i];
                 String tmp = null;
@@ -462,6 +464,8 @@ public class Manager {
             fields[2] = "fecha_nacimiento";
             fields[4] = "email";
 
+            System.out.println("regpersonal: '"+map.get("regpersonal")+"'");
+            
             return callSelectStoredProcedure("get_employee_from_cc", map, fields);
 
         } catch (Exception e) {
