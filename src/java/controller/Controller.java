@@ -1313,7 +1313,9 @@ public class Controller {
             response.callResultStoredProcedure("schedule_appointment", map, fields);
         }
         
-        System.out.println("id_cita: "+response.getIdInsert());
+        //System.out.println("id_cita: "+response.getIdInsert());
+        utils.SendEmail se=new utils.SendEmail();
+        se.sendAppointmentConfirmationEmail(response.getIdInsert());
         
         
         
@@ -1600,6 +1602,157 @@ public class Controller {
     
     
     
+    
+    
+    
+    @POST
+    @Path("/personmoreinfo")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getPersonaFicha(java.io.InputStream params) {
+
+        String fields[] = {"id_persona"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callSelectStoredProcedure("get_persona_ficha", map, fields);
+
+    }
+    
+    
+    
+    
+        
+    @POST
+    @Path("/savepersonmoreinfo")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String savePersonaFicha(java.io.InputStream params) {
+
+        String fields[] = {"id_persona", "flag_tiene_discapacidad", "telefono_emergencia", "contacto_emergencia", "id_tipo_discapacidad"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("save_persona_ficha", map, fields);
+
+    }
+    
+    
+    
+    
+    
+    
+        
+    @POST
+    @Path("/saveappointmentaction")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String saveAcionCita(java.io.InputStream params) {
+
+        String fields[] = {"id_cita", "id_accion", "observaciones"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("create_cita_accion", map, fields);
+
+    }
+    
+    
+    
+    
+    
+    @POST
+    @Path("/appointmentactions")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAccionesCita(java.io.InputStream params) {
+
+        String fields[] = {"id_cita"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callSelectStoredProcedure("get_cita_acciones", map, fields);
+
+    }
+    
+    
+    
+    
+    
+    @POST
+    @Path("/deleteappointmentaction")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteAccionesCita(java.io.InputStream params) {
+
+        String fields[] = {"id_cita_accion","id_cita"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("delete_cita_accion", map, fields);
+
+    }
+    
+    
+    
+    
+    
+    
+    @POST
+    @Path("/finishappointment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String finishAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_cita"};
+        return m.callResultStoredProcedure("finish_appointment", fields, params);
+
+    }
+    
+    
+    
+    
+    
+    
+    @POST
+    @Path("/cancelappointment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String cancelAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_cita"};
+        return m.callResultStoredProcedure("cancel_appointment", fields, params);
+
+    }
+    
+    
+    
+    
+    
+    @POST
+    @Path("/appointmenthistory")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAppointmentHistory(java.io.InputStream params) {
+
+        String fields[] = {"id_cita"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callSelectStoredProcedure("get_appointment_history", map, fields);
+
+    }
+    
+    
+    
+    
+    
+    @POST
+    @Path("/deletepersonmeasurement")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deletePersonaMedida(java.io.InputStream params) {
+
+        String fields[] = {"id_persona_medida","id_cita"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("delete_persona_medida", map, fields);
+
+    }
     
     
     

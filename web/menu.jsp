@@ -17,7 +17,7 @@
             <ul> 
                 <li><a href="scheduleappointment.jsp"><span>Programar Cita</span></a></li>
                 <li><a href="appointments.jsp"><span>Ver y Editar Citas</span></a></li>
-                <li><a href="attendappointment.jsp"><span>Atender Cita</span></a></li>
+                <%--<li><a href="attendappointment.jsp"><span>Atender Cita</span></a></li>--%>
                 <li class="last"><a href="patients.jsp"><span>Buscar Pacientes</span></a></li> 
             </ul>
         </li>
