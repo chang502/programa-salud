@@ -1757,4 +1757,38 @@ public class Controller {
     
     
     
+    
+    
+    @POST
+    @Path("/patient")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getPatient(java.io.InputStream params) {
+
+        String fields[] = {"id_persona"};
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callSelectStoredProcedure("get_patient", map, fields);
+
+    }
+    
+    
+    
+    
+        
+    @POST
+    @Path("/updatepersoninfo")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updatePersonaInfo(java.io.InputStream params) {
+
+        String fields[] = {"id_persona", "nombre", "apellido", "fecha_nacimiento", "sexo", "email", "telefono", "cui", "nov", "regpersonal", "carnet"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("update_person_info", map, fields);
+
+    }
+    
+    
+    
+    
 }

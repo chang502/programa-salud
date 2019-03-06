@@ -175,11 +175,11 @@ public class JsonResponse {
                         data.append("\":");
 
                         data.append((dtypes[i] == Types.VARCHAR || dtypes[i] == Types.CHAR || dtypes[i] == Types.VARBINARY) ? "\"" : "");
-
-                        
+                                
+                        //Types.
                         //System.out.println(i + " " + md.getColumnName(i + 1) + ": " + dtypes[i] + "\twas null?: " + rs.wasNull());
 
-                        data.append(dtypes[i] == Types.BIT ? rs.getBoolean(i + 1) ? "true" : "false" : dtypes[i] == Types.DECIMAL ? ((rs.getLong(i + 1)*0l==0l && rs.wasNull())?"null":rs.getLong(i + 1)): rs.getString(i + 1) != null ? rs.getString(i + 1).replaceAll("\"", "\'").replaceAll("\n", "\\\\n") : "");
+                        data.append(dtypes[i] == Types.BIT ? rs.getBoolean(i + 1) ? "true" : "false" : dtypes[i] == Types.DECIMAL ? ((rs.getLong(i + 1)*0l==0l && rs.wasNull())?"null":rs.getLong(i + 1)): rs.getString(i + 1) != null ? rs.getString(i + 1).replaceAll("\"", "\'").replaceAll("\n", "\\\\n") : dtypes[i] == Types.INTEGER?((rs.getInt(i + 1)*0l==0l && rs.wasNull())?"null":rs.getInt(i + 1)): "");
 
                         data.append((dtypes[i] == Types.VARCHAR || dtypes[i] == Types.CHAR || dtypes[i] == Types.VARBINARY) ? "\"" : "");
                         data.append(",");

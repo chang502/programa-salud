@@ -97,8 +97,8 @@ function createAppointmentsForTodayPanel(conf) {
                                         icon: 'images/icons/vcard.png',
                                         tooltip: 'Ver ficha del paciente',
                                         handler: function (grid, rowIndex, colIndex) {
-                                            var rec = grid.getStore().getAt(rowIndex).get('id_cita');
-                                            //editRec(rec);
+                                            var rec = grid.getStore().getAt(rowIndex).get('id_paciente');
+                                            location.href = 'patient.jsp?paciente='+rec;
                                         }
                                     }, {
                                         icon: 'images/icons/page_edit.png',
