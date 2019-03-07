@@ -34,7 +34,7 @@
         <li class="has-sub"><a href="#"><span>Programa de Salud</span></a> 
             <ul> 
                 <li><a href="drinkingfountains.jsp"><span>Bebederos</span></a></li>
-                <li><a href="playgrounds.jsp"><span>Espacios de Convivencia</span></a></li>
+                <li><a href="coexistence.jsp"><span>Infraestructura y Planificación para la Convivencia</span></a></li>
                 <li><a href="teams.jsp"><span>Selecciones</span></a></li>
                 <li><a href="championships.jsp"><span>Campeonatos</span></a></li>
                 <li class="last"><a href="trainings.jsp"><span>Capacitaciones</span></a></li>

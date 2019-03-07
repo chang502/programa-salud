@@ -44,7 +44,7 @@ Ext.onReady(function () {
                             destroy: 'DELETE'
                         },
                         paramsAsJson: true,
-                        url: 'controller/patientmedidahist',
+                        url: 'controller/measurementhistoryperson',
                         jsonData: '{"id_persona": "' + urlparams.paciente + '"}',
                         reader: {type: 'json',
                             root: 'data'
@@ -64,7 +64,7 @@ Ext.onReady(function () {
                             destroy: 'DELETE'
                         },
                         paramsAsJson: true,
-                        url: 'controller/appointmentactions',
+                        url: 'controller/actionshistoryperson',
                         jsonData: '{"id_persona": "' + urlparams.paciente + '"}',
                         reader: {type: 'json',
                             root: 'data'
@@ -84,18 +84,18 @@ Ext.onReady(function () {
                             destroy: 'DELETE'
                         },
                         paramsAsJson: true,
-                        url: 'controller/appointmenthistory',
+                        url: 'controller/appointmenthistoryperson',
                         jsonData: '{"id_persona": "' + urlparams.paciente + '"}',
                         reader: {type: 'json',
                             root: 'data'
                         }
                     }
                 });
-                /*
-                 store_historial_medidas.load();
-                 store_historial_acciones.load({params:{id_cita:urlparams.cita}});
-                 store_historial_citas.load({params:{id_cita:urlparams.cita}});
-                 */
+                
+                 store_historial_medidas.load({params:{id_persona:urlparams.paciente}});
+                 store_historial_acciones.load({params:{id_persona:urlparams.paciente}});
+                 store_historial_citas.load({params:{id_persona:urlparams.paciente}});
+                 
                 Ext.Ajax.request({
                     url: 'controller/patient',
                     method: 'POST',
@@ -501,48 +501,7 @@ Ext.onReady(function () {
                                                             {text: 'Atiende', dataIndex: 'atiende', width: 220},
                                                             {text: 'Medida', dataIndex: 'medida', width: 110},
                                                             {text: 'Valor', dataIndex: 'valor', width: 100},
-                                                            {text: 'Unidad', dataIndex: 'unidad', width: 80},
-                                                            {
-                                                                xtype: 'actioncolumn',
-                                                                text: 'Eliminar',
-                                                                width: 40,
-                                                                items: [
-                                                                    {
-                                                                        icon: 'images/icons/cross.png',
-                                                                        tooltip: 'Eliminar registro',
-                                                                        handler: function (grid, rowIndex, colIndex) {
-                                                                            var rec = grid.getStore().getAt(rowIndex).get('id_persona_medida');
-
-                                                                            Ext.Msg.show({
-                                                                                title: 'Eliminar Registro',
-                                                                                message: '¿Está seguro de eliminar el registro?',
-                                                                                buttons: Ext.Msg.YESNO,
-                                                                                icon: Ext.Msg.QUESTION,
-                                                                                fn: function (btn) {
-                                                                                    if (btn === 'yes') {
-                                                                                        Ext.Ajax.request({
-                                                                                            url: 'controller/deletepersonmeasurement',
-                                                                                            method: 'POST',
-                                                                                            jsonData: '{"id_persona_medida": "' + rec + '","id_cita": "' + urlparams.cita + '"}',
-                                                                                            success: function (f, opts) {
-                                                                                                var resultadoEliminaReg = eval('(' + f.responseText + ')');
-                                                                                                if (resultadoEliminaReg.success) {
-                                                                                                    Ext.Msg.show({title: "Operación exitosa", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
-                                                                                                    store_historial_medidas.load({params: {id_cita: urlparams.paciente}});
-                                                                                                } else {
-                                                                                                    Ext.Msg.show({title: "Error", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
-                                                                                                }
-                                                                                            },
-                                                                                            failure: function (response, opts) {
-                                                                                                Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                }
-                                                                            });
-                                                                        }
-                                                                    }]
-                                                            }
+                                                            {text: 'Unidad', dataIndex: 'unidad', width: 80}
                                                         ]
                                                     }, {
                                                         xtype: 'grid',
@@ -557,48 +516,7 @@ Ext.onReady(function () {
                                                             {text: 'Clínica', dataIndex: 'clinica'},
                                                             {text: 'Atiende', dataIndex: 'atiende', width: 220},
                                                             {text: 'Acción', dataIndex: 'accion', width: 110},
-                                                            {text: 'Obs.', dataIndex: 'observaciones', width: 180},
-                                                            {
-                                                                xtype: 'actioncolumn',
-                                                                text: 'Eliminar',
-                                                                width: 40,
-                                                                items: [
-                                                                    {
-                                                                        icon: 'images/icons/cross.png',
-                                                                        tooltip: 'Eliminar registro',
-                                                                        handler: function (grid, rowIndex, colIndex) {
-                                                                            var rec = grid.getStore().getAt(rowIndex).get('id_cita_accion');
-
-                                                                            Ext.Msg.show({
-                                                                                title: 'Eliminar Registro',
-                                                                                message: '¿Está seguro de eliminar el registro?',
-                                                                                buttons: Ext.Msg.YESNO,
-                                                                                icon: Ext.Msg.QUESTION,
-                                                                                fn: function (btn) {
-                                                                                    if (btn === 'yes') {
-                                                                                        Ext.Ajax.request({
-                                                                                            url: 'controller/deleteappointmentaction',
-                                                                                            method: 'POST',
-                                                                                            jsonData: '{"id_cita_accion": "' + rec + '","id_cita": "' + urlparams.cita + '"}',
-                                                                                            success: function (f, opts) {
-                                                                                                var resultadoEliminaReg = eval('(' + f.responseText + ')');
-                                                                                                if (resultadoEliminaReg.success) {
-                                                                                                    Ext.Msg.show({title: "Operación exitosa", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
-                                                                                                    store_historial_acciones.load({params: {id_cita: urlparams.cita}});
-                                                                                                } else {
-                                                                                                    Ext.Msg.show({title: "Error", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
-                                                                                                }
-                                                                                            },
-                                                                                            failure: function (response, opts) {
-                                                                                                Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                }
-                                                                            });
-                                                                        }
-                                                                    }]
-                                                            }
+                                                            {text: 'Obs.', dataIndex: 'observaciones', width: 180}
                                                         ]
                                                     }, {
                                                         xtype: 'grid',

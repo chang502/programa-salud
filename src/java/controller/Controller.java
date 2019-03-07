@@ -1791,4 +1791,51 @@ public class Controller {
     
     
     
+    
+    
+    
+    
+    
+    @POST
+    @Path("/measurementhistoryperson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getMeasurementHistoryPerson(java.io.InputStream params) {
+
+        String fields[] = {"id_persona"};
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callSelectStoredProcedure("get_measurement_history_persona", map, fields);
+
+    }
+    
+    
+    
+    
+    @POST
+    @Path("/appointmenthistoryperson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAppointmentHistoryPerson(java.io.InputStream params) {
+
+        String fields[] = {"id_persona"};
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callSelectStoredProcedure("get_appointment_history_persona", map, fields);
+
+    }
+    
+    
+    
+    
+    @POST
+    @Path("/actionshistoryperson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getActionsHistoryPerson(java.io.InputStream params) {
+
+        String fields[] = {"id_persona"};
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callSelectStoredProcedure("get_cita_acciones_persona", map, fields);
+
+    }
+    
 }
