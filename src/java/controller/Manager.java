@@ -240,6 +240,7 @@ public class Manager {
                 ses.setAttribute("hasClinica", rs.getBoolean("hasClinica"));
                 ses.setAttribute("hasDeportes", rs.getBoolean("hasDeportes"));
                 ses.setAttribute("hasProgramaSalud", rs.getBoolean("hasProgramaSalud"));
+                ses.setAttribute("hasPlayground", rs.getBoolean("hasPlayground"));
                 ses.setAttribute("isAdmin", rs.getBoolean("isAdmin"));
                 ses.setAttribute("cambiar_clave", rs.getBoolean("cambiar_clave"));
 

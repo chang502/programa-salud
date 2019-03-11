@@ -26,7 +26,7 @@
                 response.sendRedirect("changepassword.jsp?redirect=" + request.getServletPath().replace("/", ""));
             }
         }
-        if(session.getAttribute("hasProgramaSalud")!=null && !(Boolean) session.getAttribute("hasProgramaSalud")){
+        if(session.getAttribute("hasPlayground")!=null && !(Boolean) session.getAttribute("hasPlayground")){
             response.sendRedirect("error.jsp?code=1");
         }
     %>

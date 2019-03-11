@@ -34,13 +34,21 @@
         <li class="has-sub"><a href="#"><span>Programa de Salud</span></a> 
             <ul> 
                 <li><a href="drinkingfountains.jsp"><span>Bebederos</span></a></li>
-                <li><a href="coexistence.jsp"><span>Infraestructura y Planificación para la Convivencia</span></a></li>
                 <li><a href="teams.jsp"><span>Selecciones</span></a></li>
                 <li><a href="championships.jsp"><span>Campeonatos</span></a></li>
                 <li class="last"><a href="trainings.jsp"><span>Capacitaciones</span></a></li>
             </ul>
         </li>
         <% } %>
+        
+        <% if(!session.isNew() && (Boolean)session.getAttribute("hasPlayground")) { %>
+        <li class="has-sub"><a href="#"><span>Espacios de Convivencia</span></a> 
+            <ul> 
+                <li class="last"><a href="coexistence.jsp"><span>Infraestructura y Planificación para la Convivencia</span></a></li>
+            </ul>
+        </li>
+        <% } %>
+        
         <% if(!session.isNew() && ((Boolean)session.getAttribute("hasClinica") || (Boolean)session.getAttribute("hasDeportes") || (Boolean)session.getAttribute("hasProgramaSalud")  )) { %>
         <li class="has-sub"><a href="#"><span>Reportes</span></span></a>
             <ul>	

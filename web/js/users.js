@@ -370,7 +370,7 @@ Ext.onReady(function () {
                             }, {
                                 xtype: 'grid',
                                 store: store_roles_usuarios,
-                                height: 140,
+                                height: 160,
                                 maxHeight: 250,
                                 columns: [
                                     {hidden: true, dataIndex: 'id_usuario_rol'},
@@ -410,7 +410,7 @@ Ext.onReady(function () {
                                             }
                                         }
                                     },
-                                    {text: 'Rol', dataIndex: 'rol', width: 175, dataIndex: 'nombre_rol'},
+                                    {text: 'Rol', dataIndex: 'nombre_rol', width: 175},
                                     {text: 'Descripción Rol', dataIndex: 'descripcionRol', width: 250, dataIndex: 'descripcion_rol'}
                                 ]
                             }

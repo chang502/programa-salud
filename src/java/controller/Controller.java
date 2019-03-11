@@ -1838,4 +1838,34 @@ public class Controller {
 
     }
     
+    
+    
+    
+    
+    
+    @GET
+    @Path("/coexistencecategories")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getCategoriasConvivencia() {
+        return m.callSelectStoredProcedure("get_categorias_convivencia");
+    }
+    
+    
+   
+    
+    @GET
+    @Path("/coexistenceplace")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getLugaresConvivencia(@Context HttpServletRequest request) {
+        String id_categoria_convivencia=request.getParameter("id_categoria_convivencia");
+        
+        java.util.Map<String, String> map = new HashMap<>();
+        
+        map.put("id_categoria_convivencia", id_categoria_convivencia!=null?id_categoria_convivencia.length()==0?null:id_categoria_convivencia:null);
+        
+        String fields[] = {"id_categoria_convivencia"};
+        
+        return m.callSelectStoredProcedure("get_lugares_convivencia", map, fields);
+    }
+    
 }

@@ -29,6 +29,28 @@ var store_unidades_medida = Ext.create('Ext.data.Store', {
     }
 });
 
+var store_categorias_convivencia = Ext.create('Ext.data.Store', {
+    fields: ['id_categoria_convivencia', 'nombre'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/coexistencecategories',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
+var store_lugares_convivencia = Ext.create('Ext.data.Store', {
+    fields: ['id_categoria_convivencia', 'nombre'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/coexistenceplace',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
 function editRec(rec) {
     Ext.Ajax.request({
         url: 'controller/playgrounds/' + rec,
@@ -237,7 +259,7 @@ Ext.onReady(function () {
 
     store_unidades_medida.load();
     store_espacio_convivencia.load();
-
+    store_categorias_convivencia.load();
 
 
     Ext.create({
@@ -262,6 +284,50 @@ Ext.onReady(function () {
                 buttonAlign: 'right',
                 items: [
                     {
+                        xtype: 'fieldset',
+                        title: 'Espacio / Ubicación',
+                        colspan: 2,
+                        padding: '5 5 5 5',
+                        layout: {
+                            type: 'table',
+                            columns: 2
+                        },
+                        defaults: {
+                            padding: '5 15 5 15',
+                            selectOnFocus: true
+                        },
+                        items: [
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Categoría',
+                                store: store_categorias_convivencia,
+                                queryMode: 'local',
+                                displayField: 'nombre',
+                                valueField: 'id_categoria_convivencia',
+                                allowBlank: false,
+                                emptyText: 'Seleccione',
+                                forceSelection: true,
+                                name: 'id_categoria_convivencia',
+                                listeners: {
+                                    select: function (combo, record, eOpts) {
+                                        store_lugares_convivencia.load({params:{id_categoria_convivencia:combo.getValue()}});
+                                    }
+                                }
+                            }, {
+                                xtype: 'combo',
+                                fieldLabel: 'Nombre',
+                                store: store_lugares_convivencia,
+                                queryMode: 'local',
+                                displayField: 'nombre',
+                                valueField: 'id_lugar_convivencia',
+                                allowBlank: false,
+                                emptyText: 'Seleccione',
+                                forceSelection: true,
+                                matchFieldWidth: false,
+                                name: 'id_lugar_convivencia'
+                            }
+                        ]
+                    }, {
                         xtype: 'textfield',
                         fieldLabel: 'Nombre',
                         name: 'nombre',
