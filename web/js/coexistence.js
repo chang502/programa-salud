@@ -58,7 +58,7 @@ function editRec(rec) {
         success: function (f, opts) {
             var resultado = eval('(' + f.responseText + ')');
             if (resultado.success) {
-
+                store_lugares_convivencia.load({params: {id_categoria_convivencia: resultado.data[0].id_categoria_convivencia}});
                 var frmEdit = Ext.create({
                     xtype: 'form',
                     padding: '5 5 5 5',
@@ -78,6 +78,53 @@ function editRec(rec) {
                             value: resultado.data[0].id_espacio_convivencia
                         },
                         {
+                            xtype: 'fieldset',
+                            title: 'Espacio / Ubicación',
+                            colspan: 2,
+                            padding: '5 5 5 5',
+                            layout: {
+                                type: 'table',
+                                columns: 2
+                            },
+                            defaults: {
+                                padding: '5 15 5 15',
+                                selectOnFocus: true
+                            },
+                            items: [
+                                {
+                                    xtype: 'combo',
+                                    fieldLabel: 'Categoría',
+                                    store: store_categorias_convivencia,
+                                    queryMode: 'local',
+                                    displayField: 'nombre',
+                                    valueField: 'id_categoria_convivencia',
+                                    allowBlank: false,
+                                    emptyText: 'Seleccione',
+                                    forceSelection: true,
+                                    name: 'id_categoria_convivencia',
+                                    value: resultado.data[0].id_categoria_convivencia,
+                                    listeners: {
+                                        select: function (combo, record, eOpts) {
+                                            store_lugares_convivencia.load({params: {id_categoria_convivencia: combo.getValue()}});
+                                        }
+                                    }
+                                }, {
+                                    xtype: 'combo',
+                                    fieldLabel: 'Nombre',
+                                    store: store_lugares_convivencia,
+                                    queryMode: 'local',
+                                    displayField: 'nombre',
+                                    valueField: 'id_lugar_convivencia',
+                                    allowBlank: false,
+                                    emptyText: 'Seleccione',
+                                    forceSelection: true,
+                                    matchFieldWidth: false,
+                                    name: 'id_lugar_convivencia',
+                                    value: resultado.data[0].id_lugar_convivencia
+                                }
+                            ]
+                        }
+                        , {
                             xtype: 'textfield',
                             fieldLabel: 'Nombre',
                             name: 'nombre',
@@ -163,6 +210,7 @@ function editRec(rec) {
                     title: 'Editar Registro',
                     defaultButton: 'doUpdate',
                     referenceHolder: true,
+                    modal: true,
                     buttons: [
                         {
                             text: 'Aceptar',
@@ -310,7 +358,7 @@ Ext.onReady(function () {
                                 name: 'id_categoria_convivencia',
                                 listeners: {
                                     select: function (combo, record, eOpts) {
-                                        store_lugares_convivencia.load({params:{id_categoria_convivencia:combo.getValue()}});
+                                        store_lugares_convivencia.load({params: {id_categoria_convivencia: combo.getValue()}});
                                     }
                                 }
                             }, {
@@ -456,6 +504,8 @@ Ext.onReady(function () {
 
                         columns: [
                             {hidden: true, dataIndex: 'id_espacio_convivencia'},
+                            {text: 'Categoría', dataIndex: 'categoria_convivencia', width: 120},
+                            {text: 'Lugar', dataIndex: 'lugar_convivencia', width: 150},
                             {text: 'Nombre', dataIndex: 'nombre', width: 120},
                             {text: 'Ubicación', dataIndex: 'ubicacion', width: 160},
                             {text: 'Cantidad', dataIndex: 'cantidad_medida', width: 100},

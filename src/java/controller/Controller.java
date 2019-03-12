@@ -615,7 +615,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String createPlayground(java.io.InputStream params) {
 
-        String fields[] = {"nombre", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado", "observaciones"};
+        String fields[] = {"nombre", "id_lugar_convivencia", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado", "observaciones"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
         return m.callResultStoredProcedure("create_playground", map, fields);
@@ -653,7 +653,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String updatePlayground(java.io.InputStream params) {
 
-        String fields[] = {"id_espacio_convivencia", "nombre", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado", "observaciones"};
+        String fields[] = {"id_espacio_convivencia", "nombre", "id_lugar_convivencia", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado", "observaciones"};
         return m.callResultStoredProcedure("update_playground", fields, params);
 
     }
