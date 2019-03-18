@@ -20,11 +20,23 @@ var store_capacidades_especiales = Ext.create('Ext.data.Store', {
 
 
 
+var store_tipos_enfermedad = Ext.create('Ext.data.Store', {
+    fields: ['id_tipo_enfermedad', 'nombre'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/diseasetypes',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
 
 
 Ext.onReady(function () {
 
     store_capacidades_especiales.load();
+    store_tipos_enfermedad.load();
 
     try {
         var txtparams = location.search.substring(1);
@@ -158,6 +170,18 @@ Ext.onReady(function () {
                                         name: 'id_tipo_discapacidad',
                                         allowBlank: false
                                     }, {
+                                        xtype: 'combo',
+                                        fieldLabel: '¿Padece de alguna enfermedar crónica?',
+                                        emptyText: 'Seleccione',
+                                        store: store_tipos_enfermedad,
+                                        matchFieldWidth: false,
+                                        queryMode: 'local',
+                                        displayField: 'nombre',
+                                        valueField: 'id_tipo_enfermedad',
+                                        name: 'id_tipo_enfermedad',
+                                        colspan: 2,
+                                        allowBlank: false
+                                    }, {
                                         xtpye: 'hiddenfield',
                                         name: 'id_persona',
                                         value: urlparams.paciente
@@ -183,7 +207,7 @@ Ext.onReady(function () {
                                                         form.mask("Espere");
                                                         var data = form.getValues();
 
-                                                        data.id_persona = panelInfoAdicional.items.items[4].value;
+                                                        data.id_persona = panelInfoAdicional.items.items[5].value;
 
                                                         if (!data.hasOwnProperty('flag_tiene_discapacidad')) {
                                                             data.flag_tiene_discapacidad = '0';

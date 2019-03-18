@@ -1628,7 +1628,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String savePersonaFicha(java.io.InputStream params) {
 
-        String fields[] = {"id_persona", "flag_tiene_discapacidad", "telefono_emergencia", "contacto_emergencia", "id_tipo_discapacidad"};
+        String fields[] = {"id_persona", "flag_tiene_discapacidad", "telefono_emergencia", "contacto_emergencia", "id_tipo_discapacidad", "id_tipo_enfermedad"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
         return m.callResultStoredProcedure("save_persona_ficha", map, fields);
@@ -1866,6 +1866,36 @@ public class Controller {
         String fields[] = {"id_categoria_convivencia"};
         
         return m.callSelectStoredProcedure("get_lugares_convivencia", map, fields);
+    }
+    
+    
+   
+    
+    
+    @GET
+    @Path("/diseasetypes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDiseaseTypes() {
+        return m.callSelectStoredProcedure("get_disease_types");
+    }
+    
+    
+    
+    
+    
+    
+        
+    @POST
+    @Path("/saveemployeeextrainfo")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String saveEmployeeExtraInfo(java.io.InputStream params) {
+
+        String fields[] = {"cui", "fecha_nacimiento", "telefono", "telefono_emergencia", "contacto_emergencia", "peso", "estatura", "flag_tiene_discapacidad", "id_tipo_discapacidad", "id_tipo_enfermedad"};
+
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.actualizarDatosTrabajador( map, fields);
+
     }
     
 }

@@ -26,12 +26,13 @@
         </style>
         
         
+        <% if(session.getAttribute("hasClinica")!=null && (Boolean) session.getAttribute("hasClinica")){ %><script src="js/appointmenteditanddelete_dialog.js" type="text/javascript"></script>
         <script src="js/person.js" type="text/javascript"></script>
-        <script src="js/appointmenteditanddelete_dialog.js" type="text/javascript"></script>
         <script src="js/appointment_store.js" type="text/javascript"></script>
         <script src="js/appointmentschedule_panel.js" type="text/javascript"></script>
         <script src="js/appointmentsfortoday_panel.js" type="text/javascript"></script>
-        <script src="js/index.js" type="text/javascript"></script>
+        <script src="js/index.js" type="text/javascript"></script><% } %>
+        <% if(session.getAttribute("hasIngresoDatos")!=null && (Boolean) session.getAttribute("hasIngresoDatos")){ %><script src="js/ingresodatos.js" type="text/javascript"></script><% } %>
         <title>Inicio</title>
     </head><%
         Boolean cambiar_clave = (Boolean) session.getAttribute("cambiar_clave");
@@ -48,7 +49,9 @@
             <jsp:include page="header.jsp" />
             <jsp:include page="menu.jsp" />
             <div id="main-container" >
-
+                <% if(session.getAttribute("hasClinica")!=null && (Boolean) session.getAttribute("hasClinica")){ %><div id="index_clinica" ></div><% } %>
+                <% if(session.getAttribute("hasIngresoDatos")!=null && (Boolean) session.getAttribute("hasIngresoDatos")){ %><div id="index_ingresodatos" ></div><% } %>
+                
             </div>
             <jsp:include page="footer.jsp" />
         </div>

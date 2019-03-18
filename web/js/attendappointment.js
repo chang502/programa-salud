@@ -18,13 +18,23 @@ var store_capacidades_especiales = Ext.create('Ext.data.Store', {
     }
 });
 
-
+var store_tipos_enfermedad = Ext.create('Ext.data.Store', {
+    fields: ['id_tipo_enfermedad', 'nombre'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/diseasetypes',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
 
 
 
 Ext.onReady(function () {
 
     store_capacidades_especiales.load();
+    store_tipos_enfermedad.load();
 
     try {
         var txtparams = location.search.substring(1);
@@ -134,6 +144,7 @@ Ext.onReady(function () {
                                                     xtype: 'textfield',
                                                     fieldLabel: 'Teléfono de emergencia',
                                                     name: 'telefono_emergencia',
+                                                    allowBlank: false,
                                                     maxLength: 8,
                                                     enforceMaxLength: true,
                                                     minLength: 8,
@@ -141,6 +152,9 @@ Ext.onReady(function () {
                                                 }, {
                                                     xtype: 'textfield',
                                                     fieldLabel: 'Contacto de emergencia',
+                                                    allowBlank: false,
+                                                    maxLength: 255,
+                                                    enforceMaxLength: true,
                                                     name: 'contacto_emergencia'
                                                 }, {
                                                     xtype: 'checkbox',
@@ -164,10 +178,23 @@ Ext.onReady(function () {
                                                     store: store_capacidades_especiales,
                                                     queryMode: 'local',
                                                     displayField: 'nombre',
+                                                    disabled: true,
                                                     valueField: 'id_tipo_discapacidad',
                                                     name: 'id_tipo_discapacidad',
                                                     allowBlank: false
                                                 }, {
+                        xtype: 'combo',
+                        fieldLabel: '¿Padece de alguna enfermedar crónica?',
+                        emptyText: 'Seleccione',
+                        store: store_tipos_enfermedad,
+                        matchFieldWidth: false,
+                        queryMode: 'local',
+                        displayField: 'nombre',
+                        valueField: 'id_tipo_enfermedad',
+                        name: 'id_tipo_enfermedad',
+                        colspan: 2,
+                        allowBlank: false
+                    }, {
                                                     xtpye: 'hiddenfield',
                                                     name: 'id_cita',
                                                     value: resultado.data[0].id_cita
@@ -197,7 +224,13 @@ Ext.onReady(function () {
                                                                     form.mask("Espere");
                                                                     var data = form.getValues();
 
-                                                                    data.id_persona = panelInfoAdicional.items.items[5].value;
+                                                                    data.id_persona = panelInfoAdicional.items.items[6].value;
+                                                                    
+                                                                    
+
+                                                                    if (!data.hasOwnProperty('flag_tiene_discapacidad')) {
+                                                                        data.flag_tiene_discapacidad = '0';
+                                                                    }
 
                                                                     Ext.Ajax.request({
                                                                         url: 'controller/savepersonmoreinfo',
@@ -220,6 +253,7 @@ Ext.onReady(function () {
                                                                                             panelInfoAdicional.items.items[1].setValue(resultado_moreinfo2.data[0].contacto_emergencia);
                                                                                             panelInfoAdicional.items.items[2].setValue(resultado_moreinfo2.data[0].flag_tiene_discapacidad);
                                                                                             panelInfoAdicional.items.items[3].setValue(resultado_moreinfo2.data[0].id_tipo_discapacidad);
+                                                                                            panelInfoAdicional.items.items[4].setValue(resultado_moreinfo2.data[0].id_tipo_enfermedad);
                                                                                         } else {
                                                                                             Ext.Msg.show({title: "Error", msg: resultado_moreinfo.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                                                                         }
@@ -254,6 +288,7 @@ Ext.onReady(function () {
                                                     panelInfoAdicional.items.items[1].setValue(resultado_moreinfo.data[0].contacto_emergencia);
                                                     panelInfoAdicional.items.items[2].setValue(resultado_moreinfo.data[0].flag_tiene_discapacidad);
                                                     panelInfoAdicional.items.items[3].setValue(resultado_moreinfo.data[0].id_tipo_discapacidad);
+                                                    panelInfoAdicional.items.items[4].setValue(resultado_moreinfo.data[0].id_tipo_enfermedad);
                                                 } else {
                                                     Ext.Msg.show({title: "Error", msg: resultado_moreinfo.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                                 }

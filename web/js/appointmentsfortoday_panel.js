@@ -22,9 +22,13 @@ var store_citas_de_hoy = Ext.create('Ext.data.Store', {
 function createAppointmentsForTodayPanel(conf) {
 
     store_citas_de_hoy.load();
-
     if (conf === undefined) {
+        
         conf = {afterSuccess: function () {}};
+    }
+
+    if(!conf.hasOwnProperty('collapsible')){
+        conf.collapsible = false;
     }
     var appointmentsfortoday_panel = Ext.create({
         xtype: 'panel',
@@ -32,6 +36,7 @@ function createAppointmentsForTodayPanel(conf) {
             {
                 xtype: 'fieldset',
                 title: 'Citas de Hoy',
+                collapsible: conf.collapsible,
                 items: [{
                         xtype: 'grid',
                         store: store_citas_de_hoy,
@@ -129,7 +134,7 @@ function createAppointmentsForTodayPanel(conf) {
         ]
     });
 
-
+    //Ext.apply(appointmentsfortoday_panel,conf);
 
 
     return appointmentsfortoday_panel;

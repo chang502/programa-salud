@@ -12,11 +12,12 @@ Ext.QuickTips.init();
 Ext.onReady(function () {
     Ext.create({
         xtype: 'form',
-        renderTo: 'main-container',
+        renderTo: 'index_clinica',
         //width: 900,
         items: [
-            createAppointmentsForTodayPanel({}),
+            createAppointmentsForTodayPanel({collapsible:true}),
             createScheduleAppointmentPanel({
+                collapsible: true,
                 afterSuccess: function(){
                     store_citas_de_hoy.load();
                 }

@@ -370,8 +370,8 @@ Ext.onReady(function () {
                             }, {
                                 xtype: 'grid',
                                 store: store_roles_usuarios,
-                                height: 160,
-                                maxHeight: 250,
+                                //height: 160,
+                                //maxHeight: 250,
                                 columns: [
                                     {hidden: true, dataIndex: 'id_usuario_rol'},
                                     {

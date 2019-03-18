@@ -181,7 +181,6 @@ public class Manager {
             /*response.setSuccess(true);
             response.setSessionExpired(false);
             response.setMessage("Medidas ingresadas correctamente" );*/
-
             return "{\"success\":true,\"sessionexpired\":false,\"message\":\"Medidas ingresadas correctamente\",\"rows\":0,\"data\":[]}";
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -241,6 +240,7 @@ public class Manager {
                 ses.setAttribute("hasDeportes", rs.getBoolean("hasDeportes"));
                 ses.setAttribute("hasProgramaSalud", rs.getBoolean("hasProgramaSalud"));
                 ses.setAttribute("hasPlayground", rs.getBoolean("hasPlayground"));
+                ses.setAttribute("hasIngresoDatos", rs.getBoolean("hasIngresoDatos"));
                 ses.setAttribute("isAdmin", rs.getBoolean("isAdmin"));
                 ses.setAttribute("cambiar_clave", rs.getBoolean("cambiar_clave"));
 
@@ -353,7 +353,6 @@ public class Manager {
 
     private String parseStudentCcWsResponseMetadata(String raw, String carrera) {
         try {
-            System.out.println(raw);
             java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
             JsonReader reader = Json.createReader(is);
 
@@ -429,7 +428,7 @@ public class Manager {
 
     private String parseEmployeeCcWsResponseMetadata(String raw) {
         try {
-            System.out.println(raw);
+            //System.out.println(raw);
             java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
             JsonReader reader = Json.createReader(is);
             //JsonObject jsonObject = reader.readObject();
@@ -465,8 +464,7 @@ public class Manager {
             fields[2] = "fecha_nacimiento";
             fields[4] = "email";
 
-            System.out.println("regpersonal: '"+map.get("regpersonal")+"'");
-            
+            //System.out.println("regpersonal: '"+map.get("regpersonal")+"'");
             return callSelectStoredProcedure("get_employee_from_cc", map, fields);
 
         } catch (Exception e) {
@@ -543,6 +541,94 @@ public class Manager {
         }
 
         return "{}";
+    }
+
+    public String actualizarDatosTrabajador(java.util.Map<String, String> params, String fields[]) {
+        if (response.setSessionExpired(isSessionExpired())) {
+            return response.getJsonData();
+        }
+        try {
+
+            try {
+                HttpURLConnection con = utils.ConexionCentroCalculo.getTrabajador(params.get("cui"));
+
+                if (con != null && con.getResponseCode() == 200) {
+
+                    java.io.InputStream is = con.getInputStream();
+                    String ws_response = getCcWsResponseMetadata(is);
+
+                    java.io.InputStream bais = new java.io.ByteArrayInputStream(ws_response.getBytes("UTF-8"));
+                    JsonReader reader = Json.createReader(bais);
+
+                    JsonArray jsonArray = reader.readArray();
+                    reader.close();
+
+                    if (jsonArray.isEmpty()) {
+                        response.setSuccess(false);
+                        response.setMessage("No se encontraron registros");
+                        return response.getJsonData();
+                    }
+                    JsonObject jsonObject = jsonArray.getJsonObject(0);
+
+                    java.util.Map<String, String> map = new java.util.HashMap<>();
+
+                    String fields_rec[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "regpersonal", "departamento"};
+                    for (int i = 0; i < fields_rec.length; i++) { //<8
+                        String field = fields_rec[i];
+                        String tmp = null;
+                        try {
+                            tmp = jsonObject.getString(field);
+                        } catch (Exception ff) {
+                        }
+                        map.put(field, tmp);
+                    }
+
+                    String tmp = map.remove("fechanacimiento");
+                    map.put("fecha_nacimiento", tmp);
+
+                    tmp = map.remove("correo");
+                    map.put("email", tmp);
+
+                    if (map.get("cui").equals(params.get("cui"))
+                            && map.get("fecha_nacimiento").equals(params.get("fecha_nacimiento"))) {
+                        //System.out.println("Información coincide, persona identificada");
+                        params.put("nombre", map.get(""));
+                        params.put("apellido", map.get(""));
+                        params.put("sexo", map.get(""));
+                        params.put("email", map.get(""));
+                        params.put("regpersonal", map.get(""));
+                        params.put("departamento", map.get(""));
+
+                        String fielfs[] = {"cui", "fecha_nacimiento", "telefono", "telefono_emergencia", "contacto_emergencia", "peso", "estatura", "flag_tiene_discapacidad", "id_tipo_discapacidad", "id_tipo_enfermedad",
+                            "nombre", "apellido", "sexo", "email", "regpersonal", "departamento"};
+
+                        return callSelectStoredProcedure("registrar_datos_empleado", map, fielfs);
+
+                    } else {
+                        response.setSuccess(false);
+                        response.setMessage("Los datos ingresados no coinciden, revise que el CUI y la fecha de nacimiento sean las correctas");
+                        return response.getJsonData();
+                    }
+
+                } else {
+                    response.setSuccess(false);
+                    response.setMessage("No es posible realizar la búsqueda de personal en este momento");
+                    return response.getJsonData();
+                }
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+                response.setSuccess(false);
+                response.setMessage("Ocurrió un error: " + e.getMessage());
+                return response.getJsonData();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            response.setSuccess(false);
+            response.setMessage("Ocurrió un error: " + e.getMessage());
+            return response.getJsonData();
+        }
+
     }
 
 }

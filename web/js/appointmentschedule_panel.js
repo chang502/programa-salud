@@ -35,6 +35,10 @@ function createScheduleAppointmentPanel(conf) {
     if (conf===undefined){
         conf={afterSuccess: function(){}};
     }
+
+    if(!conf.hasOwnProperty('collapsible')){
+        conf.collapsible = false;
+    }
     
     var scheduleappointment_panel = Ext.create({
         xtype: 'form',
@@ -46,6 +50,7 @@ function createScheduleAppointmentPanel(conf) {
             {
                 xtype: 'fieldset',
                 title: 'Programar Cita',
+                collapsible: conf.collapsible,
                 layout: {
                     type: 'table',
                     columns: 2
