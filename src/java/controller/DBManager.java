@@ -28,24 +28,26 @@ public class DBManager {
         }
         try {
             Properties prop = new Properties();
-            prop.load(DBManager.class.getResourceAsStream("/controller/database.properties"));
+            String conf_path=System.getenv("PROSALUD_CONFIG");
+            String db_conf_file=conf_path+java.io.File.separator+"database.properties";
+            prop.load(new java.io.FileInputStream(db_conf_file));
             connectionstring = prop.getProperty("connectionstring");
             user = prop.getProperty("user");
             password = prop.getProperty("password");
-            //System.out.println("Reading database.properties");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            e.printStackTrace(System.err);
         }
     }
 
     private static void connect() {
-        if (conn != null) {
-            //System.out.println("connection already created");
-            return;
-        }
+
         try {
+            if (conn != null && !conn.isClosed()) {
+                //System.out.println("connection already created");
+                return;
+            }
             //System.out.println("Creating the connection");
             Class.forName("org.mariadb.jdbc.Driver");
             conn = DriverManager.getConnection(connectionstring, user, password);
@@ -75,15 +77,13 @@ public class DBManager {
 
         CallableStatement stmt = conn.prepareCall(query);
 
-
-        if(stmt.execute()){
+        if (stmt.execute()) {
             return stmt.getResultSet();
         }
 
         return null;
 
     }
-    
 
     public ResultSet callGetProcedure(String procedure_name, java.util.Map<String, String> params, String fields[]) throws Exception {
 
@@ -94,10 +94,8 @@ public class DBManager {
         if (params.size() > 0) {
             param_list = param_list.substring(0, param_list.length() - 1);
         }
-        
 
         String query = "{ call " + procedure_name + "(" + param_list + ") }";
-
 
         CallableStatement stmt = conn.prepareCall(query);
 
@@ -105,7 +103,7 @@ public class DBManager {
             stmt.setString(i + 1, params.get(fields[i]));
         }
 
-        if(stmt.execute()){
+        if (stmt.execute()) {
             return stmt.getResultSet();
         }
 
@@ -125,7 +123,7 @@ public class DBManager {
         }
 
         String query = "{ call " + procedure + "(" + param_list + ",?,?) }";//2 parámetros más para el id y el mensaje
-        
+
         CallableStatement stmt = conn.prepareCall(query);
 
         for (int i = 0; i < fields.length; i++) {
@@ -139,8 +137,6 @@ public class DBManager {
         return stmt;
 
     }
-    
-    
 
     public CallableStatement callResultProcedureWith4Outputs(String procedure, java.util.Map<String, String> params, String fields[]) throws Exception {
 
@@ -154,7 +150,7 @@ public class DBManager {
         }
 
         String query = "{ call " + procedure + "(" + param_list + ",?,?,?,?) }";//2 parámetros más para el id y el mensaje
-        
+
         CallableStatement stmt = conn.prepareCall(query);
 
         for (int i = 0; i < fields.length; i++) {
@@ -170,5 +166,5 @@ public class DBManager {
         return stmt;
 
     }
-    
+
 }

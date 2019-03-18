@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Properties;
 
 
 /**
@@ -13,19 +14,41 @@ import java.net.URLEncoder;
  */
 public class ConexionCentroCalculo {
 
-private static final int TIMEOUT = 3000;
-private static final String URL = "http://172.16.240.70:9090/fiusac-web-process/apiProcess/get/ejecutarMetodoWS/";
+    //private static final int TIMEOUT = 3000;
+    //private static final String URL = "http://172.16.240.70:9090/fiusac-web-process/apiProcess/get/ejecutarMetodoWS/";
+    private static String timeout;
+    private static String user;
+    private static String password;
+    private static String url;
 
+    private static void loadProperties() {
+        if (url != null) {
+            return;
+        }
+        try {
+            Properties prop = new Properties();
+            String conf_path=System.getenv("PROSALUD_CONFIG");
+            String db_conf_file=conf_path+java.io.File.separator+"webservice.properties";
+            prop.load(new java.io.FileInputStream(db_conf_file));
+            url = prop.getProperty("url");
+            timeout = prop.getProperty("timeout");
+            user = prop.getProperty("user");
+            password = prop.getProperty("password");
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace(System.err);
+        }
+    }
+    
     public static HttpURLConnection getEstudiante(String numeroCarnet) {
-        //Persona resp = null;
+        loadProperties();
         String strOperacion = "datosPersonalesSimple";
         try {
-            
-            //String url = "http://172.16.240.70:9090/fiusac-web-process/apiProcess/get/ejecutarMetodoWS/";
-            URL obj = new URL(URL);
+            URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             
-            con.setConnectTimeout(TIMEOUT);
+            con.setConnectTimeout(Integer.parseInt(timeout));
             
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -33,12 +56,11 @@ private static final String URL = "http://172.16.240.70:9090/fiusac-web-process/
             con.setRequestProperty("charset", "UTF-8");
             
             
-            String strUser = "990067900";
-            String strPassword = "ws-sa7ud";
+            String strUser = user;
+            String strPassword = password;
             String strReference = "";
             
             String strParametros = "";
-            
             
             strParametros = URLEncoder.encode("Carnet=" + numeroCarnet, "UTF-8");
             
@@ -54,11 +76,6 @@ private static final String URL = "http://172.16.240.70:9090/fiusac-web-process/
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             
             wr.writeBytes(urlParameters);
-            
-            /*BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(wr, "ASCII"));
-            bw.write(urlParameters);
-            bw.flush();
-            bw.close();*/
             
             wr.flush();
             wr.close();
@@ -76,21 +93,19 @@ private static final String URL = "http://172.16.240.70:9090/fiusac-web-process/
 
 
     public static HttpURLConnection getTrabajador(String cui) {
-        //Persona resp = null;
+        loadProperties();
         String strOperacion = "datosPersonalesTrabajador";
         try {
-            
-            
-            URL obj = new URL(URL);
+            URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             
-            con.setConnectTimeout(TIMEOUT);
+            con.setConnectTimeout(Integer.parseInt(timeout));
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Cache-Control", "no-cache");
             
-            String strUser = "990067900";
-            String strPassword = "ws-sa7ud";
+            String strUser = user;
+            String strPassword = password;
             String strReference = "";
             
             String strParametros = "";
@@ -129,20 +144,20 @@ private static final String URL = "http://172.16.240.70:9090/fiusac-web-process/
 
 
     public static HttpURLConnection getEstudianteCarrera(String carnet) {
-        //Persona resp = null;
+        loadProperties();
         String strOperacion = "carrerasEstudiante";
         try {
             
-            URL obj = new URL(URL);
+            URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             
-            con.setConnectTimeout(TIMEOUT);
+            con.setConnectTimeout(Integer.parseInt(timeout));
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Cache-Control", "no-cache");
             
-            String strUser = "990067900";
-            String strPassword = "ws-sa7ud";
+            String strUser = user;
+            String strPassword = password;
             String strReference = "";
             
             String strParametros = "";

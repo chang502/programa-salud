@@ -274,6 +274,7 @@ Ext.onReady(function () {
                                             panelInfoAdicional.items.items[1].setValue(resultado_moreinfo.data[0].contacto_emergencia);
                                             panelInfoAdicional.items.items[2].setValue(resultado_moreinfo.data[0].flag_tiene_discapacidad);
                                             panelInfoAdicional.items.items[3].setValue(resultado_moreinfo.data[0].id_tipo_discapacidad);
+                                            panelInfoAdicional.items.items[4].setValue(resultado_moreinfo.data[0].id_tipo_enfermedad);
                                             //panelInfoAdicional.items.items[2].checkChange();
 
                                         }
