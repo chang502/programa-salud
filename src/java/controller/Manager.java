@@ -589,20 +589,34 @@ public class Manager {
                     tmp = map.remove("correo");
                     map.put("email", tmp);
 
+                    String fecha_nac_formatted=params.get("fecha_nacimiento");
+                    fecha_nac_formatted=fecha_nac_formatted.substring(6,10)+"-"+fecha_nac_formatted.substring(3,5)+"-"+fecha_nac_formatted.substring(0,2);
+                    
+                    //System.out.println("cui: "+map.get("cui")+" - "+params.get("cui"));
+                    //System.out.println("fecha_nac: "+map.get("fecha_nacimiento")+" - "+fecha_nac_formatted);
                     if (map.get("cui").equals(params.get("cui"))
-                            && map.get("fecha_nacimiento").equals(params.get("fecha_nacimiento"))) {
+                            && map.get("fecha_nacimiento").equals(fecha_nac_formatted)) {
                         //System.out.println("Información coincide, persona identificada");
-                        params.put("nombre", map.get(""));
-                        params.put("apellido", map.get(""));
-                        params.put("sexo", map.get(""));
-                        params.put("email", map.get(""));
-                        params.put("regpersonal", map.get(""));
-                        params.put("departamento", map.get(""));
+                        params.put("nombre", map.get("nombre"));
+                        params.put("apellido", map.get("apellido"));
+                        params.put("sexo", map.get("sexo"));
+                        params.put("email", map.get("email"));
+                        params.put("regpersonal", map.get("regpersonal"));
+                        params.put("departamento", map.get("departamento"));
+                        
+                        params.remove("fecha_nacimiento");
+                        params.put("fecha_nacimiento", fecha_nac_formatted);
 
                         String fielfs[] = {"cui", "fecha_nacimiento", "telefono", "telefono_emergencia", "contacto_emergencia", "peso", "estatura", "flag_tiene_discapacidad", "id_tipo_discapacidad", "id_tipo_enfermedad",
                             "nombre", "apellido", "sexo", "email", "regpersonal", "departamento"};
 
-                        return callSelectStoredProcedure("registrar_datos_empleado", map, fielfs);
+                        for (int i = 0; i < fielfs.length; i++) {
+                            String fielf = fielfs[i];
+                            System.out.println(fielf+": "+params.get(fielf));
+                        }
+                        
+                        
+                        return callResultStoredProcedure("registrar_datos_empleado", params, fielfs);
 
                     } else {
                         response.setSuccess(false);

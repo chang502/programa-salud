@@ -10,11 +10,13 @@ Ext.require([
 Ext.QuickTips.init();
 
 
-var store_tipos_documento = Ext.create('Ext.data.Store', {
-    fields: ['id_tipo_documento', 'nombre'],
+
+
+var store_semestres = Ext.create('Ext.data.Store', {
+    fields: ['semestre'],
     proxy: {
         type: 'ajax',
-        url: 'controller/studentdocumenttypes',
+        url: 'controller/semesters',
         reader: {type: 'json',
             root: 'data'
         }
@@ -275,10 +277,31 @@ function deleteRec(rec) {
 
 Ext.onReady(function () {
     
-    store_tipos_documento.load();
     store_disciplinas.load();
     store_estudiantes_deportes.load();
     
+    
+    
+    comboSemestre = Ext.create({
+        xtype: 'combo',
+        fieldLabel: 'Semestre',
+        store: store_semestres,
+        colspan: 2,
+        queryMode: 'local',
+        displayField: 'semestre',
+        valueField: 'semestre',
+        name: 'semestre',
+        allowBlank: false
+    });
+
+    store_semestres.load(function () {
+        if (store_semestres.getCount() > 1) {
+            comboSemestre.select(store_semestres.getAt(1));
+        } else if (store_semestres.getCount() > 0) {
+            comboSemestre.select(store_semestres.getAt(0));
+        }
+
+    });
     
     var frmPpal = Ext.create({
         xtype: 'form',
@@ -302,14 +325,9 @@ Ext.onReady(function () {
                 },
                 buttonAlign: 'right',
                 items: [
+                    comboSemestre
+                    , 
                     {
-                        xtype: 'combo',
-                        fieldLabel: 'Tipo documento',
-                        store: store_tipos_documento,
-                        queryMode: 'local',
-                        displayField: 'nombre',
-                        valueField: 'id_tipo_documento'
-                    }, {
                         xtype: 'textfield',
                         fieldLabel: 'Número Documento'
                     }, {

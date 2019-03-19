@@ -1894,6 +1894,7 @@ public class Controller {
         String fields[] = {"cui", "fecha_nacimiento", "telefono", "telefono_emergencia", "contacto_emergencia", "peso", "estatura", "flag_tiene_discapacidad", "id_tipo_discapacidad", "id_tipo_enfermedad"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
+        System.out.println(map.get("flag_tiene_discapacidad"));
         return m.actualizarDatosTrabajador( map, fields);
 
     }

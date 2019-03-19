@@ -196,6 +196,11 @@ Ext.onReady(function () {
                                         //setting id_persona
                                         //data.id_persona = form.items.items[0].items.items[2].items.items[0].value;
 
+
+                                        if (!data.hasOwnProperty('flag_tiene_discapacidad')) {
+                                            data.flag_tiene_discapacidad = '0';
+                                        }
+
                                         Ext.Ajax.request({
                                             url: 'controller/saveemployeeextrainfo',
                                             method: 'POST',

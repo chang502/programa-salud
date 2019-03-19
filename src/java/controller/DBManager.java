@@ -30,6 +30,7 @@ public class DBManager {
             Properties prop = new Properties();
             String conf_path=System.getenv("PROSALUD_CONFIG");
             String db_conf_file=conf_path+java.io.File.separator+"database.properties";
+            //System.out.println(db_conf_file);
             prop.load(new java.io.FileInputStream(db_conf_file));
             connectionstring = prop.getProperty("connectionstring");
             user = prop.getProperty("user");
