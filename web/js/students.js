@@ -328,9 +328,6 @@ Ext.onReady(function () {
                     comboSemestre
                     , 
                     {
-                        xtype: 'textfield',
-                        fieldLabel: 'Número Documento'
-                    }, {
                         xtype: 'combo',
                         fieldLabel: 'Disciplina',
                         colspan: 2,

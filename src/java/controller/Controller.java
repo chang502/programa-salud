@@ -719,18 +719,16 @@ public class Controller {
     @Path("/students")
     @Produces(MediaType.APPLICATION_JSON)
     public String getEstudiantesDeportes(@Context HttpServletRequest request) {
-        String id_tipo_documento=request.getParameter("id_tipo_documento");
-        String numero_documento=request.getParameter("numero_documento");
+        String semestre=request.getParameter("semestre");
         String id_disciplina=request.getParameter("id_disciplina");
         
         java.util.Map<String, String> map = new HashMap<>();
         
-        map.put("id_tipo_documento", id_tipo_documento!=null?id_tipo_documento.length()==0?null:id_tipo_documento:null);
-        map.put("numero_documento", numero_documento!=null?numero_documento.length()==0?null:numero_documento:null);
+        map.put("semestre", semestre!=null?semestre.length()==0?null:semestre:null);
         map.put("id_disciplina", id_disciplina!=null?id_disciplina.length()==0?null:id_disciplina:null);
         
         
-        String fields[] = {"id_tipo_documento","numero_documento","id_disciplina"};
+        String fields[] = {"semestre","id_disciplina"};
         return m.callSelectStoredProcedure("get_students", map, fields);
     }
     
