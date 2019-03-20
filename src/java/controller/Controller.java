@@ -716,6 +716,22 @@ public class Controller {
     
     
     @GET
+    @Path("/student_disciplines")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDisciplinasEstudiante(@Context HttpServletRequest request) {
+        String semestre=request.getParameter("semestre");
+        
+        java.util.Map<String, String> map = new HashMap<>();
+        
+        map.put("semestre", semestre!=null?semestre.length()==0?null:semestre:null);
+        
+        
+        String fields[] = {"semestre"};
+        return m.callSelectStoredProcedure("get_student_disciplines", map, fields);
+    }
+    
+    
+    @GET
     @Path("/students")
     @Produces(MediaType.APPLICATION_JSON)
     public String getEstudiantesDeportes(@Context HttpServletRequest request) {
@@ -734,32 +750,6 @@ public class Controller {
     
     
     
-    @GET
-    @Path("/students/{id_estudiante_deportes}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getEstudianteDeportes(@PathParam("id_estudiante_deportes") String id_estudiante_deportes) {
-        String fields[] = {"id_estudiante_deportes"};
-        java.util.Map<String, String> map = new HashMap<>();
-        map.put("id_estudiante_deportes", id_estudiante_deportes);
-        
-        return m.callSelectStoredProcedure("get_student",map,fields);
-    }
-    
-    
-
-    
-    
-    @POST
-    @Path("/updatestudent")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String updateEstudianteDeportes(java.io.InputStream params) {
-        String fields[] = {"id_estudiante_deportes", "id_tipo_documento", "numero_documento", "email", "peso", "estatura", "cualidades_especiales", "id_disciplina"};
-        return m.callResultStoredProcedure("update_student", fields, params);
-
-    }
-
-    
     
     @POST
     @Path("/deletestudent")
@@ -767,7 +757,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String deleteEstudianteDeportes(java.io.InputStream params) {
 
-        String fields[] = {"id_estudiante_deportes"};
+        String fields[] = {"id_asignacion_deportes"};
         return m.callResultStoredProcedure("delete_student", fields, params);
 
     }
