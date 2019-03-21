@@ -51,6 +51,20 @@ var store_lugares_convivencia = Ext.create('Ext.data.Store', {
     }
 });
 
+
+
+var store_estados_convivencia = Ext.create('Ext.data.Store', {
+    fields: ['estado'],
+    data: [
+        {"estado": 'PLANIFICACION'},
+        {"estado": 'EJECUCION'},
+        {"estado": 'SUPERVISION'},
+        {"estado": 'FINALIZADO'},
+        {"estado": 'VIGENTE'},
+        {"estado": 'SUSPENDIDO'}
+    ]
+});
+
 function editRec(rec) {
     Ext.Ajax.request({
         url: 'controller/playgrounds/' + rec,
@@ -138,7 +152,7 @@ function editRec(rec) {
                             name: 'ubicacion',
                             maxLength: 250,
                             enforceMaxLength: true,
-                            allowBlank: false,
+                            allowBlank: true,
                             value: resultado.data[0].ubicacion
                         }, {
                             xtype: 'numberfield',
@@ -199,7 +213,7 @@ function editRec(rec) {
                             fieldLabel: 'Observaciones',
                             width: 580,
                             name: 'observaciones',
-                            maxLength: 1000,
+                            maxLength: 2000,
                             enforceMaxLength: true,
                             value: resultado.data[0].observaciones
                         }
@@ -388,7 +402,7 @@ Ext.onReady(function () {
                         name: 'ubicacion',
                         maxLength: 250,
                         enforceMaxLength: true,
-                        allowBlank: false
+                        allowBlank: true
                     }, {
                         xtype: 'numberfield',
                         fieldLabel: 'Cantidad',
@@ -429,20 +443,24 @@ Ext.onReady(function () {
                         enforceMaxLength: true,
                         allowBlank: false
                     }, {
-                        xtype: 'textfield',
-                        colspan: 2,
+                        xtype: 'combo',
                         fieldLabel: 'Estado',
-                        name: 'estado',
-                        maxLength: 200,
-                        enforceMaxLength: true,
-                        allowBlank: false
+                        store: store_estados_convivencia,
+                        queryMode: 'local',
+                        displayField: 'estado',
+                        valueField: 'estado',
+                        allowBlank: false,
+                        emptyText: 'Seleccione',
+                        forceSelection: true,
+                        colspan: 2,
+                        name: 'estado'
                     }, {
                         xtype: 'textarea',
                         colspan: 2,
                         fieldLabel: 'Observaciones',
                         width: 580,
                         name: 'observaciones',
-                        maxLength: 1000,
+                        maxLength: 2000,
                         enforceMaxLength: true
                     }
                     ,

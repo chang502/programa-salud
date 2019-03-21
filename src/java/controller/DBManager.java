@@ -45,10 +45,10 @@ public class DBManager {
     private static void connect() {
 
         try {
-            if (conn != null && !conn.isClosed()) {
+            /*if (conn != null && !conn.isClosed()) {
                 //System.out.println("connection already created");
                 return;
-            }
+            }*/
             //System.out.println("Creating the connection");
             Class.forName("org.mariadb.jdbc.Driver");
             conn = DriverManager.getConnection(connectionstring, user, password);

@@ -140,7 +140,7 @@ function showPersonaDialog(hiddenfield, textfield) {
                         store: store_tipo_persona,
                         queryMode: 'local',
                         displayField: 'value',
-                        //forceSelection: true,
+                        forceSelection: true,
                         validateOnChange: true,
                         valueField: 'id',
                         name: 'tipo_persona',
