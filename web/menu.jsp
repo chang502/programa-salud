@@ -50,15 +50,7 @@
         <% } %>
         
         <% if(!session.isNew() && ((Boolean)session.getAttribute("hasClinica") || (Boolean)session.getAttribute("hasDeportes") || (Boolean)session.getAttribute("hasProgramaSalud")  )) { %>
-        <li class="has-sub"><a href="#"><span>Reportes</span></span></a>
-            <ul>	
-                <li><a href="#"><span>Reporte 1</span></a></li>
-                <li><a href="#"><span>Reporte 2</span></a></li>
-                <li><a href="#"><span>Reporte 3</span></a></li>
-                <li><a href="#"><span>Reporte 4</span></a></li>
-                <li class="last"><a href="#"><span>Reporte 5</span></a></li>
-            </ul>
-        </li>
+        <li><a href="reports.jsp"><span>Reportes</span></span></a></li>
         <% } %>
         <% if(!session.isNew() && (Boolean)session.getAttribute("isAdmin")) { %>
         <li class="has-sub"><a href="#"><span>Administrar</span></span></a>

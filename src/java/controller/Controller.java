@@ -1887,4 +1887,53 @@ public class Controller {
 
     }
     
+    
+    
+    
+    
+
+    @GET
+    @Path("/reportes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getReports() {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        return m.callSelectStoredProcedure("get_reports",map,fields);
+    }
+    
+    
+    
+    @GET
+    @Path("/reportes/{id_reporte}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getReportParams(@PathParam("id_reporte") String id_reporte) {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_reporte", "id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_reporte", id_reporte);
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_reportparams",map,fields);
+    }
+    
+    
+
+    
 }
