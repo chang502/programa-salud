@@ -6,18 +6,76 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.*;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Types;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
+
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.*;
+import org.apache.poi.ss.util.WorkbookUtil;
 
 /**
  *
  * @author Andres
  */
 public class reports extends HttpServlet {
+
+    private String rname = null;
+    private int paramcount;
+
+    private ResultSet getReportResultSet(HttpSession ses, HttpServletRequest request) {
+        String id_usuario = ses.getAttribute("id_usuario").toString();
+        String id_reporte = request.getParameter("id_reporte");
+
+        java.util.Map<String, String> paramap = new java.util.HashMap();
+        paramap.put("id_reporte", id_reporte);
+        paramap.put("id_usuario", id_usuario);
+        String parafields[] = {"id_reporte", "id_usuario"};
+
+        DBManager dm = new DBManager();
+
+        java.util.Map<String, String> params = new java.util.HashMap();
+        java.util.ArrayList<String> al = new java.util.ArrayList();
+        String sp_name = null;
+        try {
+            ResultSet rsparam = dm.callGetProcedure("get_report_data_and_params", paramap, parafields);
+            this.paramcount = 0;
+            while (rsparam.next()) {
+                this.rname = rsparam.getString("nombre");
+                sp_name = rsparam.getString("sp_name");
+
+                String varname = rsparam.getString("var_name");
+                if (varname != null && !varname.equals("")) {
+                    this.paramcount++;
+                    params.put(varname, request.getParameter(varname));
+                    al.add(varname);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            return null;
+        }
+
+        if (sp_name == null) {
+            return null;
+        }
+
+        params.put("id_usuario", id_usuario);
+        al.add("id_usuario");
+
+        try {
+            String[] tmp = new String[this.paramcount];
+            ResultSet resp = dm.callGetProcedure(sp_name, params, al.toArray(tmp));
+            return resp;
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+
+        return null;
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,57 +89,119 @@ public class reports extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        //response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet reports</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet reports at " + request.getContextPath() + "</h1>");
+        HttpSession ses = request.getSession();
+        if (ses == null || ses.isNew()) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
 
-            Map<String, String[]> m = request.getParameterMap();
-            Set s = m.entrySet();
-            Iterator it = s.iterator();
-            while (it.hasNext()) {
+        try {
+            ResultSet rs = getReportResultSet(ses, request);
+            if (rs == null) {
+                response.sendRedirect("error.jsp");
+                return;
+            }
 
-                Map.Entry<String, String[]> entry = (Map.Entry<String, String[]>) it.next();
+            ResultSetMetaData md = rs.getMetaData();
 
-                String key = entry.getKey();
-                String[] value = entry.getValue();
+            int columncount = md.getColumnCount();
+            int rowcount = 1;//starting on 1 because of the headers
 
-                out.println("Key is " + key + "<br>");
+            int[] dtypes = new int[columncount];
 
-                if (value.length > 1) {
-                    for (int i = 0; i < value.length; i++) {
-                        out.println("<li>" + value[i].toString() + "</li><br>");
+            for (int i = 0; i < columncount; i++) {
+                dtypes[i] = md.getColumnType(i + 1);
+                //System.out.println(md.getColumnTypeName(i + 1));
+            }
+
+            Workbook wb = new XSSFWorkbook();
+            Sheet sh = wb.createSheet(WorkbookUtil.createSafeSheetName(this.rname != null ? this.rname != null : "Reporte"));
+
+            CreationHelper createHelper = wb.getCreationHelper();
+
+            //headers
+            CellStyle style = wb.createCellStyle();
+            Font font = wb.createFont();
+            font.setBold(true);
+            style.setFont(font);
+            Row header = sh.createRow(0);
+            for (int i = 0; i < columncount; i++) {
+                Cell c = header.createCell(i);
+                c.setCellValue(
+                        createHelper.createRichTextString(md.getColumnLabel(i + 1)));
+                c.setCellStyle(style);
+            }
+
+            CellStyle dateStyle = wb.createCellStyle();
+            dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy"));
+
+            /*CellStyle timeStyle = wb.createCellStyle();
+            timeStyle.setDataFormat(createHelper.createDataFormat().getFormat("hh:mm"));*/
+            CellStyle dateTimeStyle = wb.createCellStyle();
+            dateTimeStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy hh:mm"));
+
+            /*for (int i = 0; i < dtypes.length; i++) {
+                int dtype = dtypes[i];
+                //System.out.println("dtype: "+dtype+", "+String.valueOf(Types.));
+            }*/
+            while (rs.next()) {
+                Row row = sh.createRow(rowcount);
+                for (int i = 0; i < columncount; i++) {
+
+                    //Object val=dtypes[i] == Types.BIT ? rs.getBoolean(i + 1) : dtypes[i] == Types.DECIMAL ? ((rs.getLong(i + 1)*0l==0l && rs.wasNull())?"null":rs.getLong(i + 1)): rs.getString(i + 1) != null ? rs.getString(i + 1).replaceAll("\"", "\'").replaceAll("\n", "\\\\n") : dtypes[i] == Types.INTEGER?((rs.getInt(i + 1)*0l==0l && rs.wasNull())?"null":rs.getInt(i + 1)): ""
+                    switch (dtypes[i]) {
+                        case Types.BIT:
+                            row.createCell(i).setCellValue(rs.getBoolean(i + 1));
+                            break;
+                        case Types.DECIMAL:
+                            row.createCell(i).setCellValue(rs.getLong(i + 1));
+                            break;
+                        case Types.INTEGER:
+                            row.createCell(i).setCellValue(rs.getInt(i + 1));
+                            break;
+                        case Types.TIMESTAMP:
+                            Cell c = row.createCell(i);
+                            c.setCellValue(rs.getDate(i + 1));
+                            c.setCellStyle(dateTimeStyle);
+                            break;
+                        case Types.DATE:
+                            Cell cd = row.createCell(i);
+                            cd.setCellValue(rs.getDate(i + 1));
+                            cd.setCellStyle(dateStyle);
+                            break;
+                        default:
+                            row.createCell(i).setCellValue(createHelper.createRichTextString(rs.getString(i + 1)));
+                            break;
                     }
-                } else {
-                    out.println("Value is " + value[0].toString() + "<br>");
+                }
+                rowcount++;
+            }
+
+            for (int i = 0; i < columncount; i++) {
+                sh.autoSizeColumn(i);
+            }
+
+            if (sh.getPhysicalNumberOfRows() > 1) {
+                response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                if (this.rname != null) {
+                    response.setHeader("Content-disposition", "attachment; filename=\"" + this.rname + "\"");
                 }
 
-                out.println("-------------------<br>");
-            }
-            
-            
-            if(m.containsKey("id_reporte")){
-                out.println(m.get("id_reporte")[0]);
-                out.println(request.getParameter("id_reporte"));
-                out.println(request.getSession().getAttribute("id_usuario"));
-            }
-            
-            /*String fields[] = {"id_reporte"};
+                OutputStream fileOut = response.getOutputStream();
+                wb.write(fileOut);
+            } else {
+                response.setContentType("text/html;charset=UTF-8");
+                request.setAttribute("titulo", "Generar Reporte");
+                request.setAttribute("mensaje", "El reporte no contiene información");
+                request.getRequestDispatcher("reportresult.jsp").include(request, response);
 
-            Manager ma= new Manager(request);;
-            java.util.Map<String, String> map = ma.createMap(fields, request.getInputStream());
-            out.println(map.get("id_reporte"));*/
+            }
 
-            out.println("</body>");
-            out.println("</html>");
+            //Runtime.getRuntime().exec("excel "+f.toString());
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
