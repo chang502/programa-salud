@@ -149,6 +149,10 @@ public class JsonResponse {
         return this.idInsert;
     }
 
+    public ResultSet getResultSet() {
+        return this.rs;
+    }
+
     public String getJsonData() {
 
         StringBuilder data = new StringBuilder();

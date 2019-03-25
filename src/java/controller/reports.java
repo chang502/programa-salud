@@ -115,7 +115,7 @@ public class reports extends HttpServlet {
             }
 
             Workbook wb = new XSSFWorkbook();
-            Sheet sh = wb.createSheet(WorkbookUtil.createSafeSheetName(this.rname != null ? this.rname != null : "Reporte"));
+            Sheet sh = wb.createSheet(WorkbookUtil.createSafeSheetName((this.rname != null ? this.rname : "Reporte")));
 
             CreationHelper createHelper = wb.getCreationHelper();
 
@@ -135,20 +135,15 @@ public class reports extends HttpServlet {
             CellStyle dateStyle = wb.createCellStyle();
             dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy"));
 
-            /*CellStyle timeStyle = wb.createCellStyle();
-            timeStyle.setDataFormat(createHelper.createDataFormat().getFormat("hh:mm"));*/
+            CellStyle timeStyle = wb.createCellStyle();
+            timeStyle.setDataFormat(createHelper.createDataFormat().getFormat("hh:mm"));
             CellStyle dateTimeStyle = wb.createCellStyle();
             dateTimeStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy hh:mm"));
 
-            /*for (int i = 0; i < dtypes.length; i++) {
-                int dtype = dtypes[i];
-                //System.out.println("dtype: "+dtype+", "+String.valueOf(Types.));
-            }*/
             while (rs.next()) {
                 Row row = sh.createRow(rowcount);
                 for (int i = 0; i < columncount; i++) {
 
-                    //Object val=dtypes[i] == Types.BIT ? rs.getBoolean(i + 1) : dtypes[i] == Types.DECIMAL ? ((rs.getLong(i + 1)*0l==0l && rs.wasNull())?"null":rs.getLong(i + 1)): rs.getString(i + 1) != null ? rs.getString(i + 1).replaceAll("\"", "\'").replaceAll("\n", "\\\\n") : dtypes[i] == Types.INTEGER?((rs.getInt(i + 1)*0l==0l && rs.wasNull())?"null":rs.getInt(i + 1)): ""
                     switch (dtypes[i]) {
                         case Types.BIT:
                             row.createCell(i).setCellValue(rs.getBoolean(i + 1));
@@ -168,6 +163,11 @@ public class reports extends HttpServlet {
                             Cell cd = row.createCell(i);
                             cd.setCellValue(rs.getDate(i + 1));
                             cd.setCellStyle(dateStyle);
+                            break;
+                        case Types.TIME:
+                            Cell ct = row.createCell(i);
+                            ct.setCellValue(rs.getDate(i + 1));
+                            ct.setCellStyle(timeStyle);
                             break;
                         default:
                             row.createCell(i).setCellValue(createHelper.createRichTextString(rs.getString(i + 1)));
@@ -196,8 +196,6 @@ public class reports extends HttpServlet {
                 request.getRequestDispatcher("reportresult.jsp").include(request, response);
 
             }
-
-            //Runtime.getRuntime().exec("excel "+f.toString());
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }

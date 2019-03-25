@@ -80,7 +80,7 @@ html,body {
 #header h1 {
     margin-left: 120px;
     margin-top: 20px;
-    font-size: 42px;
+    font-size: 32px;
     font-weight: bold;
     width: 650px;
     line-height: 17px;
@@ -88,7 +88,7 @@ html,body {
 
 #pagetitle {
     margin-left: 120px;
-    font-size: 27px;
+    font-size: 22px;
     width: 650px;
     line-height: 17px;
 }

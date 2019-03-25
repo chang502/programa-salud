@@ -8,7 +8,7 @@ Ext.QuickTips.init();
 
 
 var store_espacio_convivencia = Ext.create('Ext.data.Store', {
-    fields: ['id_espacio_convivencia', 'nombre', 'ubicacion', 'cantidad', 'cantidad_medida', 'id_unidad_medida', 'anio', 'costo', 'estado', 'observaciones'],
+    fields: ['id_espacio_convivencia', 'nombre', 'ubicacion', 'cantidad', 'cantidad_medida', 'id_unidad_medida', 'anio', 'costo', 'estado','id_persona', 'persona', 'observaciones'],
     proxy: {
         type: 'ajax',
         url: 'controller/playgrounds',
@@ -198,16 +198,28 @@ function editRec(rec) {
                             allowBlank: false,
                             value: resultado.data[0].costo
                         }, {
-                            xtype: 'textfield',
+                            xtype: 'combo',
                             fieldLabel: 'Estado',
-                            colspan: 2,
+                            store: store_estados_convivencia,
+                            queryMode: 'local',
+                            displayField: 'estado',
+                            valueField: 'estado',
+                            allowBlank: false,
+                            emptyText: 'Seleccione',
+                            forceSelection: true,
                             colspan: 2,
                             name: 'estado',
-                            maxLength: 200,
-                            enforceMaxLength: true,
-                            allowBlank: false,
                             value: resultado.data[0].estado
-                        }, {
+                        },
+                        getPersonTextBox(
+                                {
+                                    fieldLabel:'Persona a cargo',
+                                    id_persona: resultado.data[0].id_persona,
+                                    nombre_completo: resultado.data[0].persona,
+                                    panelConfig: {colspan:2,padding: '5 25 5 15'}
+                                }
+                                ), 
+                        {
                             xtype: 'textarea',
                             colspan: 2,
                             fieldLabel: 'Observaciones',
@@ -233,6 +245,7 @@ function editRec(rec) {
                                 if (!frmEdit.isValid()) {
                                 } else {
                                     var data = frmEdit.getValues();
+                                    data.id_persona = frmEdit.items.items[9].items.items[0].value;
                                     frmEdit.mask("Espere");
                                     Ext.Ajax.request({
                                         url: 'controller/updateplayground',
@@ -454,7 +467,7 @@ Ext.onReady(function () {
                         forceSelection: true,
                         colspan: 2,
                         name: 'estado'
-                    }, {
+                    },getPersonTextBox({fieldLabel:'Persona a cargo',panelConfig: {colspan:2,padding: '5 25 5 15'}}), {
                         xtype: 'textarea',
                         colspan: 2,
                         fieldLabel: 'Observaciones',
@@ -463,6 +476,8 @@ Ext.onReady(function () {
                         maxLength: 2000,
                         enforceMaxLength: true
                     }
+                    
+                        
                     ,
                     {
                         xtype: 'container',
@@ -485,6 +500,8 @@ Ext.onReady(function () {
                                     } else {
                                         form.mask("Espere");
                                         var data = form.getValues();
+                                        //window.console.log(form.items.items[0].items.items[8].items.items[0].value);
+                                        data.id_persona = form.items.items[0].items.items[8].items.items[0].value;
                                         //console.log(data);
                                         Ext.Ajax.request({
                                             url: 'controller/createplayground',
@@ -522,6 +539,7 @@ Ext.onReady(function () {
 
                         columns: [
                             {hidden: true, dataIndex: 'id_espacio_convivencia'},
+                            {hidden: true, dataIndex: 'id_persona'},
                             {text: 'Categoría', dataIndex: 'categoria_convivencia', width: 120},
                             {text: 'Lugar', dataIndex: 'lugar_convivencia', width: 150},
                             {text: 'Nombre', dataIndex: 'nombre', width: 120},
@@ -530,6 +548,7 @@ Ext.onReady(function () {
                             {text: 'Año', dataIndex: 'anio', width: 65},
                             {text: 'Costo', dataIndex: 'costo', width: 90},
                             {text: 'Estado', dataIndex: 'estado'},
+                            {text: 'Persona a Cargo', dataIndex: 'persona', width: 250},
                             {text: 'Observaciones', dataIndex: 'observaciones', width: 150},
                             {
                                 xtype: 'actioncolumn',

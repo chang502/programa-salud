@@ -41,6 +41,14 @@ var store_tipo_persona = Ext.create('Ext.data.Store', {
 });
 
 
+
+
+
+
+
+
+
+
 Ext.onReady(function () {
     var frmPpal = Ext.create({
         xtype: 'form',
@@ -179,9 +187,9 @@ Ext.onReady(function () {
                         },
                         listeners: {
                             rowbodykeyup: function (view, rowBodyEl, e, eOpts) {
-                                window.console.log(vent);
+                                //window.console.log(vent);
                                 if (e.getKey() === e.ENTER) {
-                                    window.console.log(vent);
+                                    //window.console.log(vent);
                                 }
                             }
                         },
@@ -199,14 +207,7 @@ Ext.onReady(function () {
                                         tooltip: 'Ver ficha del paciente',
                                         handler: function (grid, rowIndex, colIndex) {
                                             var rec = grid.getStore().getAt(rowIndex).get('id_persona');
-                                            location.href = 'patient.jsp?paciente='+rec;
-                                        }
-                                    }, {
-                                        icon: 'images/icons/add.png',
-                                        tooltip: 'Crear cita',
-                                        handler: function (grid, rowIndex, colIndex) {
-                                            var rec = grid.getStore().getAt(rowIndex).get('id_persona');
-                                            //deleteRec(rec);
+                                            location.href = 'patient.jsp?paciente=' + rec;
                                         }
                                     }]
                             }

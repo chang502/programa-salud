@@ -12,7 +12,7 @@
         <link href="styles/style.css" rel="stylesheet" type="text/css"/>
         
         <script src="js/login.js" type="text/javascript"></script>
-        <title>Error</title>
+        <title><%= request.getParameter("title")!=null?request.getParameter("title"):"Error" %></title>
     </head>
     <body>
         <div id="content">
@@ -27,7 +27,8 @@
                         Ocurri&oacute; un error.
                         <% } %>
                     <% }else{ %>
-                    Ocurri&oacute; un error.
+                    <%= request.getParameter("message")!=null?request.getParameter("message"):"Ocurri&oacute; un error." %>
+                    <%= request.getParameter("message") %>
                     <%}%>
                     
                     <br>

@@ -17,8 +17,6 @@ import javax.mail.internet.*;
  */
 public class SendEmail {
 
-    //private final String USERNAME="saludfiusac";
-    //private final String PASSWORD="programasalud2018";
     private static String user;
     private static String password;
 

@@ -18,6 +18,19 @@ var store_capacidades_especiales = Ext.create('Ext.data.Store', {
     }
 });
 
+
+
+var store_disciplinas_persona = Ext.create('Ext.data.Store', {
+    fields: ['id_disciplina_persona', 'nombre'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/persondisciplines',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
 var store_tipos_enfermedad = Ext.create('Ext.data.Store', {
     fields: ['id_tipo_enfermedad', 'nombre'],
     proxy: {
@@ -35,6 +48,7 @@ Ext.onReady(function () {
 
     store_capacidades_especiales.load();
     store_tipos_enfermedad.load();
+    store_disciplinas_persona.load();
 
     try {
         var txtparams = location.search.substring(1);
@@ -182,7 +196,19 @@ Ext.onReady(function () {
                                                     valueField: 'id_tipo_discapacidad',
                                                     name: 'id_tipo_discapacidad',
                                                     allowBlank: false
-                                                }, {
+                                                },{
+                        xtype: 'combo',
+                        fieldLabel: '¿Pertenece a alguna federación o asociación deportiva?',
+                        emptyText: 'Seleccione',
+                        store: store_disciplinas_persona,
+                        matchFieldWidth: false,
+                        queryMode: 'local',
+                        displayField: 'nombre',
+                        valueField: 'id_disciplina_persona',
+                        name: 'id_disciplina_persona',
+                        //colspan: 2,
+                        allowBlank: false
+                    }, {
                         xtype: 'combo',
                         fieldLabel: '¿Padece de alguna enfermedar crónica?',
                         emptyText: 'Seleccione',
@@ -192,7 +218,7 @@ Ext.onReady(function () {
                         displayField: 'nombre',
                         valueField: 'id_tipo_enfermedad',
                         name: 'id_tipo_enfermedad',
-                        colspan: 2,
+                        //colspan: 2,
                         allowBlank: false
                     }, {
                                                     xtpye: 'hiddenfield',
@@ -224,7 +250,7 @@ Ext.onReady(function () {
                                                                     form.mask("Espere");
                                                                     var data = form.getValues();
 
-                                                                    data.id_persona = panelInfoAdicional.items.items[6].value;
+                                                                    data.id_persona = panelInfoAdicional.items.items[7].value;
                                                                     
                                                                     
 
@@ -253,7 +279,8 @@ Ext.onReady(function () {
                                                                                             panelInfoAdicional.items.items[1].setValue(resultado_moreinfo2.data[0].contacto_emergencia);
                                                                                             panelInfoAdicional.items.items[2].setValue(resultado_moreinfo2.data[0].flag_tiene_discapacidad);
                                                                                             panelInfoAdicional.items.items[3].setValue(resultado_moreinfo2.data[0].id_tipo_discapacidad);
-                                                                                            panelInfoAdicional.items.items[4].setValue(resultado_moreinfo2.data[0].id_tipo_enfermedad);
+                                                                                            panelInfoAdicional.items.items[4].setValue(resultado_moreinfo2.data[0].id_disciplina_persona);
+                                                                                            panelInfoAdicional.items.items[5].setValue(resultado_moreinfo2.data[0].id_tipo_enfermedad);
                                                                                         } else {
                                                                                             Ext.Msg.show({title: "Error", msg: resultado_moreinfo.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                                                                         }
@@ -288,7 +315,8 @@ Ext.onReady(function () {
                                                     panelInfoAdicional.items.items[1].setValue(resultado_moreinfo.data[0].contacto_emergencia);
                                                     panelInfoAdicional.items.items[2].setValue(resultado_moreinfo.data[0].flag_tiene_discapacidad);
                                                     panelInfoAdicional.items.items[3].setValue(resultado_moreinfo.data[0].id_tipo_discapacidad);
-                                                    panelInfoAdicional.items.items[4].setValue(resultado_moreinfo.data[0].id_tipo_enfermedad);
+                                                    panelInfoAdicional.items.items[4].setValue(resultado_moreinfo.data[0].id_disciplina_persona);
+                                                    panelInfoAdicional.items.items[5].setValue(resultado_moreinfo.data[0].id_tipo_enfermedad);
                                                 } else {
                                                     Ext.Msg.show({title: "Error", msg: resultado_moreinfo.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                                 }

@@ -20,6 +20,17 @@ var store_tipos_enfermedad = Ext.create('Ext.data.Store', {
     }
 });
 
+var store_disciplinas_persona = Ext.create('Ext.data.Store', {
+    fields: ['id_disciplina_persona', 'nombre'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/persondisciplines',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
 
 var store_capacidades_especiales = Ext.create('Ext.data.Store', {
     fields: ['id_tipo_discapacidad', 'nombre'],
@@ -36,6 +47,7 @@ Ext.onReady(function () {
 
     store_capacidades_especiales.load();
     store_tipos_enfermedad.load();
+    store_disciplinas_persona.load();
 
     Ext.create({
         xtype: 'form',
@@ -150,6 +162,18 @@ Ext.onReady(function () {
                         allowBlank: false
                     }, {
                         xtype: 'combo',
+                        fieldLabel: '¿Pertenece a alguna federación o asociación deportiva?',
+                        emptyText: 'Seleccione',
+                        store: store_disciplinas_persona,
+                        matchFieldWidth: false,
+                        queryMode: 'local',
+                        displayField: 'nombre',
+                        valueField: 'id_disciplina_persona',
+                        name: 'id_disciplina_persona',
+                        //colspan: 2,
+                        allowBlank: false
+                    }, {
+                        xtype: 'combo',
                         fieldLabel: '¿Padece de alguna enfermedar crónica?',
                         emptyText: 'Seleccione',
                         store: store_tipos_enfermedad,
@@ -158,7 +182,7 @@ Ext.onReady(function () {
                         displayField: 'nombre',
                         valueField: 'id_tipo_enfermedad',
                         name: 'id_tipo_enfermedad',
-                        colspan: 2,
+                        //colspan: 2,
                         allowBlank: false
                     }, {
                         xtype: 'container',

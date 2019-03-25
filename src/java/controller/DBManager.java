@@ -97,7 +97,7 @@ public class DBManager {
         }
 
         String query = "{ call " + procedure_name + "(" + param_list + ") }";
-
+       
         CallableStatement stmt = conn.prepareCall(query);
 
         for (int i = 0; i < fields.length; i++) {

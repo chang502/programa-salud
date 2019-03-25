@@ -27,6 +27,7 @@
         <script src="js/appointmenteditanddelete_dialog.js" type="text/javascript"></script>
         <script src="js/appointmentsfortoday_panel.js" type="text/javascript"></script>
         <script src="js/appointmentsforthefuture_panel.js" type="text/javascript"></script>
+        <script src="js/appointment_utils.js" type="text/javascript"></script>
         <script src="js/appointments.js" type="text/javascript"></script>
         <title>Citas</title>
     </head><%

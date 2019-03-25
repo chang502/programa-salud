@@ -615,7 +615,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String createPlayground(java.io.InputStream params) {
 
-        String fields[] = {"nombre", "id_lugar_convivencia", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado", "observaciones"};
+        String fields[] = {"nombre", "id_lugar_convivencia", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado", "id_persona", "observaciones"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
         return m.callResultStoredProcedure("create_playground", map, fields);
@@ -653,7 +653,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String updatePlayground(java.io.InputStream params) {
 
-        String fields[] = {"id_espacio_convivencia", "nombre", "id_lugar_convivencia", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado", "observaciones"};
+        String fields[] = {"id_espacio_convivencia", "nombre", "id_lugar_convivencia", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado","id_persona", "observaciones"};
         return m.callResultStoredProcedure("update_playground", fields, params);
 
     }
@@ -1616,7 +1616,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String savePersonaFicha(java.io.InputStream params) {
 
-        String fields[] = {"id_persona", "flag_tiene_discapacidad", "telefono_emergencia", "contacto_emergencia", "id_tipo_discapacidad", "id_tipo_enfermedad"};
+        String fields[] = {"id_persona", "flag_tiene_discapacidad", "telefono_emergencia", "contacto_emergencia", "id_tipo_discapacidad", "id_tipo_enfermedad", "id_disciplina_persona"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
         return m.callResultStoredProcedure("save_persona_ficha", map, fields);
@@ -1879,10 +1879,9 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String saveEmployeeExtraInfo(java.io.InputStream params) {
 
-        String fields[] = {"cui", "fecha_nacimiento", "telefono", "telefono_emergencia", "contacto_emergencia", "peso", "estatura", "flag_tiene_discapacidad", "id_tipo_discapacidad", "id_tipo_enfermedad"};
+        String fields[] = {"cui", "fecha_nacimiento", "telefono", "telefono_emergencia", "contacto_emergencia", "peso", "estatura", "flag_tiene_discapacidad", "id_tipo_discapacidad", "id_tipo_enfermedad", "id_disciplina_persona"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
-        System.out.println(map.get("flag_tiene_discapacidad"));
         return m.actualizarDatosTrabajador( map, fields);
 
     }
@@ -1931,6 +1930,16 @@ public class Controller {
         map.put("id_usuario", id_usuario);
         
         return m.callSelectStoredProcedure("get_reportparams",map,fields);
+    }
+    
+    
+    
+    
+    @GET
+    @Path("/persondisciplines")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getPersonDisciplines() {
+        return m.callSelectStoredProcedure("get_discipline_types");
     }
     
     

@@ -607,13 +607,13 @@ public class Manager {
                         params.remove("fecha_nacimiento");
                         params.put("fecha_nacimiento", fecha_nac_formatted);
 
-                        String fielfs[] = {"cui", "fecha_nacimiento", "telefono", "telefono_emergencia", "contacto_emergencia", "peso", "estatura", "flag_tiene_discapacidad", "id_tipo_discapacidad", "id_tipo_enfermedad",
+                        String fielfs[] = {"cui", "fecha_nacimiento", "telefono", "telefono_emergencia", "contacto_emergencia", "peso", "estatura", "flag_tiene_discapacidad", "id_tipo_discapacidad", "id_tipo_enfermedad", "id_disciplina_persona",
                             "nombre", "apellido", "sexo", "email", "regpersonal", "departamento"};
 
-                        for (int i = 0; i < fielfs.length; i++) {
+                        /*for (int i = 0; i < fielfs.length; i++) {
                             String fielf = fielfs[i];
                             System.out.println(fielf+": "+params.get(fielf));
-                        }
+                        }*/
                         
                         
                         return callResultStoredProcedure("registrar_datos_empleado", params, fielfs);

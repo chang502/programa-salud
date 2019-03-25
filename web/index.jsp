@@ -29,6 +29,7 @@
         <% if(session.getAttribute("hasClinica")!=null && (Boolean) session.getAttribute("hasClinica")){ %><script src="js/appointmenteditanddelete_dialog.js" type="text/javascript"></script>
         <script src="js/person.js" type="text/javascript"></script>
         <script src="js/appointment_store.js" type="text/javascript"></script>
+        <script src="js/appointment_utils.js" type="text/javascript"></script>
         <script src="js/appointmentschedule_panel.js" type="text/javascript"></script>
         <script src="js/appointmentsfortoday_panel.js" type="text/javascript"></script>
         <script src="js/index.js" type="text/javascript"></script><% } %>
