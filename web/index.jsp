@@ -34,6 +34,13 @@
         <script src="js/appointmentsfortoday_panel.js" type="text/javascript"></script>
         <script src="js/index.js" type="text/javascript"></script><% } %>
         <% if(session.getAttribute("hasIngresoDatos")!=null && (Boolean) session.getAttribute("hasIngresoDatos")){ %><script src="js/ingresodatos.js" type="text/javascript"></script><% } %>
+        <% if(session.getAttribute("hasDeportes")!=null && (Boolean) session.getAttribute("hasDeportes")){ %><script src="js/students.js" type="text/javascript"></script><% } %>
+        <% if(session.getAttribute("hasPlayground")!=null && (Boolean) session.getAttribute("hasPlayground")){ %><script src="js/person.js" type="text/javascript"></script>
+        <script src="js/coexistence.js" type="text/javascript"></script><% } %>
+        <% if(session.getAttribute("isAdmin")!=null && (Boolean) session.getAttribute("isAdmin")){ %><script src="js/person.js" type="text/javascript"></script>
+        <script src="js/users.js" type="text/javascript"></script><% } %>
+        <% if(session.getAttribute("hasProgramaSalud")!=null && (Boolean) session.getAttribute("hasProgramaSalud")){ %><script src="js/person.js" type="text/javascript"></script>
+        <script src="js/trainings.js" type="text/javascript"></script><% } %>
         <title>Inicio</title>
     </head><%
         Boolean cambiar_clave = (Boolean) session.getAttribute("cambiar_clave");

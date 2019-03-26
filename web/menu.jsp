@@ -49,7 +49,7 @@
         </li>
         <% } %>
         
-        <% if(!session.isNew() && ((Boolean)session.getAttribute("hasClinica") || (Boolean)session.getAttribute("hasDeportes") || (Boolean)session.getAttribute("hasProgramaSalud")  )) { %>
+        <% if(!session.isNew() && ((Boolean)session.getAttribute("hasClinica") || (Boolean)session.getAttribute("hasDeportes") || (Boolean)session.getAttribute("hasProgramaSalud") || (Boolean)session.getAttribute("hasPlayground")  )) { %>
         <li><a href="reports.jsp"><span>Reportes</span></span></a></li>
         <% } %>
         <% if(!session.isNew() && (Boolean)session.getAttribute("isAdmin")) { %>

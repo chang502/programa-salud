@@ -91,7 +91,84 @@ function editRec(rec) {
                             allowBlank: false,
                             hideTrigger: true,
                             value: resultado.data[0].limite
-                        }, getPersonTextBox()
+                        }, 
+                        
+                        
+                        {
+                        xtype: 'fieldset',
+                        title: 'Días',
+                        defaultType: 'checkboxfield',
+                        margin: '0 0 5 10',
+                        width: 280,
+                        items: [
+                            {
+                                boxLabel: 'Lunes',
+                                name: 'flg_lunes',
+                                inputValue: 1,
+                                value: resultado.data[0].flg_lunes?1:0,
+                                id: 'checkbox1_'
+                            }, {
+                                boxLabel: 'Martes',
+                                name: 'flg_martes',
+                                inputValue: 1,
+                                value: resultado.data[0].flg_martes?1:0,
+                                id: 'checkbox2_'
+                            }, {
+                                boxLabel: 'Miércoles',
+                                name: 'flg_miercoles',
+                                inputValue: 1,
+                                value: resultado.data[0].flg_miercoles?1:0,
+                                id: 'checkbox3_'
+                            }, {
+                                boxLabel: 'Jueves',
+                                name: 'flg_jueves',
+                                inputValue: 1,
+                                value: resultado.data[0].flg_jueves?1:0,
+                                id: 'checkbox4_'
+                            }, {
+                                boxLabel: 'Viernes',
+                                name: 'flg_viernes',
+                                inputValue: 1,
+                                value: resultado.data[0].flg_viernes?1:0,
+                                id: 'checkbox5_'
+                            }, {
+                                boxLabel: 'Sábado',
+                                name: 'flg_sabado',
+                                inputValue: 1,
+                                value: resultado.data[0].flg_sabado?1:0,
+                                id: 'checkbox6_'
+                            }
+                        ]
+                    },{
+                        xtype: 'panel',
+                        defaults: {
+                            padding: '15 5 25 15',
+                            selectOnFocus: true
+                        },
+                        items: [
+                            {
+                                xtype: 'timefield',
+                                fieldLabel: 'Hora Inicio',
+                                format: 'H:i',
+                                minValue: '06:00',
+                                maxValue: '20:00',
+                                value: resultado.data[0].hora_inicio,
+                                increment: 10,
+                                name: 'hora_inicio'
+                            },{
+                                xtype: 'timefield',
+                                fieldLabel: 'Hora Fin',
+                                format: 'H:i',
+                                minValue: '06:00',
+                                maxValue: '20:00',
+                                value: resultado.data[0].hora_fin,
+                                increment: 10,
+                                name: 'hora_fin'
+                            }
+                        ]
+                    }
+                        
+                        ,getPersonTextBox({id_persona:resultado.data[0].id_persona, nombre_completo:resultado.data[0].persona_encargada, panelConfig: {colspan: 2}})
 
 
 
