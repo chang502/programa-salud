@@ -496,10 +496,20 @@ public class Controller {
     @Path("/updatediscipline")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateDiscipline(java.io.InputStream params) {
+    public String updateDiscipline(java.io.InputStream params) {        
+        String fields[] = {"id_disciplina", "semestre", "nombre","limite", "flg_lunes", "flg_martes", "flg_miercoles", "flg_jueves", "flg_viernes", "flg_sabado", "hora_inicio", "hora_fin", "id_persona"};
 
-        String fields[] = {"id_disciplina", "nombre", "semestre","limite","id_persona","primer_nombre","segundo_nombre","primer_apellido","segundo_apellido","fecha_nacimiento","sexo","email","telefono"};
-        return m.callResultStoredProcedure("update_discipline", fields, params);
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        
+        String tmp;
+        for (int i =3; i < 10; i++) {
+            String field = fields[i];
+            tmp=map.remove(field);
+            map.put(field, tmp!=null?"1":"0");
+        }
+        
+        
+        return m.callResultStoredProcedure("update_discipline",map, fields);
 
     }
 
@@ -530,9 +540,20 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String createDrinkfountain(java.io.InputStream params) {
 
-        String fields[] = {"nombre", "ubicacion", "fecha_mantenimiento", "estado", "observaciones"};
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+        String fields[] = {"nombre", "ubicacion", "fecha_mantenimiento", "estado", "observaciones","id_usuario"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
+        map.put("id_usuario", id_usuario);
+        
         return m.callResultStoredProcedure("create_drinkfountain", map, fields);
 
     }
@@ -542,7 +563,18 @@ public class Controller {
     @Path("/drinkfountains")
     @Produces(MediaType.APPLICATION_JSON)
     public String getDrinkfountains() {
-        return m.callSelectStoredProcedure("get_drinkfountains");
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_drinkfountains",map,fields);
     }
     
     
@@ -614,10 +646,22 @@ public class Controller {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String createPlayground(java.io.InputStream params) {
-
-        String fields[] = {"nombre", "id_lugar_convivencia", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado", "id_persona", "observaciones"};
-
+        
+        String fields[] = {"nombre", "id_lugar_convivencia", "ubicacion", "cantidad", "id_unidad_medida", "anio", "costo", "estado", "id_persona", "observaciones", "id_usuario"};
         java.util.Map<String, String> map = m.createMap(fields, params);
+        
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        map.put("id_usuario", id_usuario);
+        
+        
+        
+
         return m.callResultStoredProcedure("create_playground", map, fields);
 
     }
@@ -627,7 +671,19 @@ public class Controller {
     @Path("/playgrounds")
     @Produces(MediaType.APPLICATION_JSON)
     public String getPlaygrounds() {
-        return m.callSelectStoredProcedure("get_playgrounds");
+        
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_playgrounds",map,fields);
     }
     
     
@@ -777,10 +833,19 @@ public class Controller {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String createTeam(java.io.InputStream params) {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
 
-        String fields[] = {"nombre", "descripcion", "especialidad", "estado"};
+        String fields[] = {"nombre", "descripcion", "especialidad", "estado","id_usuario"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
+        map.put("id_usuario", id_usuario);
         return m.callResultStoredProcedure("create_team", map, fields);
 
     }
@@ -790,7 +855,20 @@ public class Controller {
     @Path("/teams")
     @Produces(MediaType.APPLICATION_JSON)
     public String getTeams() {
-        return m.callSelectStoredProcedure("get_teams");
+        
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_teams",map,fields);
+        
     }
     
     
@@ -879,9 +957,18 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String createChampionship(java.io.InputStream params) {
 
-        String fields[] = {"id_seleccion","nombre", "fecha", "victorioso", "observaciones"};
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_seleccion","nombre", "fecha", "victorioso", "observaciones","id_usuario"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
+        map.put("id_usuario", id_usuario);
         return m.callResultStoredProcedure("create_championship", map, fields);
 
     }
@@ -891,7 +978,19 @@ public class Controller {
     @Path("/championships")
     @Produces(MediaType.APPLICATION_JSON)
     public String getChampionships() {
-        return m.callSelectStoredProcedure("get_championships");
+        
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_championships",map,fields);
     }
     
     
@@ -988,10 +1087,19 @@ public class Controller {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String createTeamPerson(java.io.InputStream params) {
-
-        String fields[] = {"id_seleccion", "id_persona", "fecha_inicio", "fecha_fin"};
+        
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_seleccion", "id_persona", "fecha_inicio", "fecha_fin", "id_usuario"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
+        map.put("id_usuario", id_usuario);
         return m.callResultStoredProcedure("create_team_person", map, fields);
 
     }
@@ -1001,7 +1109,18 @@ public class Controller {
     @Path("/teampersons")
     @Produces(MediaType.APPLICATION_JSON)
     public String getTeamPersons() {
-        return m.callSelectStoredProcedure("get_team_persons");
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_team_persons",map,fields);
     }
     
     
@@ -1065,10 +1184,19 @@ public class Controller {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String createTraining(java.io.InputStream params) {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
 
-        String fields[] = {"nombre", "descripcion", "tipo_capacitacion", "estado", "fecha_inicio", "fecha_fin"};
+        String fields[] = {"nombre", "descripcion", "tipo_capacitacion", "estado", "fecha_inicio", "fecha_fin","id_usuario"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
+        map.put("id_usuario", id_usuario);
         return m.callResultStoredProcedure("create_training", map, fields);
 
     }
@@ -1078,7 +1206,18 @@ public class Controller {
     @Path("/trainings")
     @Produces(MediaType.APPLICATION_JSON)
     public String getTrainings() {
-        return m.callSelectStoredProcedure("get_trainings");
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_trainings",map,fields);
     }
     
     
@@ -1151,9 +1290,18 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public String createTrainingAttendee(java.io.InputStream params) {
 
-        String fields[] = {"id_capacitacion", "id_persona"};
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_capacitacion", "id_persona","id_usuario"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
+        map.put("id_usuario", id_usuario);
         return m.callResultStoredProcedure("create_training_attendee", map, fields);
 
     }
@@ -1163,7 +1311,18 @@ public class Controller {
     @Path("/trainingattendees")
     @Produces(MediaType.APPLICATION_JSON)
     public String getTrainingAttendees() {
-        return m.callSelectStoredProcedure("get_training_attendees");
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_training_attendees",map,fields);
     }
     
     

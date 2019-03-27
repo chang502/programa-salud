@@ -187,6 +187,8 @@ function editRec(rec) {
                                 if (!frmEdit.isValid()) {
                                 } else {
                                     var data = frmEdit.getValues();
+                                    data.id_persona = frmEdit.items.items[6].items.items[0].value;
+                                    
                                     frmEdit.mask("Espere");
                                     Ext.Ajax.request({
                                         url: 'controller/updatediscipline',
@@ -490,7 +492,7 @@ Ext.onReady(function () {
                                     }]
                             }
                         ],
-                        maxHeight: 150
+                        maxHeight: 350
                     }
                 ]
 

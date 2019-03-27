@@ -29,28 +29,8 @@ var store_seleccion_personas = Ext.create('Ext.data.Store', {
 });
 
 
-var store_tipos_documento = Ext.create('Ext.data.Store', {
-    fields: ['id_tipo_documento', 'nombre'],
-    proxy: {
-        type: 'ajax',
-        url: 'controller/documenttypes',
-        reader: {type: 'json',
-            root: 'data'
-        }
-    }
-});
 
 
-var store_tipos_persona = Ext.create('Ext.data.Store', {
-    fields: ['id_tipo_persona', 'nombre'],
-    proxy: {
-        type: 'ajax',
-        url: 'controller/persontypes',
-        reader: {type: 'json',
-            root: 'data'
-        }
-    }
-});
 
 
 
@@ -260,8 +240,6 @@ Ext.onReady(function () {
     
     store_seleccion_personas.load();
     store_selecciones.load();
-    store_tipos_documento.load();
-    store_tipos_persona.load();
 
     Ext.create({
         xtype: 'panel',
