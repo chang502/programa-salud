@@ -119,8 +119,8 @@ Ext.onReady(function () {
                 });
 
                 store_historial_medidas.load();
-                store_historial_acciones.load({params:{id_cita:urlparams.cita}});
-                store_historial_citas.load({params:{id_cita:urlparams.cita}});
+                store_historial_acciones.load({params: {id_cita: urlparams.cita}});
+                store_historial_citas.load({params: {id_cita: urlparams.cita}});
                 store_acciones.load();
 
                 Ext.Ajax.request({
@@ -196,31 +196,31 @@ Ext.onReady(function () {
                                                     valueField: 'id_tipo_discapacidad',
                                                     name: 'id_tipo_discapacidad',
                                                     allowBlank: false
-                                                },{
-                        xtype: 'combo',
-                        fieldLabel: '¿Pertenece a alguna federación o asociación deportiva?',
-                        emptyText: 'Seleccione',
-                        store: store_disciplinas_persona,
-                        matchFieldWidth: false,
-                        queryMode: 'local',
-                        displayField: 'nombre',
-                        valueField: 'id_disciplina_persona',
-                        name: 'id_disciplina_persona',
-                        //colspan: 2,
-                        allowBlank: false
-                    }, {
-                        xtype: 'combo',
-                        fieldLabel: '¿Padece de alguna enfermedar crónica?',
-                        emptyText: 'Seleccione',
-                        store: store_tipos_enfermedad,
-                        matchFieldWidth: false,
-                        queryMode: 'local',
-                        displayField: 'nombre',
-                        valueField: 'id_tipo_enfermedad',
-                        name: 'id_tipo_enfermedad',
-                        //colspan: 2,
-                        allowBlank: false
-                    }, {
+                                                }, {
+                                                    xtype: 'combo',
+                                                    fieldLabel: '¿Pertenece a alguna federación o asociación deportiva?',
+                                                    emptyText: 'Seleccione',
+                                                    store: store_disciplinas_persona,
+                                                    matchFieldWidth: false,
+                                                    queryMode: 'local',
+                                                    displayField: 'nombre',
+                                                    valueField: 'id_disciplina_persona',
+                                                    name: 'id_disciplina_persona',
+                                                    //colspan: 2,
+                                                    allowBlank: false
+                                                }, {
+                                                    xtype: 'combo',
+                                                    fieldLabel: '¿Padece de alguna enfermedar crónica?',
+                                                    emptyText: 'Seleccione',
+                                                    store: store_tipos_enfermedad,
+                                                    matchFieldWidth: false,
+                                                    queryMode: 'local',
+                                                    displayField: 'nombre',
+                                                    valueField: 'id_tipo_enfermedad',
+                                                    name: 'id_tipo_enfermedad',
+                                                    //colspan: 2,
+                                                    allowBlank: false
+                                                }, {
                                                     xtpye: 'hiddenfield',
                                                     name: 'id_cita',
                                                     value: resultado.data[0].id_cita
@@ -251,8 +251,8 @@ Ext.onReady(function () {
                                                                     var data = form.getValues();
 
                                                                     data.id_persona = panelInfoAdicional.items.items[7].value;
-                                                                    
-                                                                    
+
+
 
                                                                     if (!data.hasOwnProperty('flag_tiene_discapacidad')) {
                                                                         data.flag_tiene_discapacidad = '0';
@@ -311,12 +311,15 @@ Ext.onReady(function () {
                                             success: function (f, opts) {
                                                 var resultado_moreinfo = eval('(' + f.responseText + ')');
                                                 if (resultado_moreinfo.success) {
-                                                    panelInfoAdicional.items.items[0].setValue(resultado_moreinfo.data[0].telefono_emergencia);
-                                                    panelInfoAdicional.items.items[1].setValue(resultado_moreinfo.data[0].contacto_emergencia);
-                                                    panelInfoAdicional.items.items[2].setValue(resultado_moreinfo.data[0].flag_tiene_discapacidad);
-                                                    panelInfoAdicional.items.items[3].setValue(resultado_moreinfo.data[0].id_tipo_discapacidad);
-                                                    panelInfoAdicional.items.items[4].setValue(resultado_moreinfo.data[0].id_disciplina_persona);
-                                                    panelInfoAdicional.items.items[5].setValue(resultado_moreinfo.data[0].id_tipo_enfermedad);
+                                                    if (resultado_moreinfo.data.length > 0) {
+                                                        panelInfoAdicional.items.items[0].setValue(resultado_moreinfo.data[0].telefono_emergencia);
+                                                        panelInfoAdicional.items.items[1].setValue(resultado_moreinfo.data[0].contacto_emergencia);
+                                                        panelInfoAdicional.items.items[2].setValue(resultado_moreinfo.data[0].flag_tiene_discapacidad);
+                                                        panelInfoAdicional.items.items[3].setValue(resultado_moreinfo.data[0].id_tipo_discapacidad);
+                                                        panelInfoAdicional.items.items[4].setValue(resultado_moreinfo.data[0].id_disciplina_persona);
+                                                        panelInfoAdicional.items.items[5].setValue(resultado_moreinfo.data[0].id_tipo_enfermedad);
+                                                    }
+
                                                 } else {
                                                     Ext.Msg.show({title: "Error", msg: resultado_moreinfo.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                                 }
@@ -419,11 +422,31 @@ Ext.onReady(function () {
                                                     allowBlank: linea.obligatorio === 'true',
                                                     name: 'valor'
                                                 });
+                                            } else if (linea.tipo_dato === 'Lista') {
+                                                var itemlist = linea.unidad_medida.split(',');
+                                                var storedata = [];
+                                                for (var j = 0; j < itemlist.length; j++) {
+                                                    storedata.push({id: itemlist[j], nombre: itemlist[j]});
+                                                }
+
+                                                panelMedidas.add({
+                                                    xtype: 'combo',
+                                                    fieldLabel: linea.fieldLabel,
+                                                    allowBlank: linea.obligatorio === 'true',
+                                                    store: Ext.create('Ext.data.Store', {
+                                                        fields: ['id', 'nombre'],
+                                                        data: storedata
+                                                    }),
+                                                    name: 'valor',
+                                                    displayField: 'id',
+                                                    valueField: 'nombre',
+                                                    forceSelection: true
+                                                });
                                             }
 
                                             panelMedidas.add({
                                                 xtype: 'label',
-                                                text: linea.unidad_medida
+                                                text: linea.tipo_dato === 'Lista' ? '' : linea.unidad_medida
                                             });
                                         }
                                         panelMedidas.add({
@@ -588,9 +611,9 @@ Ext.onReady(function () {
                                                                                 } else {
                                                                                     form.mask("Espere");
                                                                                     var data = form.getValues();
-                                                                                    
+
                                                                                     data.id_cita = urlparams.cita;
-                                                                                    
+
                                                                                     Ext.Ajax.request({
                                                                                         url: 'controller/saveappointmentaction',
                                                                                         method: 'POST',
@@ -601,7 +624,7 @@ Ext.onReady(function () {
                                                                                             if (resultado.success) {
                                                                                                 Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
                                                                                                 form.reset();
-                                                                                                store_historial_acciones.load({params:{id_cita:urlparams.cita}});
+                                                                                                store_historial_acciones.load({params: {id_cita: urlparams.cita}});
                                                                                             } else {
                                                                                                 Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                                                                             }
@@ -634,7 +657,7 @@ Ext.onReady(function () {
                                                             xtype: 'button',
                                                             text: 'Finalizar Cita',
                                                             anchor: '-50%',
-                                                            handler: function(){
+                                                            handler: function () {
                                                                 Ext.Msg.show({
                                                                     title: 'Finalizar Cita',
                                                                     message: 'Al finalizar la cita, ya no podrá agregar acciones<br>ni tomar medidas. ¿Desea continuar?',
@@ -662,15 +685,15 @@ Ext.onReady(function () {
                                                                         }
                                                                     }
                                                                 });
-                                                                
-                                                                
+
+
                                                             }
-                                                        },{
+                                                        }, {
                                                             xtype: 'button',
                                                             margin: '0 0 0 15',
                                                             text: 'Cancelar Cita',
                                                             anchor: '-50%',
-                                                            handler: function(){
+                                                            handler: function () {
                                                                 Ext.Msg.show({
                                                                     title: 'Cancelar Cita',
                                                                     message: '¿Desea cancelar la cita?',
@@ -698,8 +721,8 @@ Ext.onReady(function () {
                                                                         }
                                                                     }
                                                                 });
-                                                                
-                                                                
+
+
                                                             }
                                                         }
                                                     ]
@@ -747,34 +770,34 @@ Ext.onReady(function () {
                                                                                     tooltip: 'Eliminar registro',
                                                                                     handler: function (grid, rowIndex, colIndex) {
                                                                                         var rec = grid.getStore().getAt(rowIndex).get('id_persona_medida');
-                                                                                        
-                                                                                            Ext.Msg.show({
-                                                                                                title: 'Eliminar Registro',
-                                                                                                message: '¿Está seguro de eliminar el registro?',
-                                                                                                buttons: Ext.Msg.YESNO,
-                                                                                                icon: Ext.Msg.QUESTION,
-                                                                                                fn: function (btn) {
-                                                                                                    if (btn === 'yes') {
-                                                                                                        Ext.Ajax.request({
-                                                                                                            url: 'controller/deletepersonmeasurement',
-                                                                                                            method: 'POST',
-                                                                                                            jsonData: '{"id_persona_medida": "' + rec + '","id_cita": "'+urlparams.cita+'"}',
-                                                                                                            success: function (f, opts) {
-                                                                                                                var resultadoEliminaReg = eval('(' + f.responseText + ')');
-                                                                                                                if (resultadoEliminaReg.success) {
-                                                                                                                    Ext.Msg.show({title: "Operación exitosa", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
-                                                                                                                    store_historial_medidas.load({params:{id_cita:urlparams.cita}});
-                                                                                                                } else {
-                                                                                                                    Ext.Msg.show({title: "Error", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
-                                                                                                                }
-                                                                                                            },
-                                                                                                            failure: function (response, opts) {
-                                                                                                                Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+
+                                                                                        Ext.Msg.show({
+                                                                                            title: 'Eliminar Registro',
+                                                                                            message: '¿Está seguro de eliminar el registro?',
+                                                                                            buttons: Ext.Msg.YESNO,
+                                                                                            icon: Ext.Msg.QUESTION,
+                                                                                            fn: function (btn) {
+                                                                                                if (btn === 'yes') {
+                                                                                                    Ext.Ajax.request({
+                                                                                                        url: 'controller/deletepersonmeasurement',
+                                                                                                        method: 'POST',
+                                                                                                        jsonData: '{"id_persona_medida": "' + rec + '","id_cita": "' + urlparams.cita + '"}',
+                                                                                                        success: function (f, opts) {
+                                                                                                            var resultadoEliminaReg = eval('(' + f.responseText + ')');
+                                                                                                            if (resultadoEliminaReg.success) {
+                                                                                                                Ext.Msg.show({title: "Operación exitosa", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
+                                                                                                                store_historial_medidas.load({params: {id_cita: urlparams.cita}});
+                                                                                                            } else {
+                                                                                                                Ext.Msg.show({title: "Error", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                                                                                             }
-                                                                                                        });
-                                                                                                    }
+                                                                                                        },
+                                                                                                        failure: function (response, opts) {
+                                                                                                            Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                                                        }
+                                                                                                    });
                                                                                                 }
-                                                                                            });
+                                                                                            }
+                                                                                        });
                                                                                     }
                                                                                 }]
                                                                         }
@@ -803,52 +826,52 @@ Ext.onReady(function () {
                                                                                     tooltip: 'Eliminar registro',
                                                                                     handler: function (grid, rowIndex, colIndex) {
                                                                                         var rec = grid.getStore().getAt(rowIndex).get('id_cita_accion');
-                                                                                        
-                                                                                            Ext.Msg.show({
-                                                                                                title: 'Eliminar Registro',
-                                                                                                message: '¿Está seguro de eliminar el registro?',
-                                                                                                buttons: Ext.Msg.YESNO,
-                                                                                                icon: Ext.Msg.QUESTION,
-                                                                                                fn: function (btn) {
-                                                                                                    if (btn === 'yes') {
-                                                                                                        Ext.Ajax.request({
-                                                                                                            url: 'controller/deleteappointmentaction',
-                                                                                                            method: 'POST',
-                                                                                                            jsonData: '{"id_cita_accion": "' + rec + '","id_cita": "'+urlparams.cita+'"}',
-                                                                                                            success: function (f, opts) {
-                                                                                                                var resultadoEliminaReg = eval('(' + f.responseText + ')');
-                                                                                                                if (resultadoEliminaReg.success) {
-                                                                                                                    Ext.Msg.show({title: "Operación exitosa", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
-                                                                                                                    store_historial_acciones.load({params:{id_cita:urlparams.cita}});
-                                                                                                                } else {
-                                                                                                                    Ext.Msg.show({title: "Error", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
-                                                                                                                }
-                                                                                                            },
-                                                                                                            failure: function (response, opts) {
-                                                                                                                Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+
+                                                                                        Ext.Msg.show({
+                                                                                            title: 'Eliminar Registro',
+                                                                                            message: '¿Está seguro de eliminar el registro?',
+                                                                                            buttons: Ext.Msg.YESNO,
+                                                                                            icon: Ext.Msg.QUESTION,
+                                                                                            fn: function (btn) {
+                                                                                                if (btn === 'yes') {
+                                                                                                    Ext.Ajax.request({
+                                                                                                        url: 'controller/deleteappointmentaction',
+                                                                                                        method: 'POST',
+                                                                                                        jsonData: '{"id_cita_accion": "' + rec + '","id_cita": "' + urlparams.cita + '"}',
+                                                                                                        success: function (f, opts) {
+                                                                                                            var resultadoEliminaReg = eval('(' + f.responseText + ')');
+                                                                                                            if (resultadoEliminaReg.success) {
+                                                                                                                Ext.Msg.show({title: "Operación exitosa", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
+                                                                                                                store_historial_acciones.load({params: {id_cita: urlparams.cita}});
+                                                                                                            } else {
+                                                                                                                Ext.Msg.show({title: "Error", msg: resultadoEliminaReg.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
                                                                                                             }
-                                                                                                        });
-                                                                                                    }
+                                                                                                        },
+                                                                                                        failure: function (response, opts) {
+                                                                                                            Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                                                        }
+                                                                                                    });
                                                                                                 }
-                                                                                            });
+                                                                                            }
+                                                                                        });
                                                                                     }
                                                                                 }]
                                                                         }
                                                                     ]
                                                                 }, {
-                                                                 xtype: 'grid',
-                                                                 title: 'Historial de Citas',
-                                                                 maxHeight: 250,
-                                                                 store: store_historial_citas,
-                                                                 columns: [
-                                                                 {text: 'Programada', dataIndex: 'programada'},
-                                                                 {text: 'Iniciada', dataIndex: 'inicio'},
-                                                                 {text: 'Finalizada', dataIndex: 'fin'},
-                                                                 {text: 'Clínica', dataIndex: 'clinica'},
-                                                                 {text: 'Doctor', dataIndex: 'atiende'},
-                                                                 {text: 'Síntoma', dataIndex: 'sintoma'}
-                                                                 ]
-                                                                 }
+                                                                    xtype: 'grid',
+                                                                    title: 'Historial de Citas',
+                                                                    maxHeight: 250,
+                                                                    store: store_historial_citas,
+                                                                    columns: [
+                                                                        {text: 'Programada', dataIndex: 'programada'},
+                                                                        {text: 'Iniciada', dataIndex: 'inicio'},
+                                                                        {text: 'Finalizada', dataIndex: 'fin'},
+                                                                        {text: 'Clínica', dataIndex: 'clinica'},
+                                                                        {text: 'Doctor', dataIndex: 'atiende'},
+                                                                        {text: 'Síntoma', dataIndex: 'sintoma'}
+                                                                    ]
+                                                                }
                                                             ]
                                                         }
                                                     ]

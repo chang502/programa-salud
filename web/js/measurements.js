@@ -84,7 +84,7 @@ function editRec(rec) {
                             fieldLabel: 'Unidad de Medida',
                             name: 'unidad_medida',
                             allowBlank: false,
-                            maxLength: 50,
+                            maxLength: 1000,
                             enforceMaxLength: true,
                             value: resultado.data[0].unidad_medida
                         }, {
@@ -266,7 +266,7 @@ Ext.onReady(function () {
                         fieldLabel: 'Unidad de Medida',
                         name: 'unidad_medida',
                         allowBlank: false,
-                        maxLength: 50,
+                        maxLength: 1000,
                         enforceMaxLength: true
                     }, {
                         xtype: 'textfield',
