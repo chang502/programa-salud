@@ -445,6 +445,36 @@ public class Controller {
     
     
     
+    @GET
+    @Path("/clinicactions/{id_clinica}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getClinicActions(@PathParam("id_clinica") String id_clinica) {
+        String fields[] = {"id_clinica"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_clinica", id_clinica);
+        
+        return m.callSelectStoredProcedure("get_clinica_acciones",map,fields);
+    }
+    
+    
+    @POST
+    @Path("/updateclinicaction")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateClinicAction(java.io.InputStream params) {
+
+        String fields[] = {"id_clinica_accion", "activo"};
+        return m.callResultStoredProcedure("update_clinica_accion", fields, params);
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     @POST
     @Path("/creatediscipline")
@@ -1601,6 +1631,27 @@ public class Controller {
     }
     
     
+    
+    
+    @GET
+    @Path("/clinicactionsactionsappt/{id_cita}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAppointmentActions(@PathParam("id_cita") String id_cita) {
+        javax.servlet.http.HttpSession ses=m.getRequest().getSession();
+        
+        String id_usuario="";
+        try{
+            id_usuario=ses.getAttribute("id_usuario").toString();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        String fields[] = {"id_cita","id_usuario"};
+        java.util.Map<String, String> map = new HashMap<>();
+        map.put("id_cita", id_cita);
+        map.put("id_usuario", id_usuario);
+        
+        return m.callSelectStoredProcedure("get_appointment_actions",map,fields);
+    }
     
     
     

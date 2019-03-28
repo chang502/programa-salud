@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/* global Ext */
+
 Ext.require([
     'Ext.tip.QuickTipManager'
 ]);
@@ -46,6 +48,18 @@ var store_clinica_doctores = Ext.create('Ext.data.Store', {
 
 var store_clinica_medidas = Ext.create('Ext.data.Store', {
     fields: ['id_clinica_medida', 'nombre', 'tipo_dato', 'valor_minimo', 'valor_maximo', 'obligatorio', 'activo'],
+    proxy: {
+        type: 'ajax',
+        //url: 'controller/users',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
+
+var store_clinica_acciones = Ext.create('Ext.data.Store', {
+    fields: ['id_clinica_accion', 'nombre', 'activo'],
     proxy: {
         type: 'ajax',
         //url: 'controller/users',
@@ -505,6 +519,88 @@ Ext.onReady(function () {
                     }
                 ]
             }
+            ,
+            {
+                xtype: 'fieldset',
+                title: 'Acciones',
+                items: [
+                    {
+                        xtype: 'combo',
+                        fieldLabel: 'Clínica',
+                        id: 'cmbClinicaAccion',
+                        store: store_clinicas,
+                        queryMode: 'local',
+                        displayField: 'nombre',
+                        valueField: 'id_clinica',
+                        listeners: {
+                            change: function (combo, newVal, oldVal, eOpts) {
+                                Ext.Ajax.request({
+                                    url: 'controller/clinicactions/' + newVal,
+                                    success: function (f, opts) {
+                                        var resultado = eval('(' + f.responseText + ')');
+                                        if (resultado.success) {
+                                            store_clinica_acciones.loadData(resultado.data);
+                                        } else {
+                                            Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                            Ext.getCmp('cmbClinicaAccion').reset();
+                                        }
+                                    },
+                                    failure: function (response, opts) {
+                                        Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                        Ext.getCmp('cmbClinicaAccion').reset();
+                                    }
+                                });
+
+                            }
+                        }
+                    }, {
+                        xtype: 'grid',
+                        maxHeight: 150,
+                        store: store_clinica_acciones,
+                        columns: [
+                            {hidden: true, dataIndex: 'id_clinica_accion'},
+                            {
+                                xtype: 'checkcolumn',
+                                text: 'Seleccionar',
+                                dataIndex: 'activo',
+                                listeners: {
+                                    checkchange: function (checkolumn, rowindex, checked, record, evnt, eOpts) {
+                                        thisgrid = this.up('grid');
+                                        thisgrid.mask('Trabajando...');
+                                        Ext.Ajax.request({
+                                            url: 'controller/updateclinicaction/',
+                                            method: 'POST',
+                                            jsonData: record.data,
+
+                                            success: function (f, opts) {
+                                                var resultado = eval('(' + f.responseText + ')');
+                                                if (resultado.success) {
+                                                    store_clinica_acciones.commitChanges();
+                                                    thisgrid.unmask();
+                                                } else {
+                                                    Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+
+                                                    store_clinica_acciones.rejectChanges();
+                                                    Ext.getCmp('cmbClinicaAccion').reset();
+                                                    thisgrid.unmask();
+                                                }
+                                            },
+                                            failure: function (response, opts) {
+                                                Ext.Msg.show({title: "Error", msg: "Ocurrió un error", buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                store_clinica_medidas.rejectChanges();
+                                                Ext.getCmp('cmbClinicaAccion').reset();
+                                                thisgrid.unmask();
+                                            }
+                                        });
+                                    }
+                                }
+                            },
+                            {text: 'Nombre', dataIndex: 'nombre', width: 450}
+                        ]
+                    }
+                ]
+            }
+            //
         ]
     });
 });

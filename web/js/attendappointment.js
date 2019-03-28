@@ -111,7 +111,7 @@ Ext.onReady(function () {
                     fields: ['id_accion', 'nombre'],
                     proxy: {
                         type: 'ajax',
-                        url: 'controller/actions',
+                        url: 'controller/clinicactionsactionsappt/'+urlparams.cita,
                         reader: {type: 'json',
                             root: 'data'
                         }
@@ -121,7 +121,7 @@ Ext.onReady(function () {
                 store_historial_medidas.load();
                 store_historial_acciones.load({params: {id_cita: urlparams.cita}});
                 store_historial_citas.load({params: {id_cita: urlparams.cita}});
-                store_acciones.load();
+                store_acciones.load({params: {id_cita: urlparams.cita}});
 
                 Ext.Ajax.request({
                     url: 'controller/attendappointment',

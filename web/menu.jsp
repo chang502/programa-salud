@@ -58,8 +58,8 @@
                 <li><a href="users.jsp"><span>Usuarios</span></a></li>
                 <li><a href="doctors.jsp"><span>Doctores</span></a></li>
                 <li><a href="measurements.jsp"><span>Medidas</span></a></li>
-                <li><a href="clinics.jsp"><span>Clínicas</span></a></li>
-                <li class="last"><a href="actions.jsp"><span>Acciones (Citas)</span></a></li>
+                <li><a href="actions.jsp"><span>Acciones (Citas)</span></a></li>
+                <li class="last"><a href="clinics.jsp"><span>Clínicas</span></a></li>
             </ul>
         </li>
         <% } %>
