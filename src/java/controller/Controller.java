@@ -264,6 +264,10 @@ public class Controller {
         String fields[] = {"nombre", "id_tipo_dato", "unidad_medida", "valor_minimo", "valor_maximo", "obligatorio"};
 
         java.util.Map<String, String> map = m.createMap(fields, params);
+        String unidad_medida= map.remove("unidad_medida");
+        map.put("unidad_medida", unidad_medida==null||unidad_medida.equals("")?" ":unidad_medida);
+        
+        
         return m.callResultStoredProcedure("create_measurement", map, fields);
 
     }
@@ -300,7 +304,10 @@ public class Controller {
     public String updateMeasurement(java.io.InputStream params) {
 
         String fields[] = {"id_medida", "nombre", "id_tipo_dato", "unidad_medida", "valor_minimo", "valor_maximo", "obligatorio"};
-        return m.callResultStoredProcedure("update_measurement", fields, params);
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        String unidad_medida= map.remove("unidad_medida");
+        map.put("unidad_medida", unidad_medida==null||unidad_medida.equals("")?" ":unidad_medida);
+        return m.callResultStoredProcedure("update_measurement", map, fields);
 
     }
 
@@ -1073,6 +1080,7 @@ public class Controller {
     
     @GET
     @Path("/searchpersons")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String searchPerson(java.io.InputStream params) {
         String fields[] = {"identificacion", "nombre_completo"};

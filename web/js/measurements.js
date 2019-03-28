@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/* global Ext */
+
 Ext.require([
     'Ext.tip.QuickTipManager'
 ]);
@@ -78,7 +80,16 @@ function editRec(rec) {
                             valueField: 'id_tipo_dato',
                             name: 'id_tipo_dato',
                             allowBlank: false,
-                            value: resultado.data[0].id_tipo_dato
+                            value: resultado.data[0].id_tipo_dato,
+                            listeners: {
+                                select: function( combo, record, eOpts){
+
+                                    combo.ownerCt.items.items[3].setDisabled(combo.getValue()===8704 || combo.getValue() ===8705);
+                                    combo.ownerCt.items.items[4].setDisabled(combo.getValue()===8704 || combo.getValue() ===8705 || combo.getValue() ===8706);
+                                    combo.ownerCt.items.items[5].setDisabled(combo.getValue()===8704 || combo.getValue() ===8705 || combo.getValue() ===8706);
+                                    combo.ownerCt.items.items[3].setFieldLabel(combo.getValue() ===8706?'Valores separados por coma':'Unidad de Medida');
+                                }
+                            }
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Unidad de Medida',
@@ -130,6 +141,11 @@ function editRec(rec) {
                         }
                     ]
                 });
+
+                frmEdit.items.items[3].setDisabled(resultado.data[0].id_tipo_dato===8704 || resultado.data[0].id_tipo_dato ===8705);
+                frmEdit.items.items[4].setDisabled(resultado.data[0].id_tipo_dato===8704 || resultado.data[0].id_tipo_dato ===8705 || resultado.data[0].id_tipo_dato ===8706);
+                frmEdit.items.items[5].setDisabled(resultado.data[0].id_tipo_dato===8704 || resultado.data[0].id_tipo_dato ===8705 || resultado.data[0].id_tipo_dato ===8706);
+                frmEdit.items.items[3].setFieldLabel(resultado.data[0].id_tipo_dato ===8706?'Valores separados por coma':'Unidad de Medida');
 
                 var vent = Ext.create('Ext.window.Window', {
                     title: 'Editar Registro',
@@ -260,7 +276,16 @@ Ext.onReady(function () {
                         displayField: 'tipo_dato',
                         valueField: 'id_tipo_dato',
                         name: 'id_tipo_dato',
-                        allowBlank: false
+                        allowBlank: false,
+                        listeners: {
+                            select: function( combo, record, eOpts){
+                                
+                                combo.ownerCt.items.items[2].setDisabled(combo.getValue()===8704 || combo.getValue() ===8705);
+                                combo.ownerCt.items.items[3].setDisabled(combo.getValue()===8704 || combo.getValue() ===8705 || combo.getValue() ===8706);
+                                combo.ownerCt.items.items[4].setDisabled(combo.getValue()===8704 || combo.getValue() ===8705 || combo.getValue() ===8706);
+                                combo.ownerCt.items.items[2].setFieldLabel(combo.getValue() ===8706?'Valores separados por coma':'Unidad de Medida');
+                            }
+                        }
                     }, {
                         xtype: 'textfield',
                         fieldLabel: 'Unidad de Medida',
@@ -337,6 +362,11 @@ Ext.onReady(function () {
                                                 if (resultado.success) {
                                                     Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
                                                     form.reset();
+                                                    
+                                                    form.items.items[0].items.items[2].setDisabled(false);
+                                                    form.items.items[0].items.items[3].setDisabled(false);
+                                                    form.items.items[0].items.items[4].setDisabled(false);
+                                                    
                                                     store_medidas.load();
                                                 } else {
                                                     Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
