@@ -97,7 +97,7 @@ function editRec(rec) {
                             allowBlank: false,
                             maxLength: 1000,
                             enforceMaxLength: true,
-                            value: resultado.data[0].unidad_medida
+                            value: resultado.data[0].unidad_medida.trim()
                         }, {
                             xtype: 'textfield',
                             fieldLabel: 'Valor Mínimo',

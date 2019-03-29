@@ -8,7 +8,7 @@ Ext.QuickTips.init();
 
 
 var store_bebederos = Ext.create('Ext.data.Store', {
-    fields: ['id_bebedero', 'nombre', 'ubicacion', 'fecha_mantenimiento', 'estado', 'observaciones'],
+    fields: ['id_bebedero', 'nombre', 'ubicacion', 'fecha_mantenimiento', 'estado', 'observaciones', 'creado'],
     proxy: {
         type: 'ajax',
         url: 'controller/drinkfountains',
@@ -309,6 +309,7 @@ Ext.onReady(function () {
                             {text: 'Fecha<br>Mantenimiento', dataIndex: 'fecha_mantenimiento'},
                             {text: '<br>Estado', dataIndex: 'estado'},
                             {text: '<br>Observaciones', dataIndex: 'observaciones'},
+                            {text: '<br>Creado', dataIndex: 'creado'},
                             {
                                 xtype: 'actioncolumn',
                                 text: 'Acciones',

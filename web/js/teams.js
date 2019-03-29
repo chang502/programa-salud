@@ -6,7 +6,7 @@ Ext.QuickTips.init();
 
 
 var store_selecciones = Ext.create('Ext.data.Store', {
-    fields: ['id_seleccion', 'nombre', 'descripcion', 'especialidad', 'estado'],
+    fields: ['id_seleccion', 'nombre', 'descripcion', 'especialidad', 'estado','creado'],
     proxy: {
         type: 'ajax',
         url: 'controller/teams',
@@ -356,6 +356,7 @@ Ext.onReady(function () {
                             {text: 'Descripción', dataIndex: 'descripcion', width: 150},
                             {text: 'Especialidad', dataIndex: 'especialidad', width: 220},
                             {text: 'Estado', dataIndex: 'estado', width: 120},
+                            {text: 'Creado', dataIndex: 'creado', width: 120},
                             {
                                 xtype: 'actioncolumn',
                                 text: 'Acciones',

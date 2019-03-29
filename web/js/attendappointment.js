@@ -416,6 +416,7 @@ Ext.onReady(function () {
                                                     name: 'valor'
                                                 });
                                             } else if (linea.tipo_dato === 'Sí/No') {
+                                                window.console.log(linea.obligatorio === 'true');
                                                 panelMedidas.add({
                                                     xtype: 'checkbox',
                                                     fieldLabel: linea.fieldLabel,
@@ -475,7 +476,6 @@ Ext.onReady(function () {
 
                                                             data.id_cita = form.items.items[0].items.items[0].value;
                                                             data.id_persona = form.items.items[0].items.items[1].value;
-                                                            window.console.log(data);
 
                                                             Ext.Ajax.request({
                                                                 url: 'controller/savemeasures',

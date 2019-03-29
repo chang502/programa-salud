@@ -63,7 +63,7 @@ Ext.onReady(function () {
                         displayField: 'nombre',
                         valueField: 'id_reporte',
                         allowBlank: false,
-                        matchFieldWidth: false,
+                        //matchFieldWidth: false,
                         width: 500,
                         colspan: 2,
                         name: 'id_reporte',
