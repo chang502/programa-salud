@@ -19,6 +19,7 @@
         <title>Iniciar Sesión</title>
     </head>
     <body>
+        <!-- 1.0 -->
         <div id="content">
             <jsp:include page="header.jsp" />
             <div id="main-container">
