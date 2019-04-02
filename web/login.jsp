@@ -19,7 +19,8 @@
         <title>Iniciar Sesión</title>
     </head>
     <body>
-        <!-- 1.0 -->
+        <script type="text/javascript">console.log('by Andrés Chang - 2019');</script>
+        <!-- 1.1 -->
         <div id="content">
             <jsp:include page="header.jsp" />
             <div id="main-container">

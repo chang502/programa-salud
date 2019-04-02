@@ -12,14 +12,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.*;
 import javax.json.JsonValue.ValueType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Context;
 import structures.JsonResponse;
 
 /**
@@ -30,6 +28,12 @@ public class Manager {
 
     private JsonResponse response;
     private HttpServletRequest request;
+    
+    
+    
+    private final static String ENCODING="UTF-8";
+
+
 
     public Manager(HttpServletRequest request) {
         response = new JsonResponse();
@@ -336,8 +340,10 @@ public class Manager {
         try {
 
             //java.io.InputStreamReader isr=new java.io.InputStreamReader(is,"UTF-8");
-            BufferedReader bfreader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-
+            //BufferedReader bfreader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            
+            BufferedReader bfreader = new BufferedReader(new InputStreamReader(is,ENCODING));
+            
             JsonReader reader = Json.createReader(bfreader);
             JsonObject jsonObject = reader.readObject();
             reader.close();
@@ -353,7 +359,7 @@ public class Manager {
 
     private String parseStudentCcWsResponseMetadata(String raw, String carrera) {
         try {
-            java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
+            java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes(ENCODING));
             JsonReader reader = Json.createReader(is);
 
             JsonArray jsonArray = reader.readArray();
@@ -405,7 +411,7 @@ public class Manager {
         String resp = null;
 
         try {
-            java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
+            java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes(ENCODING));
             JsonReader reader = Json.createReader(is);
 
             JsonArray jsonArray = reader.readArray();
@@ -429,7 +435,7 @@ public class Manager {
     private String parseEmployeeCcWsResponseMetadata(String raw) {
         try {
             //System.out.println(raw);
-            java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes("UTF-8"));
+            java.io.InputStream is = new java.io.ByteArrayInputStream(raw.getBytes(ENCODING));
             JsonReader reader = Json.createReader(is);
             //JsonObject jsonObject = reader.readObject();
 
@@ -497,6 +503,7 @@ public class Manager {
                         //carrera
                         con = utils.ConexionCentroCalculo.getEstudianteCarrera(identificacion);
                         String ws_response_carrera = getCcWsResponseMetadata(con.getInputStream());
+                        //System.out.println(ws_response);
                         String carrera = getFieldFromCcWsResponseMetadata(ws_response_carrera, "carrera");
                         //String carrera="09";
                         //!carrera
@@ -557,7 +564,7 @@ public class Manager {
                     java.io.InputStream is = con.getInputStream();
                     String ws_response = getCcWsResponseMetadata(is);
 
-                    java.io.InputStream bais = new java.io.ByteArrayInputStream(ws_response.getBytes("UTF-8"));
+                    java.io.InputStream bais = new java.io.ByteArrayInputStream(ws_response.getBytes(ENCODING));
                     JsonReader reader = Json.createReader(bais);
 
                     JsonArray jsonArray = reader.readArray();

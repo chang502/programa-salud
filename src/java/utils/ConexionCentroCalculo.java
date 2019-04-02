@@ -20,6 +20,9 @@ public class ConexionCentroCalculo {
     private static String user;
     private static String password;
     private static String url;
+    
+    
+    private static final String encoding="UTF-8";
 
     private static void loadProperties() {
         if (url != null) {
@@ -34,7 +37,6 @@ public class ConexionCentroCalculo {
             timeout = prop.getProperty("timeout");
             user = prop.getProperty("user");
             password = prop.getProperty("password");
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace(System.err);
@@ -53,7 +55,7 @@ public class ConexionCentroCalculo {
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Cache-Control", "no-cache");
-            con.setRequestProperty("charset", "UTF-8");
+            con.setRequestProperty("charset", encoding);
             
             
             String strUser = user;
@@ -62,11 +64,13 @@ public class ConexionCentroCalculo {
             
             String strParametros = "";
             
-            strParametros = URLEncoder.encode("Carnet=" + numeroCarnet, "UTF-8");
+            strParametros = URLEncoder.encode("Carnet=" + numeroCarnet, encoding);
+            
             
             String StrMetadata = "test";
             
             String urlParameters = "strUser=" + strUser + "&strPassword=" + strPassword + "&strReference=" + strReference + "&strOperacion=" + strOperacion + "&strParametros=" + strParametros + "&StrMetadata=" + StrMetadata;
+            //String urlParameters = "strUser=" + strUser + "&strPassword=" + URLEncoder.encode(strPassword,encoding) + "&strReference=" + strReference + "&strOperacion=" + strOperacion + "&strParametros=" + strParametros + "&StrMetadata=" + StrMetadata;
             
             //System.out.println(urlParameters);
             
@@ -103,6 +107,7 @@ public class ConexionCentroCalculo {
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Cache-Control", "no-cache");
+            con.setRequestProperty("charset", encoding);
             
             String strUser = user;
             String strPassword = password;
@@ -110,7 +115,7 @@ public class ConexionCentroCalculo {
             
             String strParametros = "";
             
-            strParametros = URLEncoder.encode("CUI=" + cui, "UTF-8");
+            strParametros = URLEncoder.encode("CUI=" + cui, encoding);
             
             String StrMetadata = "test";
             
@@ -155,6 +160,7 @@ public class ConexionCentroCalculo {
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Cache-Control", "no-cache");
+            con.setRequestProperty("charset", encoding);
             
             String strUser = user;
             String strPassword = password;
@@ -162,7 +168,7 @@ public class ConexionCentroCalculo {
             
             String strParametros = "";
             
-            strParametros = URLEncoder.encode("Carnet=" + carnet, "UTF-8");
+            strParametros = URLEncoder.encode("Carnet=" + carnet, encoding);
             
             String StrMetadata = "test";
             

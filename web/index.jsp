@@ -16,7 +16,7 @@
         <script src="js/ext-6.2.0/build/ext-all.js" type="text/javascript"></script>
         <script src="js/ext-6.2.0/build/classic/locale/locale-es.js" type="text/javascript"></script>
         <script src="js/ext-6.2.0/build/classic/theme-neptune/theme-neptune.js" type="text/javascript"></script>
-        
+        <script type="text/javascript">console.log('by Andrés Chang - 2019');</script>
         <style>
             .x-action-col-icon {
                 height: 16px;
