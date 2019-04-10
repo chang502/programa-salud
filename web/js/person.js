@@ -149,9 +149,9 @@ function showPersonaDialog(hiddenfield, textfield) {
                             /*afterrender: function(comp, eOpts){
                                 comp.focus();
                             },*/
-                            focus: function(){
+                            /*focus: function(){
                                 this.expand();
-                            },
+                            },*/
                             validate : function(){
                                 if(this.disabled || this.validateValue(this.processValue(this.getRawValue()))){
                                     this.clearInvalid();

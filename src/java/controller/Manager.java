@@ -28,12 +28,8 @@ public class Manager {
 
     private JsonResponse response;
     private HttpServletRequest request;
-    
-    
-    
-    private final static String ENCODING="UTF-8";
 
-
+    private final static String ENCODING = "UTF-8";
 
     public Manager(HttpServletRequest request) {
         response = new JsonResponse();
@@ -341,9 +337,8 @@ public class Manager {
 
             //java.io.InputStreamReader isr=new java.io.InputStreamReader(is,"UTF-8");
             //BufferedReader bfreader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            
-            BufferedReader bfreader = new BufferedReader(new InputStreamReader(is,ENCODING));
-            
+            BufferedReader bfreader = new BufferedReader(new InputStreamReader(is, ENCODING));
+
             JsonReader reader = Json.createReader(bfreader);
             JsonObject jsonObject = reader.readObject();
             reader.close();
@@ -570,39 +565,75 @@ public class Manager {
                     JsonArray jsonArray = reader.readArray();
                     reader.close();
 
-                    if (jsonArray.isEmpty()) {
-                        response.setSuccess(false);
-                        response.setMessage("No se encontraron registros");
-                        return response.getJsonData();
-                    }
-                    JsonObject jsonObject = jsonArray.getJsonObject(0);
+                    boolean skip_json = false;
 
                     java.util.Map<String, String> map = new java.util.HashMap<>();
 
-                    String fields_rec[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "regpersonal", "departamento"};
-                    for (int i = 0; i < fields_rec.length; i++) { //<8
-                        String field = fields_rec[i];
-                        String tmp = null;
-                        try {
-                            tmp = jsonObject.getString(field);
-                        } catch (Exception ff) {
+                    if (jsonArray.isEmpty()) {
+
+                        String fields_cui_search[] = {
+                            "cui"
+                        };
+                        java.util.Map<String, String> params_cui_search = new java.util.HashMap<>();
+                        params_cui_search.put("cui", params.get("cui"));
+
+                        JsonResponse jrr = new JsonResponse();
+                        jrr.callSelectStoredProcedure("get_person_details_by_cui", params_cui_search, fields_cui_search);
+
+                        ResultSet rs = jrr.getResultSet();
+                        int count = 0;
+                        while (rs.next()) {
+                            map.put("nombre", rs.getString("nombre"));
+                            map.put("apellido", rs.getString("apellido"));
+                            map.put("fecha_nacimiento", rs.getString("fecha_nacimiento"));
+                            map.put("sexo", rs.getString("sexo"));
+                            map.put("email", rs.getString("email"));
+                            map.put("cui", rs.getString("cui"));
+                            map.put("regpersonal", rs.getString("regpersonal"));
+                            map.put("departamento", rs.getString("departamento"));
+                            count++;
                         }
-                        map.put(field, tmp);
+
+                        skip_json = count > 0;
+
+                        if (!skip_json) {
+                            response.setSuccess(false);
+                            response.setMessage("No se encontraron registros");
+
+                            return response.getJsonData();
+                        }
                     }
-
-                    String tmp = map.remove("fechanacimiento");
-                    map.put("fecha_nacimiento", tmp);
-
-                    tmp = map.remove("correo");
-                    map.put("email", tmp);
-
-                    String fecha_nac_formatted=params.get("fecha_nacimiento");
-                    fecha_nac_formatted=fecha_nac_formatted.substring(6,10)+"-"+fecha_nac_formatted.substring(3,5)+"-"+fecha_nac_formatted.substring(0,2);
                     
+                    String fecha_nac_formatted;
+                    
+                    if (!skip_json) {
+                        JsonObject jsonObject = jsonArray.getJsonObject(0);
+
+                        String fields_rec[] = {"nombre", "apellido", "fechanacimiento", "sexo", "correo", "cui", "regpersonal", "departamento"};
+                        for (int i = 0; i < fields_rec.length; i++) { //<8
+                            String field = fields_rec[i];
+                            String tmp = null;
+                            try {
+                                tmp = jsonObject.getString(field);
+                            } catch (Exception ff) {
+                            }
+                            map.put(field, tmp);
+                        }
+
+                        String tmp = map.remove("fechanacimiento");
+                        map.put("fecha_nacimiento", tmp);
+
+                        tmp = map.remove("correo");
+                        map.put("email", tmp);
+
+                        fecha_nac_formatted = params.get("fecha_nacimiento");
+                        fecha_nac_formatted = fecha_nac_formatted.substring(6, 10) + "-" + fecha_nac_formatted.substring(3, 5) + "-" + fecha_nac_formatted.substring(0, 2);
+                    }else{
+                        fecha_nac_formatted = map.get("fecha_nacimiento");
+                    }
                     //System.out.println("cui: "+map.get("cui")+" - "+params.get("cui"));
-                    //System.out.println("fecha_nac: "+map.get("fecha_nacimiento")+" - "+fecha_nac_formatted);
                     if (map.get("cui").equals(params.get("cui"))
-                            && map.get("fecha_nacimiento").equals(fecha_nac_formatted)) {
+                            && (map.get("fecha_nacimiento") == null || map.get("fecha_nacimiento").equals(fecha_nac_formatted))) {
                         //System.out.println("Información coincide, persona identificada");
                         params.put("nombre", map.get("nombre"));
                         params.put("apellido", map.get("apellido"));
@@ -610,7 +641,7 @@ public class Manager {
                         params.put("email", map.get("email"));
                         params.put("regpersonal", map.get("regpersonal"));
                         params.put("departamento", map.get("departamento"));
-                        
+
                         params.remove("fecha_nacimiento");
                         params.put("fecha_nacimiento", fecha_nac_formatted);
 
@@ -621,8 +652,6 @@ public class Manager {
                             String fielf = fielfs[i];
                             System.out.println(fielf+": "+params.get(fielf));
                         }*/
-                        
-                        
                         return callResultStoredProcedure("registrar_datos_empleado", params, fielfs);
 
                     } else {

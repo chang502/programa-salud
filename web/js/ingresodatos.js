@@ -238,7 +238,202 @@ Ext.onReady(function () {
                                                     //store_usuarios.load();
                                                 } else {
                                                     form.unmask();
-                                                    Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                    if (resultado.message === 'No se encontraron registros') {
+
+                                                        var frmCrear_datosPersonales = Ext.create({
+                                                            xtype: 'fieldset',
+                                                            title: 'Datos Personales',
+                                                            padding: '5 5 5 5',
+                                                            defaults: {
+                                                                padding: '5 15 5 15',
+                                                                selectOnFocus: true
+                                                            },
+                                                            layout: {
+                                                                type: 'table',
+                                                                columns: 2
+                                                            },
+                                                            items: [
+                                                                {
+                                                                    xtype: 'textfield',
+                                                                    fieldLabel: 'Nombres',
+                                                                    name: 'nombre',
+                                                                    allowBlank: false
+                                                                }, {
+                                                                    xtype: 'textfield',
+                                                                    fieldLabel: 'Apellidos',
+                                                                    name: 'apellido',
+                                                                    allowBlank: false
+                                                                }, {
+                                                                    xtype: 'datefield',
+                                                                    fieldLabel: 'Fecha nacimiento',
+                                                                    name: 'fecha_nacimiento',
+                                                                    emptyText: 'dd/mm/aaaa',
+                                                                    value: data.fecha_nacimiento,
+                                                                    allowBlank: false
+                                                                }, {
+                                                                    xtype: 'combo',
+                                                                    fieldLabel: 'Sexo',
+                                                                    name: 'sexo',
+                                                                    allowBlank: false,
+                                                                    store: {
+                                                                        fields: ['id', 'value'],
+                                                                        data: [
+                                                                            {"id": 'm', "value": "Masculino"},
+                                                                            {"id": 'f', "value": "Femenino"}
+                                                                        ]
+                                                                    },
+                                                                    queryMode: 'local',
+                                                                    displayField: 'value',
+                                                                    valueField: 'id'
+                                                                }, {
+                                                                    xtype: 'textfield',
+                                                                    fieldLabel: 'Correo',
+                                                                    name: 'email',
+                                                                    vtype: 'email'
+                                                                }, {
+                                                                    xtype: 'textfield',
+                                                                    fieldLabel: 'Teléfono',
+                                                                    name: 'telefono',
+                                                                    maxLength: 8,
+                                                                    enforceMaxLength: true,
+                                                                    value: data.telefono,
+                                                                    minLength: 8,
+                                                                    maskRe: /[0-9]/
+                                                                }
+                                                            ]
+                                                        });
+
+                                                        var frmCrear_identificacion = Ext.create({
+                                                            xtype: 'fieldset',
+                                                            title: 'Identificaciones',
+                                                            //collapsed: true,
+                                                            //disabled: true,
+
+                                                            items: [
+                                                                {
+                                                                    xtype: 'panel',
+                                                                    //padding: '5 5 5 5',
+                                                                    defaults: {
+                                                                        padding: '5 15 5 15'
+                                                                    },
+                                                                    layout: {
+                                                                        type: 'table',
+                                                                        columns: 2
+                                                                    }, items: [
+                                                                        {
+                                                                            xtype: 'textfield',
+                                                                            fieldLabel: 'CUI',
+                                                                            name: 'cui',
+                                                                            maxLength: 13,
+                                                                            minLengthText: 'Ingrese un CUI válido',
+                                                                            enforceMaxLength: true,
+                                                                            value: data.cui,
+                                                                            minLength: 13,
+                                                                            maskRe: /[0-9]/
+                                                                        }, {
+                                                                            xtype: 'textfield',
+                                                                            fieldLabel: 'Registro Académico',
+                                                                            name: 'carnet',
+                                                                            maxLength: 9,
+                                                                            minLengthText: 'Ingrese un registro académico válido',
+                                                                            enforceMaxLength: true,
+                                                                            minLength: 7,
+                                                                            maskRe: /[0-9]/
+                                                                        }, {
+                                                                            xtype: 'textfield',
+                                                                            fieldLabel: 'Número de Orientación Vocacional',
+                                                                            name: 'nov',
+                                                                            maxLength: 10,
+                                                                            minLengthText: 'Ingrese un número de orientación vocacional válido',
+                                                                            enforceMaxLength: true,
+                                                                            minLength: 10,
+                                                                            maskRe: /[0-9]/
+                                                                        }, {
+                                                                            xtype: 'textfield',
+                                                                            fieldLabel: 'Registro Personal',
+                                                                            minLengthText: 'Ingrese un número de registro de personal válido',
+                                                                            name: 'regpersonal',
+                                                                            maxLength: 9,
+                                                                            enforceMaxLength: true,
+                                                                            minLength: 9,
+                                                                            maskRe: /[0-9]/
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        });
+
+
+
+                                                        var frmCrear = Ext.create({
+                                                            xtype: 'form',
+                                                            padding: '10 10 10 10',
+                                                            items: [
+                                                                frmCrear_datosPersonales,
+                                                                frmCrear_identificacion
+
+                                                            ]
+                                                        });
+
+                                                        var vent = Ext.create('Ext.window.Window', {
+                                                            title: 'Crear registro',
+                                                            modal: true,
+                                                            layout: 'fit',
+                                                            width: 820,
+                                                            height: 546,
+                                                            closeAction: 'destroy',
+                                                            buttons: [
+                                                                {
+                                                                    text: 'Aceptar',
+                                                                    handler: function () {
+
+                                                                        //console.log(activeTab);
+                                                                        //var data = activeTab.getValues();
+                                                                        //activeTab.mask("Espere");
+                                                                        if (!frmCrear.isValid()) {
+                                                                        } else {
+                                                                            var data_per = frmCrear.getValues();
+                                                                            Ext.Ajax.request({
+                                                                                url: 'controller/createperson',
+                                                                                method: 'POST',
+                                                                                jsonData: data_per,
+                                                                                success: function (f, g) {
+                                                                                    var resultado = eval('(' + f.responseText + ')');
+
+                                                                                    if (resultado.success) {
+                                                                                        //activeTab.unmask();
+                                                                                        vent.close();
+
+
+
+                                                                                    } else {
+                                                                                        //activeTab.unmask();
+                                                                                        Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                                    }
+                                                                                },
+                                                                                failure: function (f, g) {
+                                                                                    //activeTab.unmask();
+                                                                                    Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {text: 'Cancelar', handler: function () {
+                                                                        this.up('window').close();
+                                                                    }}
+                                                            ],
+                                                            items: [
+                                                                frmCrear
+                                                            ]
+                                                        }).show();
+
+
+
+                                                    } else {
+
+                                                        Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                    }
                                                 }
                                             },
                                             failure: function (f, g) {
