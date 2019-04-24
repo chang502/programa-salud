@@ -184,7 +184,7 @@ public class reports extends HttpServlet {
             if (sh.getPhysicalNumberOfRows() > 1) {
                 response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                 if (this.rname != null) {
-                    response.setHeader("Content-disposition", "attachment; filename=\"" + this.rname + "\"");
+                    response.setHeader("Content-disposition", "attachment; filename=\"" + this.rname + ".xlsx\"");
                 }
 
                 OutputStream fileOut = response.getOutputStream();
