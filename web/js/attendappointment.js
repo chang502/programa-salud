@@ -379,14 +379,14 @@ Ext.onReady(function () {
                                                 panelMedidas.add({
                                                     xtype: 'textfield',
                                                     fieldLabel: linea.fieldLabel,
-                                                    allowBlank: linea.obligatorio === 'true',
+                                                    allowBlank: linea.obligatorio !== 'true',
                                                     name: 'valor'
                                                 });
                                             } else if (linea.tipo_dato === 'Entero') {
                                                 panelMedidas.add({
                                                     xtype: 'numberfield',
                                                     fieldLabel: linea.fieldLabel,
-                                                    allowBlank: linea.obligatorio === 'true',
+                                                    allowBlank: linea.obligatorio !== 'true',
                                                     minValue: linea.valor_minimo,
                                                     maxValue: linea.valor_maximo,
                                                     hideTrigger: true,
@@ -398,7 +398,7 @@ Ext.onReady(function () {
                                                 panelMedidas.add({
                                                     xtype: 'numberfield',
                                                     fieldLabel: linea.fieldLabel,
-                                                    allowBlank: linea.obligatorio === 'true',
+                                                    allowBlank: linea.obligatorio !== 'true',
                                                     minValue: linea.valor_minimo,
                                                     maxValue: linea.valor_maximo,
                                                     hideTrigger: true,
@@ -412,15 +412,15 @@ Ext.onReady(function () {
                                                 panelMedidas.add({
                                                     xtype: 'datefield',
                                                     fieldLabel: linea.fieldLabel,
-                                                    allowBlank: linea.obligatorio === 'true',
+                                                    allowBlank: linea.obligatorio !== 'true',
                                                     name: 'valor'
                                                 });
                                             } else if (linea.tipo_dato === 'Sí/No') {
-                                                window.console.log(linea.obligatorio === 'true');
+                                                //window.console.log(linea.obligatorio !== 'true');
                                                 panelMedidas.add({
                                                     xtype: 'checkbox',
                                                     fieldLabel: linea.fieldLabel,
-                                                    allowBlank: linea.obligatorio === 'true',
+                                                    allowBlank: linea.obligatorio !== 'true',
                                                     name: 'valor'
                                                 });
                                             } else if (linea.tipo_dato === 'Lista') {
@@ -433,7 +433,7 @@ Ext.onReady(function () {
                                                 panelMedidas.add({
                                                     xtype: 'combo',
                                                     fieldLabel: linea.fieldLabel,
-                                                    allowBlank: linea.obligatorio === 'true',
+                                                    allowBlank: linea.obligatorio !== 'true',
                                                     store: Ext.create('Ext.data.Store', {
                                                         fields: ['id', 'nombre'],
                                                         data: storedata

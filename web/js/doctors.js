@@ -345,7 +345,7 @@ Ext.onReady(function () {
                         xtype: 'datefield',
                         fieldLabel: 'Fecha nacimiento',
                         submitValue: false,
-                        allowBlank: false,
+                        allowBlank: true,
                         readOnly: true
                     }, {
                         xtype: 'combo',

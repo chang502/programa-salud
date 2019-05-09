@@ -173,7 +173,8 @@ public class Manager {
                     map2.put("id_persona", id_persona);
                     map2.put("id_cita", id_cita);
                     map2.put("valor", tmp);
-                    //System.out.println(this.callResultStoredProcedure("create_persona_medida", map2, fields));
+                    String medida=this.callResultStoredProcedure("create_persona_medida", map2, fields);
+                    //System.out.println(medida);
 
                 }
             }

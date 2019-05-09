@@ -480,7 +480,7 @@ Ext.onReady(function () {
                                                                         form.mask("Espere");
                                                                         var data = form.getValues();
 
-                                                                        data.id_persona = panelInfoAdicional.items.items[4].value;
+                                                                        data.id_persona = panelInfoAdicional.items.items[6].value;
 
                                                                         if (!data.hasOwnProperty('flag_tiene_discapacidad')) {
                                                                             data.flag_tiene_discapacidad = '0';
