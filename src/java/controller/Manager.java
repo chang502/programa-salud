@@ -242,6 +242,7 @@ public class Manager {
                 ses.setAttribute("hasProgramaSalud", rs.getBoolean("hasProgramaSalud"));
                 ses.setAttribute("hasPlayground", rs.getBoolean("hasPlayground"));
                 ses.setAttribute("hasIngresoDatos", rs.getBoolean("hasIngresoDatos"));
+                ses.setAttribute("hasInventarios", rs.getBoolean("hasInventarios"));
                 ses.setAttribute("isAdmin", rs.getBoolean("isAdmin"));
                 ses.setAttribute("cambiar_clave", rs.getBoolean("cambiar_clave"));
 

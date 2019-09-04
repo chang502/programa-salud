@@ -1086,7 +1086,7 @@ public class Controller {
         String fields[] = {"identificacion", "nombre_completo"};
         
         return m.searchPerson(fields, params);
-        //return m.callResultStoredProcedure("search_person", fields, params);
+       
     }
     
     
@@ -1895,6 +1895,56 @@ public class Controller {
     }
     
     
+      @POST
+    @Path("/appointment/addmedicamento")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String addMedicamentoAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_cita", "id_medicamento","cantidad","observaciones"};               
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("create_appointment_medicamento",map,  fields); 
+
+    }
+    
+   
+    @POST
+    @Path("/appointment/deletemedicamento")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteMedicamentoAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_cita", "id_medicamento"};               
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("delete_appointment_medicamento",map,  fields);                         
+
+    }
+    
+    
+     @POST
+    @Path("/appointment/addmaterial")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String addMaterialAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_cita", "id_material","cantidad","observaciones"};               
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("create_appointment_material",map,  fields); 
+
+    }
+    
+   
+    @POST
+    @Path("/appointment/deletematerial")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteMaterialAppointment(java.io.InputStream params) {
+
+        String fields[] = {"id_cita", "id_material"};               
+        java.util.Map<String, String> map = m.createMap(fields, params);
+        return m.callResultStoredProcedure("delete_appointment_material",map,  fields); 
+
+    }
     
     
     

@@ -27,6 +27,9 @@
             <ul> 
                 <li><a href="students.jsp"><span>Consulta de Estudiantes</span></a></li>
                 <li class="last"><a href="disciplines.jsp"><span>Administrar Disciplinas</span></a></li>
+                <li><a href="prestamo.jsp"><span>Prestamo Implementos</span></a></li>
+                <li><a href="prestamo_campo.jsp"><span>Prestamo Campo de Futbol</span></a></li>
+                
             </ul>
         </li>
         <% } %>
@@ -51,6 +54,17 @@
         
         <% if(!session.isNew() && ((Boolean)session.getAttribute("hasClinica") || (Boolean)session.getAttribute("hasDeportes") || (Boolean)session.getAttribute("hasProgramaSalud") || (Boolean)session.getAttribute("hasPlayground")  )) { %>
         <li><a href="reports.jsp"><span>Reportes</span></span></a></li>
+        <% } %>
+        <% if(!session.isNew() && (Boolean)session.getAttribute("hasInventarios")) { %>
+        <li class="has-sub"><a href="#"><span>Inventarios</span></span></a>
+            <ul>	
+                <li><a href="materials.jsp"><span>Materiales</span></a></li>
+                <li><a href="procedures.jsp"><span>Procedimientos</span></a></li>
+                <li><a href="medicaments.jsp"><span>Medicamentos</span></a></li>
+                <li><a href="implements.jsp"><span>Implementos</span></a></li>                
+                <li><a href="inventory.jsp"><span>Inventario</span></a></li>                
+            </ul>
+        </li> 
         <% } %>
         <% if(!session.isNew() && (Boolean)session.getAttribute("isAdmin")) { %>
         <li class="has-sub"><a href="#"><span>Administrar</span></span></a>

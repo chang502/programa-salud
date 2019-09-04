@@ -30,6 +30,12 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(controller.Controller.class);
+        resources.add(controller.ImplementosResource.class);
+        resources.add(controller.InventoryResource.class);
+        resources.add(controller.MaterialsResource.class);
+        resources.add(controller.MedicamentsResource.class);
+        resources.add(controller.PrestamoResource.class);
+        resources.add(controller.ProceduresResource.class);
     }
     
 }

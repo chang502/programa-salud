@@ -20,7 +20,8 @@
     </head>
     <body>
         <script type="text/javascript">console.log('by Andrés Chang - 2019');</script>
-        <!-- 1.1 -->
+        <script type="text/javascript">console.log('v2.0 Carlos Ruiz - 2019');</script>
+        <!-- 2.0 -->
         <div id="content">
             <jsp:include page="header.jsp" />
             <div id="main-container">

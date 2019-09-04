@@ -22,23 +22,44 @@ public class DBManager {
 
     private static Connection conn;
 
-    private static void loadProperties() {
+//    private static void loadProperties() {
+//        if (connectionstring != null) {
+//            return;
+//        }
+//        try {
+//            Properties prop = new Properties();
+//            String conf_path=System.getenv("PROSALUD_CONFIG");
+//            String db_conf_file=conf_path+java.io.File.separator+"database.properties";
+//            //System.out.println(db_conf_file);
+//            prop.load(new java.io.FileInputStream(db_conf_file));
+//            connectionstring = prop.getProperty("connectionstring");
+//            user = prop.getProperty("user");
+//            password = prop.getProperty("password");
+//
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            e.printStackTrace(System.err);
+//        }
+//    }
+    
+      private static void loadProperties() {
         if (connectionstring != null) {
             return;
         }
         try {
             Properties prop = new Properties();
-            String conf_path=System.getenv("PROSALUD_CONFIG");
-            String db_conf_file=conf_path+java.io.File.separator+"database.properties";
-            //System.out.println(db_conf_file);
-            prop.load(new java.io.FileInputStream(db_conf_file));
+            prop.load(DBManager.class.getResourceAsStream("/controller/database.properties"));
+																					   
+											   
+																 
             connectionstring = prop.getProperty("connectionstring");
             user = prop.getProperty("user");
             password = prop.getProperty("password");
+            //System.out.println("Reading database.properties");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            e.printStackTrace(System.err);
+            System.out.println(e.toString());
         }
     }
 

@@ -7,6 +7,54 @@ Ext.require([
 Ext.QuickTips.init();
 
 
+var store_medicamento = Ext.create('Ext.data.Store', {
+    fields: ['id_medicamento', 'nombre', 'presentacion', 'activo', 'existencia'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/medicaments',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
+var store_cita_medicamento = Ext.create('Ext.data.Store', {
+    fields: ['id_cita', 'id', 'nombre', 'presentacion', 'cantidad', 'observaciones'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/inventory',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
+var store_materiales = Ext.create('Ext.data.Store', {
+    fields: ['id_material', 'nombre', 'descripcion', 'activo', 'existencia'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/materials',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
+var store_cita_materiales = Ext.create('Ext.data.Store', {
+    fields: ['id_cita', 'id', 'nombre', 'descripcion','observaciones'],
+    proxy: {
+        type: 'ajax',
+        url: 'controller/inventory',
+        reader: {type: 'json',
+            root: 'data'
+        }
+    }
+});
+
+
+
+
+
 var store_capacidades_especiales = Ext.create('Ext.data.Store', {
     fields: ['id_tipo_discapacidad', 'nombre'],
     proxy: {
@@ -111,7 +159,7 @@ Ext.onReady(function () {
                     fields: ['id_accion', 'nombre'],
                     proxy: {
                         type: 'ajax',
-                        url: 'controller/clinicactionsactionsappt/'+urlparams.cita,
+                        url: 'controller/clinicactionsactionsappt/' + urlparams.cita,
                         reader: {type: 'json',
                             root: 'data'
                         }
@@ -559,7 +607,349 @@ Ext.onReady(function () {
                                                 , {
                                                     xtype: 'form',
                                                     items: [panelMedidas]
-                                                }, {
+                                                },
+                                                //FISH MEDICAMENTOS
+                                                {
+                                                    xtype: 'form',
+                                                    id: 'formMedicamentos',
+                                                    items: [
+
+                                                        {
+                                                            xtype: 'fieldset',
+                                                            title: 'Medicamentos',
+                                                            id: 'fieldsetMedicamentos',
+                                                            colspan: 2,
+                                                            items: [{
+                                                                    xtype: 'combo',
+                                                                    fieldLabel: 'Medicamento',
+                                                                    id: 'cmbMedicamento',
+                                                                    store: store_medicamento,
+                                                                    enableKeyEvents: true,
+                                                                    displayField: 'nombre',
+                                                                    valueField: 'id_medicamento',
+                                                                    typeAhead: true,
+                                                                    typeAheadDelay: 100,
+                                                                    triggerAction: 'all',
+                                                                    mode: 'local',
+                                                                    minChars: 3,
+                                                                    width: 500,
+                                                                    selectOnFocus: true,
+                                                                    applyTo: 'search',
+                                                                    tpl: Ext.create('Ext.XTemplate',
+                                                                            '<ul class="x-list-plain"><tpl for=".">',
+                                                                            '<li role="option" class="x-boundlist-item">{nombre} - {presentacion}</li>',
+                                                                            '</tpl></ul>'
+                                                                            ),
+                                                                    // template for the content inside text field
+                                                                    displayTpl: Ext.create('Ext.XTemplate',
+                                                                            '<tpl for=".">',
+                                                                            '{nombre} - {presentacion}',
+                                                                            '</tpl>'
+                                                                            ),
+                                                                    listeners: {
+                                                                        keyup: function (el, type) {
+                                                                            store_medicamento.filter('nombre', el.getValue(), true, false, false);
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {xtype: 'textfield',
+                                                                    fieldLabel: 'Cantidad',
+                                                                    name: 'cantidad',
+                                                                    id: 'cantidadMedicamento',
+                                                                    maxLength: 3,
+                                                                    enforceMaxLength: 3,
+                                                                    allowBlank: false
+                                                                },
+                                                                {xtype: 'textfield',
+                                                                    fieldLabel: 'Observaciones',
+                                                                    name: 'observaciones',
+                                                                    id: 'observacionesMedicamento',
+                                                                    allowBlank: false
+                                                                },
+                                                                {
+                                                                    xtype: 'button',
+                                                                    name: 'btnAgregarMedicamento',
+                                                                    text: 'Agregar',
+                                                                    handler: function () {
+                                                                        //var myForm2 = Ext.getCmp('MyForm').getForm();
+                                                                        //var myForm2 = this.up('form');                              
+                                                                        var myForm2 = Ext.getCmp('formMedicamentos').getForm();
+                                                                        var data = myForm2.getValues();
+                                                                        var id_medicamento = myForm2.findField('cmbMedicamento').getValue();
+                                                                        var medicamentoSelected = store_medicamento.findRecord('id_medicamento', id_medicamento);
+                                                                        var nombre_medicamento = medicamentoSelected.data.nombre;
+                                                                        var presentacion = medicamentoSelected.data.presentacion;
+                                                                        var cantidad = myForm2.findField('cantidadMedicamento').getValue();
+                                                                        var observaciones = myForm2.findField('observacionesMedicamento').getValue();
+                                                                        var existencia  = medicamentoSelected.data.existencia;
+                                                                        if (cantidad > existencia){
+                                                                            alert('Cantidad excede a existencia.');
+                                                                            return false;
+                                                                        }
+                                                                        var dataAgregar = {
+                                                                            'id_cita': urlparams.cita,
+                                                                            'id': id_medicamento,
+                                                                            'nombre': nombre_medicamento,
+                                                                            'presentacion': presentacion,
+                                                                            'cantidad': cantidad,
+                                                                            'observaciones': observaciones
+                                                                        };
+                                                                        var dataAgregarPost = {
+                                                                            'id_cita': urlparams.cita,
+                                                                            'id_medicamento': id_medicamento,
+                                                                            'cantidad': cantidad,
+                                                                            'observaciones': observaciones
+                                                                        };
+
+
+                                                                        Ext.Ajax.request({
+                                                                            url: 'controller/appointment/addmedicamento',
+                                                                            method: 'POST',
+                                                                            jsonData: dataAgregarPost,
+                                                                            success: function (f, g) {
+                                                                                var resultado = eval('(' + f.responseText + ')');
+                                                                                if (resultado.message === 'Registro ingresado correctamente') {
+
+
+                                                                                } else {
+                                                                                    Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                                }
+                                                                            },
+                                                                            failure: function (f, g) {
+                                                                                form.unmask();
+                                                                                Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                            }
+                                                                        });
+
+                                                                        store_cita_medicamento.add(dataAgregar);
+                                                                        myForm2.reset();
+
+                                                                    }
+                                                                },
+                                                                {
+                                                                    xtype: 'fieldset',
+                                                                    id: 'fieldsetGrid',
+                                                                    title: 'Detalle Medicamentos',
+                                                                    colspan: 2,
+                                                                    items: [{
+                                                                            xtype: 'grid',
+                                                                            id: 'gridDetalle',
+                                                                            store: store_cita_medicamento,
+                                                                            maxHeight: 250,
+                                                                            columns: [
+                                                                                {text: 'Id', dataIndex: 'id', width: 100},
+                                                                                {text: 'Nombre', dataIndex: 'nombre', width: 150},
+                                                                                {text: 'Presentacion', dataIndex: 'presentacion', width: 150},
+                                                                                {text: 'Cantidad', dataIndex: 'cantidad', width: 150},
+                                                                                {text: 'Observaciones', dataIndex: 'observaciones', width: 150},
+                                                                                {
+                                                                                    xtype: 'actioncolumn',
+                                                                                    text: 'Acciones',
+                                                                                    width: 100,
+                                                                                    items: [{
+                                                                                            icon: 'images/icons/cross.png',
+                                                                                            tooltip: 'Eliminar registro',
+                                                                                            handler: function (grid, rowIndex, colIndex) {
+                                                                                                var rec = grid.getStore().getAt(rowIndex).get('id');
+
+                                                                                                Ext.Ajax.request({
+                                                                                                    url: 'controller/appointment/deletemedicamento',
+                                                                                                    method: 'POST',
+                                                                                                    jsonData: '{"id_cita": "' + urlparams.cita + '", "id_medicamento": "' + rec + '"}',
+                                                                                                    success: function (f, g) {
+                                                                                                        var resultado = eval('(' + f.responseText + ')');
+                                                                                                        if (resultado.success) {
+                                                                                                            store_cita_medicamento.remove(store_cita_medicamento.findRecord('id', rec));
+                                                                                                            Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
+
+                                                                                                        } else {
+                                                                                                            Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                                                        }
+                                                                                                    },
+                                                                                                    failure: function (f, g) {
+                                                                                                        Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                                                    }
+                                                                                                });
+
+                                                                                            }
+                                                                                        }]
+                                                                                }
+                                                                            ]
+                                                                        }]
+                                                                }
+                                                            ], },
+                                                    ]
+                                                },
+
+                                                //FISH  MEDICAMENTOS
+
+                                                //FISH MATERIALES
+                                                {
+                                                 xtype: 'form',
+                                                    id: 'formMateriales',
+                                                    items: [
+                                                
+                                                {
+                        xtype: 'fieldset',
+                        title: 'Material',
+                        id: 'fieldsetMateriales',
+                        colspan: 2,
+                        items: [{
+                                xtype: 'combo',
+                                fieldLabel: 'Material',
+                                id: 'cmbMaterial',
+                                store: store_materiales,
+                                enableKeyEvents: true,
+                                displayField: 'nombre',
+                                valueField: 'id_material',
+                                typeAhead: true,
+                                typeAheadDelay: 100,
+                                triggerAction: 'all',
+                                mode: 'local',
+                                minChars: 3,
+                                width: 300,
+                                selectOnFocus: true,
+                                applyTo: 'search',
+                                listeners: {
+                                    keyup: function (el, type) {
+                                        store_materiales.filter('nombre', el.getValue(), true, false, false);
+                                    }
+                                }
+                            },
+                            {xtype: 'textfield',
+                                fieldLabel: 'Cantidad',
+                                name: 'cantidad',
+                                id: 'cantidadMaterial',
+                                maxLength: 3,
+                                enforceMaxLength: 3,
+                                allowBlank: false
+                            },
+                            {xtype: 'textfield',
+                                                                    fieldLabel: 'Observaciones',
+                                                                    name: 'observaciones',
+                                                                    id: 'observacionesMaterial',
+                                                                    allowBlank: false
+                                                                },
+                            {
+                                xtype: 'button',
+                                name: 'btnAgregarMaterial',
+                                text: 'Agregar',
+                                handler: function () {
+                                    //var myForm2 = Ext.getCmp('MyForm').getForm();
+                                    //var myForm2 = this.up('form');                              
+                                    var myForm2 = Ext.getCmp('formMateriales').getForm();
+                                    var data = myForm2.getValues();
+                                    var id_material = myForm2.findField('cmbMaterial').getValue();
+                                    var nombre_material = myForm2.findField('cmbMaterial').getRawValue();
+                                    var cantidad = myForm2.findField('cantidadMaterial').getValue();
+                                    var observaciones = myForm2.findField('observacionesMaterial').getValue();
+                                    var materialSelected = store_materiales.findRecord('id_material', id_material);
+                                    var existencia  = materialSelected.data.existencia;
+                                                                        if (cantidad > existencia){
+                                                                            alert('Cantidad excede a existencia.');
+                                                                            return false;
+                                                                        }
+                                    var dataAgregar = {
+                                       'id_cita': urlparams.cita,
+                                        'id': id_material,
+                                        'nombre': nombre_material,
+                                        'cantidad': cantidad,
+                                        'tipo_inventario' : 1,
+                                        'observaciones': observaciones
+                                    };
+                                     var dataAgregarPost = {
+                                        'id_cita': urlparams.cita,
+                                        'id_material': id_material,                                        
+                                        'cantidad': cantidad,
+                                        'observaciones': observaciones
+                                    };
+                                    
+                                    
+                                             Ext.Ajax.request({
+                                        url: 'controller/appointment/addmaterial',
+                                        method: 'POST',
+                                        jsonData: dataAgregarPost,
+                                        success: function (f, g) {
+                                            var resultado = eval('(' + f.responseText + ')');                                                                                       
+                                            if (resultado.message    === 'Registro ingresado correctamente') { 
+                                                
+                                              
+                                            } else {                                                
+                                                Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                            }
+                                        },
+                                        failure: function (f, g) {
+                                            form.unmask();
+                                            Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                        }
+                                        });
+                                    store_cita_materiales.add(dataAgregar);
+                                    /* myForm2.findField('cmbMaterial').setValue('');
+                                   myForm2.findField('cantidadMaterial').setValue('');                                   */
+                                    myForm2.reset();
+
+                                }
+                            },
+                            {
+                                                                    xtype: 'fieldset',
+                                                                    id: 'fieldsetGridMateriales',
+                                                                    title: 'Detalle Materiales',
+                                                                    colspan: 2,
+                                                                    items: [{
+                                                                            xtype: 'grid',
+                                                                            id: 'gridDetalleMateriales',
+                                                                            store: store_cita_materiales,
+                                                                            maxHeight: 250,
+                                                                            columns: [
+                                                                                {text: 'Id', dataIndex: 'id', width: 100},
+                                                                                {text: 'Nombre', dataIndex: 'nombre', width: 150},                                                                                
+                                                                                {text: 'Cantidad', dataIndex: 'cantidad', width: 150},
+                                                                                {text: 'Observaciones', dataIndex: 'observaciones', width: 150},
+                                                                                {
+                                                                                    xtype: 'actioncolumn',
+                                                                                    text: 'Acciones',
+                                                                                    width: 100,
+                                                                                    items: [{
+                                                                                            icon: 'images/icons/cross.png',
+                                                                                            tooltip: 'Eliminar registro',
+                                                                                            handler: function (grid, rowIndex, colIndex) {
+                                                                                                var rec = grid.getStore().getAt(rowIndex).get('id');
+
+                                                                                                Ext.Ajax.request({
+                                                                                                    url: 'controller/appointment/deletematerial',
+                                                                                                    method: 'POST',
+                                                                                                    jsonData: '{"id_cita": "' + urlparams.cita + '", "id_material": "' + rec + '"}',
+                                                                                                    success: function (f, g) {
+                                                                                                        var resultado = eval('(' + f.responseText + ')');
+                                                                                                        if (resultado.success) {
+                                                                                                            store_cita_materiales.remove(store_cita_materiales.findRecord('id', rec));
+                                                                                                            Ext.Msg.show({title: "Operación exitosa", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.INFO});
+
+                                                                                                        } else {
+                                                                                                            Ext.Msg.show({title: "Error", msg: resultado.message, buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                                                        }
+                                                                                                    },
+                                                                                                    failure: function (f, g) {
+                                                                                                        Ext.Msg.show({title: "Error", msg: 'Ocurri&oacute; un error al procesar la solicitud', buttons: Ext.Msg.OK, icon: Ext.MessageBox.ERROR});
+                                                                                                    }
+                                                                                                });
+
+                                                                                            }
+                                                                                        }]
+                                                                                }
+                                                                            ]
+                                                                        }]
+                                                                }
+                        ], },
+                    
+                     ]
+                                                },
+
+                                                //FISH MATERIALES
+
+
+
+                                                , {
                                                     xtype: 'form',
                                                     items: [
                                                         {
