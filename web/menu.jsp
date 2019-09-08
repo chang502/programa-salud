@@ -62,7 +62,7 @@
                 <li><a href="procedures.jsp"><span>Procedimientos</span></a></li>
                 <li><a href="medicaments.jsp"><span>Medicamentos</span></a></li>
                 <li><a href="implements.jsp"><span>Implementos</span></a></li>                
-                <li><a href="inventory.jsp"><span>Inventario</span></a></li>                
+                <li><a href="inventory.jsp"><span>Entrada de Inventario</span></a></li>                
             </ul>
         </li> 
         <% } %>

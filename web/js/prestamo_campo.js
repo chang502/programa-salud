@@ -180,7 +180,7 @@ Ext.onReady(function () {
         id: 'MyForm',
         items: [{
                 xtype: 'fieldset',
-                title: 'Prestamo Implementos',
+                title: 'Prestamo Campo de Futbol',
                 layout: {type: 'table', columns: 2},
                 padding: '5 5 5 5',
                 defaults: {padding: '5 15 5 15'},
